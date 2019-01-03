@@ -127,10 +127,10 @@ namespace GameCursachProject
                 			break;                			
                 	}
                     if (j % 2 == 0)
-                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), Text, Text2, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), LAYER_MAP);
+                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), Text, Text2, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5),"ТОЛИК", LAYER_MAP);
                     else
                         if (i != MapArr.GetLength(0) - 1)
-                            MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), Text, Text2, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), LAYER_MAP);
+                            MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), Text, Text2, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), "Лес гномов", LAYER_MAP);
                         else
                             MapArr[i][j] = null;
                 }
@@ -164,8 +164,7 @@ namespace GameCursachProject
 
             UI = new MainUI
                 (
-                new Vector2(ScreenWidth, ScreenHeight),
-                Content.Load<Texture2D>(@"Textures\UI_BtnInfo"), Content.Load<Texture2D>(@"Textures\UI_Main_Bottom"),
+                new Vector2(ScreenWidth, ScreenHeight), Content.Load<Texture2D>(@"Textures\UI_Main_Bottom"),
                 Content.Load<Texture2D>(@"Textures\UI_Main_Bottom_Left"), Content.Load<Texture2D>(@"Textures\UI_Main_Up"),
                 Content.Load<Texture2D>(@"Textures\UI_Main_Up_Left"), Content.Load<Texture2D>(@"Textures\UI_Main_Up_Right"),
                 Content.Load<Texture2D>(@"Textures\BtnNewTurn"), Content.Load<Texture2D>(@"Textures\BtnMove"),

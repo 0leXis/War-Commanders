@@ -54,6 +54,8 @@ namespace GameCursachProject
         public ScreenBr Br { get; set; }
         public BasicSprite Vs { get; set; }
         
+        public BasicText TileName { get; set; }
+        
         public Vector2 CurrentScreenRes
         {
             get
@@ -75,8 +77,8 @@ namespace GameCursachProject
                 OpponentPoints.Position = new Vector2(OpponentName.Position.X + OpponentName.Font.MeasureString(OpponentName.Text).X - this.OpponentPoints.WidthHeight.X, this.OpponentName.Position.Y + OpponentName.Font.MeasureString(OpponentName.Text).Y);
                 RoundTime.Position = new Vector2(OpponentPoints.Position.X, this.OpponentPoints.Position.Y + this.OpponentPoints.WidthHeight.Y + 5);
 
-                Btn_Move.Position = new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 30);
-                Btn_Attack.Position = new Vector2(Btn_Move.Position.X + Btn_Move.FrameSize.X + 1, this.UI_BottomLeft.Position.Y + 30);
+                Btn_Move.Position = new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 50);
+                Btn_Attack.Position = new Vector2(Btn_Move.Position.X + Btn_Move.FrameSize.X + 1, this.UI_BottomLeft.Position.Y + 50);
 
                 Btn_EndTurn.Position = new Vector2(this.UI_BottomLeft.Position.X, Btn_Move.Position.Y + Btn_Move.Texture.Height);
 
@@ -86,13 +88,15 @@ namespace GameCursachProject
 
                 Br.ScreenRes = value;
                 Vs.Position = CurrentScreenRes / 2 - new Vector2(Vs.Texture.Width, Vs.Texture.Height) / 2;
+                
+				TileName.Position = new Vector2(UI_BottomLeft.Position.X + UI_BottomLeft.Texture.Width / 2 - TileName.Font.MeasureString(TileName.Text).X / 2, UI_BottomLeft.Position.Y + 5);
             }
         }
 
         public MainUI
             (
             Vector2 CurrentScreenRes, 
-            Texture2D UI_Info, Texture2D UI_Bottom, Texture2D UI_BottomLeft, Texture2D UI_Up, 
+            Texture2D UI_Bottom, Texture2D UI_BottomLeft, Texture2D UI_Up, 
             Texture2D UI_UpLeft, Texture2D UI_UpRight, Texture2D ButtonEndTurn_Texture, 
             Texture2D ButtonMove_Texture, Texture2D ButtonAttack_Texture, Texture2D ButtonGameMenu_Texture, 
             Texture2D ButtonChat_Texture, Texture2D ButtonStats_Texture, Texture2D PlayerIcon, 
@@ -133,8 +137,10 @@ namespace GameCursachProject
             this.RoundTime = new UI_Resource_Info(this.PlayerName.Position, Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, RoundTimeIcon, Color.White, Color.Red, RoundTime, "", Gr, Layer - 0.0005f);
             this.RoundTime.Position = new Vector2(this.OpponentPoints.Position.X, this.OpponentPoints.Position.Y + this.OpponentPoints.WidthHeight.Y + 5);
             //Нижний UI
-            Btn_Move = new Button(new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 30), ButtonMove_Texture, ButtonMove_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
-            Btn_Attack = new Button(new Vector2(Btn_Move.Position.X + Btn_Move.FrameSize.X + 1, this.UI_BottomLeft.Position.Y + 30), ButtonAttack_Texture, ButtonAttack_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
+            TileName = new BasicText(new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 5), "", Font, Color.Black, Layer - 0.0005f);
+            
+            Btn_Move = new Button(new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 50), ButtonMove_Texture, ButtonMove_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
+            Btn_Attack = new Button(new Vector2(Btn_Move.Position.X + Btn_Move.FrameSize.X + 1, this.UI_BottomLeft.Position.Y + 50), ButtonAttack_Texture, ButtonAttack_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             
             Btn_EndTurn = new Button(new Vector2(this.UI_BottomLeft.Position.X, Btn_Move.Position.Y + Btn_Move.Texture.Height), ButtonEndTurn_Texture, "Закончить ход", Font, Color.Black, ButtonEndTurn_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             
@@ -338,6 +344,11 @@ namespace GameCursachProject
                     Inf.Position = new Vector2(MouseControl.X + 10, MouseControl.Y);
                 }
                 Inf.Update();
+                if(map.ChoosedTileI != -1)
+                {
+                	TileName.Text = map.GetTile(map.ChoosedTileI, map.ChoosedTileJ).TileName;
+                	TileName.Position = new Vector2(UI_BottomLeft.Position.X + UI_BottomLeft.Texture.Width / 2 - TileName.Font.MeasureString(TileName.Text).X / 2, UI_BottomLeft.Position.Y + 5);
+                }
             }
         }
 
@@ -413,6 +424,7 @@ namespace GameCursachProject
             PlayerMoney.Draw(Target);
             RoundTime.Draw(Target);
 
+            TileName.Draw(Target);
             Btn_Move.Draw(Target);
             Btn_Attack.Draw(Target);
             Btn_EndTurn.Draw(Target);
