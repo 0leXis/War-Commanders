@@ -23,7 +23,7 @@ namespace GameCursachProject
 
     class Card : Button, IDrawable
     {
-        private const float UpLayer = 0.1f;
+        private const float UpLayer = 0.15f;
         private float LastLayer;
         private Vector2 _UpPosition;
         private Vector2 _DownPosition;

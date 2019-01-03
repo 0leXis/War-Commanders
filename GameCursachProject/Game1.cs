@@ -174,6 +174,7 @@ namespace GameCursachProject
                 Content.Load<Texture2D>(@"Textures\Player_Icon"), Content.Load<Texture2D>(@"Textures\Player_Icon"),
                 Content.Load<Texture2D>(@"Textures\UI_Flag_Player"), Content.Load<Texture2D>(@"Textures\UI_Flag_Enemy"),
                 Content.Load<Texture2D>(@"Textures\UI_Money"), Content.Load<Texture2D>(@"Textures\UI_HourGlass"),
+                Content.Load<Texture2D>(@"Textures\Vs"),
                 Content.Load<SpriteFont>(@"Fonts\ButtonFont"),
                 Content.Load<SpriteFont>(@"Fonts\UI_MiniFont"), 
                 graphics.GraphicsDevice,
@@ -319,8 +320,16 @@ namespace GameCursachProject
         private void UpdateGameObjects()
         {
             var IsMouseHandled = false;
-            Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y);
-            UI.Update(ref IsMouseHandled, Map, Hand, cam);
+            if (UI.IsVs)
+            {
+                UI.Update(ref IsMouseHandled, Map, Hand, cam);
+                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y);
+            }
+            else
+            {
+                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y);
+                UI.Update(ref IsMouseHandled, Map, Hand, cam);
+            }
             Map.Update(ref IsMouseHandled, Hand, cam);
         }
 

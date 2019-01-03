@@ -91,7 +91,6 @@ namespace GameCursachProject
         public void SpawnUnit(Unit UnitToSpawn, MapZones Side, bool UI_Show)
         {
             UnitToSpawn.Position = new Vector2(Position.X, Position.Y);
-            UnitToSpawn.Layer = Layer - 0.0001f;
             if (Side == MapZones.RIGHT)
                 UnitToSpawn.CurrentFrame = 1;
             else

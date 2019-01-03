@@ -33,7 +33,7 @@ namespace GameCursachProject
         private int iteration = 0;
         private Queue<MoveInfo> MoveList;
         private Vector2 AddVector;
-        private UnitInfo UI_UnitInfo;
+        public UnitInfo UI_UnitInfo;
 
         public int Speed { get; set; }
         public int MovePointsLeft { get; set; }
@@ -93,7 +93,7 @@ namespace GameCursachProject
             HP = OldUnit.HP;
             Armor = OldUnit.Armor;
 
-            UI_UnitInfo = new UnitInfo(new Vector2(Position.X + (FrameSize.X - OldUnit.UI_UnitInfo.Texture.Width) / 2, Position.Y + FrameSize.Y), OldUnit.UI_UnitInfo.Texture, OldUnit.UI_UnitInfo._DamageInfo.Font, OldUnit.UI_UnitInfo._DamageInfo.color, Speed.ToString(), Armor.ToString(), Damage.ToString(), HP.ToString(), Layer - 0.001f);
+            UI_UnitInfo = new UnitInfo(new Vector2(Position.X + (FrameSize.X - OldUnit.UI_UnitInfo.Texture.Width) / 2, Position.Y + FrameSize.Y), OldUnit.UI_UnitInfo.Texture, OldUnit.UI_UnitInfo._DamageInfo.Font, OldUnit.UI_UnitInfo._DamageInfo.color, OldUnit.Speed.ToString(), OldUnit.Armor.ToString(), OldUnit.Damage.ToString(), OldUnit.HP.ToString(), OldUnit.Layer - 0.001f);
             UI_UnitInfo.Visible = OldUnit.UI_UnitInfo.Visible;
         }
 

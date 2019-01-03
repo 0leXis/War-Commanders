@@ -57,7 +57,7 @@ namespace GameCursachProject
             SelectedTile = new Point(-1, -1);
             _ChoosedTileI = -1;
             _ChoosedTileJ = -1;
-            Info = new TileInfo(new Vector2(0, 0), TileInfoTexture, InfoFont, InfoColor, "", "", Tiles[0][0].Layer - 0.0005f)
+            Info = new TileInfo(new Vector2(0, 0), TileInfoTexture, InfoFont, InfoColor, "", "", Tiles[0][0].Layer - 0.2f)
             {
                 Visible = false
             };

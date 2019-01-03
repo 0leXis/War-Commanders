@@ -52,20 +52,40 @@ namespace GameCursachProject
         /// </summary>
         /// <param name="CurrentFrame">Текущий кадр</param>
         /// <returns>Возвращает false, если конец анимации (для looped всегда true)</returns>
-        public bool NextFrame(ref int CurrentFrame)
+        public bool NextFrame(ref int CurrentFrame, bool Reverse = false)
         {
-            this.CurrentFrame++;
-            if (this.CurrentFrame > LastFrame)
+            if (Reverse)
             {
-                this.CurrentFrame = FirstFrame;
-                if (Looped)
+                this.CurrentFrame--;
+                if (this.CurrentFrame < FirstFrame)
                 {
-                    CurrentFrame = this.CurrentFrame;
-                    return true;
+                    this.CurrentFrame = LastFrame;
+                    if (Looped)
+                    {
+                        CurrentFrame = this.CurrentFrame;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-                else
+            }
+            else
+            {
+                this.CurrentFrame++;
+                if (this.CurrentFrame > LastFrame)
                 {
-                    return false;
+                    this.CurrentFrame = FirstFrame;
+                    if (Looped)
+                    {
+                        CurrentFrame = this.CurrentFrame;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
             CurrentFrame = this.CurrentFrame;
@@ -86,6 +106,8 @@ namespace GameCursachProject
         private int DrawEvryNFrame;
         //Счётчик кадров
         private int FpsCounter;
+        //Если true - проигрывать анимацию в обратном порядке
+        private bool Reverse;
         //Текущий кадр
         public int CurrentFrame;
         //Имя текущей анимации
@@ -227,7 +249,7 @@ namespace GameCursachProject
         /// Проигрывает анимацию
         /// </summary>
         /// <param name="Name">Название анимации</param>
-        public void PlayAnimation(string Name)
+        public void PlayAnimation(string Name, bool IsReverse = false)
         {
             if (!Anims.ContainsKey(Name))
                 throw new Exception("Анимация не найдена");
@@ -238,7 +260,11 @@ namespace GameCursachProject
                 CurrAnimName = Name;
                 Anims.TryGetValue(Name,out CurrAnim);
                 CurrAnim.ResetAnim();
-                CurrentFrame = CurrAnim.FirstFrame;
+                Reverse = IsReverse;
+                if(Reverse)
+                    CurrentFrame = CurrAnim.LastFrame;
+                else
+                    CurrentFrame = CurrAnim.FirstFrame;
             }
         }
         /// <summary>
@@ -260,7 +286,7 @@ namespace GameCursachProject
             if (Visible && CurrAnim != null)
             {
                 if (ProcessFPS())
-                    if (!CurrAnim.Looped & !CurrAnim.NextFrame(ref CurrentFrame))
+                    if (!CurrAnim.Looped & !CurrAnim.NextFrame(ref CurrentFrame, Reverse))
                         StopAnimation();
             }
         }

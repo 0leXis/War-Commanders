@@ -12,6 +12,20 @@ namespace GameCursachProject
     {
         private Vector2 _CurrentScreenRes;
         private bool _ShowInf;
+        private int iteration;
+        private bool IsStartVs;
+        private bool IsStopVs;
+        private Vector2 _DestinationPointPlayer;
+        private Vector2 _DestinationPointOpponent;
+        private Vector2 _TmpPlDistance;
+        private Vector2 _TmpOpDistance;
+        private Vector2 _TmpPlNameDistance;
+        private Vector2 _TmpOpNameDistance;
+        private Vector2 _TmpIconScale;
+        private Vector2 _TmpTextScale;
+
+        private bool _IsVs;
+        public bool IsVs { get { return _IsVs; } }
 
         public BasicSprite UI_Bottom { get; set; }
         public BasicSprite UI_BottomLeft { get; set; }
@@ -36,7 +50,10 @@ namespace GameCursachProject
 		public Button Btn_Stats { get; set; }
 		
         public InfoBox Inf { get; set; }
-
+		
+        public ScreenBr Br { get; set; }
+        public BasicSprite Vs { get; set; }
+        
         public Vector2 CurrentScreenRes
         {
             get
@@ -52,7 +69,7 @@ namespace GameCursachProject
                 UI_Up.Scale = new Vector2((_CurrentScreenRes.X + 20 * _CurrentScreenRes.X) / 1280, UI_Bottom.Scale.Y);
                 UI_UpRight.Position = new Vector2(_CurrentScreenRes.X - UI_UpRight.Texture.Width, 0);
 
-                OpponentIcon.Position = new Vector2(_CurrentScreenRes.X - OpponentIcon.Texture.Width, 0);
+                OpponentIcon.Position = new Vector2(_CurrentScreenRes.X - OpponentIcon.Texture.Width * OpponentIcon.Scale.X, 0);
                 OpponentName.Position = OpponentIcon.Position - new Vector2(OpponentName.Font.MeasureString(OpponentName.Text).X + 10, 0);
 
                 OpponentPoints.Position = new Vector2(OpponentName.Position.X + OpponentName.Font.MeasureString(OpponentName.Text).X - this.OpponentPoints.WidthHeight.X, this.OpponentName.Position.Y + OpponentName.Font.MeasureString(OpponentName.Text).Y);
@@ -66,6 +83,9 @@ namespace GameCursachProject
                 Btn_Stats.Position = new Vector2(this.UI_BottomLeft.Position.X, Btn_EndTurn.Position.Y + Btn_EndTurn.Texture.Height);
                 Btn_Chat.Position = new Vector2(Btn_Stats.Position.X + Btn_Stats.FrameSize.X + 1, Btn_Stats.Position.Y);
                 Btn_GameMenu.Position = new Vector2(Btn_Chat.Position.X + Btn_Chat.FrameSize.X + 1, Btn_Stats.Position.Y);
+
+                Br.ScreenRes = value;
+                Vs.Position = CurrentScreenRes / 2 - new Vector2(Vs.Texture.Width, Vs.Texture.Height) / 2;
             }
         }
 
@@ -77,7 +97,7 @@ namespace GameCursachProject
             Texture2D ButtonMove_Texture, Texture2D ButtonAttack_Texture, Texture2D ButtonGameMenu_Texture, 
             Texture2D ButtonChat_Texture, Texture2D ButtonStats_Texture, Texture2D PlayerIcon, 
             Texture2D OpponentIcon, Texture2D PlayerPointsIcon, Texture2D OpponentPointsIcon,
-            Texture2D PlayerMoneyIcon, Texture2D RoundTimeIcon,
+            Texture2D PlayerMoneyIcon, Texture2D RoundTimeIcon, Texture2D Vs,
             SpriteFont Font,
             SpriteFont ResFont,
             GraphicsDevice Gr, 
@@ -98,11 +118,12 @@ namespace GameCursachProject
             this.UI_UpRight = new BasicSprite(new Vector2(_CurrentScreenRes.X - UI_UpRight.Width, 0), UI_UpRight, Layer - 0.0001f);
 
             //Верхний UI
-            this.PlayerIcon = new BasicSprite(new Vector2(0, 0), PlayerIcon, Layer - 0.0001f);
-            this.OpponentIcon = new BasicSprite(new Vector2(_CurrentScreenRes.X - OpponentIcon.Width, 0), OpponentIcon, Layer - 0.0001f);
-
-            this.PlayerName = new BasicText(this.PlayerIcon.Position + new Vector2(PlayerIcon.Width + 10, 0), PlayerName, Font, Color.White, Layer - 0.0005f);
-            this.OpponentName = new BasicText(this.OpponentIcon.Position - new Vector2(Font.MeasureString(OpponentName).X + 10, 0), OpponentName, Font, Color.White, Layer - 0.0005f);
+            this.PlayerIcon = new BasicSprite(new Vector2(0, 0), PlayerIcon, 0.09f);
+            this.PlayerIcon.Scale = new Vector2(0.4f);
+            this.OpponentIcon = new BasicSprite(new Vector2(_CurrentScreenRes.X - OpponentIcon.Width * 0.4f, 0), OpponentIcon, 0.09f);
+            this.OpponentIcon.Scale = new Vector2(0.4f);
+            this.PlayerName = new BasicText(this.PlayerIcon.Position + new Vector2(PlayerIcon.Width * this.PlayerIcon.Scale.X + 10, 0), PlayerName, Font, Color.White, 0.09f);
+            this.OpponentName = new BasicText(this.OpponentIcon.Position - new Vector2(Font.MeasureString(OpponentName).X + 10, 0), OpponentName, Font, Color.White, 0.09f);
 
             this.PlayerPoints = new UI_Resource_Info(new Vector2(this.PlayerName.Position.X, this.PlayerName.Position.Y + Font.MeasureString(PlayerName).Y), Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, PlayerPointsIcon, Color.White, Color.LightGreen, PlayerPoints + @"\" + Points_Needed, " (+" + PlayerPoints_Inc + ")", Gr, Layer - 0.0005f);
             this.OpponentPoints = new UI_Resource_Info(this.PlayerName.Position, Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, OpponentPointsIcon, Color.White, Color.LightGreen, OpponentPoints + @"\" + Points_Needed, " (+" + OpponentPoints_Inc + ")", Gr, Layer - 0.0005f);
@@ -120,150 +141,263 @@ namespace GameCursachProject
             Btn_Stats = new Button(new Vector2(this.UI_BottomLeft.Position.X, Btn_EndTurn.Position.Y + Btn_EndTurn.Texture.Height), ButtonStats_Texture, ButtonStats_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             Btn_Chat = new Button(new Vector2(Btn_Stats.Position.X + Btn_Stats.FrameSize.X + 1, Btn_Stats.Position.Y), ButtonChat_Texture, ButtonChat_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             Btn_GameMenu = new Button(new Vector2(Btn_Chat.Position.X + Btn_Chat.FrameSize.X + 1, Btn_Stats.Position.Y), ButtonGameMenu_Texture, ButtonGameMenu_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
+            
+            Br = new ScreenBr(CurrentScreenRes, 60, 220, Gr, 0.1f);
+            this.Vs = new BasicSprite(CurrentScreenRes / 2 - new Vector2(Vs.Width, Vs.Height) / 2, Vs, 0.09f);
+            StartVS();
         }
 
         public void Update(ref bool IsMouseHandled, Map map, Hand hand, Camera cam)
         {
-            if (!IsMouseHandled)
+        	Br.UpdateAnims();
+            if (_IsVs)
             {
-                if (MouseControl.X < UI_BottomLeft.Texture.Width)
+                IsMouseHandled = true;
+                if(iteration < 120)
                 {
-                    if (MouseControl.Y > _CurrentScreenRes.Y - UI_BottomLeft.Texture.Height)
+                    if (IsStartVs && iteration > 80)
                     {
+                        PlayerIcon.Position += new Vector2((_DestinationPointPlayer.X - PlayerIcon.Position.X) / 8, 0);
+                        OpponentIcon.Position -= new Vector2((OpponentIcon.Position.X - _DestinationPointOpponent.X) / 8, 0);
+                        PlayerName.Position = new Vector2(PlayerIcon.Position.X + PlayerIcon.Texture.Width / 2 * PlayerIcon.Scale.X - PlayerName.Font.MeasureString(PlayerName.Text).X, PlayerIcon.Position.Y + PlayerIcon.Texture.Height * PlayerIcon.Scale.Y);
+                        OpponentName.Position = new Vector2(OpponentIcon.Position.X + OpponentIcon.Texture.Width / 2 * OpponentIcon.Scale.X - OpponentName.Font.MeasureString(OpponentName.Text).X, OpponentIcon.Position.Y + OpponentIcon.Texture.Height * OpponentIcon.Scale.Y);
+                    }
+                    if (IsStopVs && iteration > 80)
+                    {
+                        PlayerIcon.Position -= _TmpPlDistance;
+                        OpponentIcon.Position -= _TmpOpDistance;
+                        PlayerIcon.Scale -= _TmpIconScale;
+                        OpponentIcon.Scale -= _TmpIconScale;
+                        PlayerName.Position -= _TmpPlNameDistance;
+                        OpponentName.Position -= _TmpOpNameDistance;
+                        PlayerName.Scale -= _TmpTextScale;
+                        OpponentName.Scale -= _TmpTextScale;
+                        Vs.Visible = false;
+                    }
+                    if(iteration == 119)
+                    {
+                        if (IsStartVs)
+                        {
+                            IsStartVs = false;
+                            StopVS();
+                        }
+                        else
+                        if (IsStopVs)
+                        {
+                            IsStopVs = false;
+                            PlayerIcon.Position = Vector2.Zero;
+                            OpponentIcon.Position = new Vector2(_CurrentScreenRes.X - OpponentIcon.Texture.Width * OpponentIcon.Scale.X, 0);
+                            PlayerIcon.Scale = new Vector2(0.4f);
+                            OpponentIcon.Scale = new Vector2(0.4f);
+                            PlayerName.Scale = Vector2.One;
+                            OpponentName.Scale = Vector2.One;
+                            PlayerName.Position = PlayerIcon.Position + new Vector2(PlayerIcon.Texture.Width * PlayerIcon.Scale.X + 10, 0);
+                            OpponentName.Position = OpponentIcon.Position - new Vector2(OpponentName.Font.MeasureString(OpponentName.Text).X + 10, 0);
+                            _IsVs = false;
+                            Br.ScreenBrUp();
+                        }
+                    }
+                    iteration++;
+                }
+            }
+            else
+            {
+                if (!IsMouseHandled)
+                {
+                    if (MouseControl.X < UI_BottomLeft.Texture.Width)
+                    {
+                        if (MouseControl.Y > _CurrentScreenRes.Y - UI_BottomLeft.Texture.Height)
+                        {
+                            IsMouseHandled = true;
+                        }
+                    }
+                    else
+                    if (MouseControl.Y > _CurrentScreenRes.Y - UI_Bottom.Texture.Height)
                         IsMouseHandled = true;
+                    else
+                    if (MouseControl.Y < UI_UpLeft.Texture.Height)
+                        IsMouseHandled = true;
+                }
+
+                var MoveUpd = Btn_Move.Update();
+                var Attack = Btn_Attack.Update();
+                var EndTurn = Btn_EndTurn.Update();
+                var Stats = Btn_Stats.Update();
+                var Chat = Btn_Chat.Update();
+                var GameMenu = Btn_GameMenu.Update();
+                _ShowInf = false;
+
+                if (!map.IsPathFinding)
+                {
+                    Btn_EndTurn.Enabled = true;
+                    for (var i = 0; i < hand.CardsCount; i++)
+                    {
+                        hand[i].Enabled = true;
                     }
                 }
                 else
-                if (MouseControl.Y > _CurrentScreenRes.Y - UI_Bottom.Texture.Height)
-                    IsMouseHandled = true;
-                else
-                if(MouseControl.Y < UI_UpLeft.Texture.Height)
-                    IsMouseHandled = true;
-            }
-
-            var MoveUpd = Btn_Move.Update();
-            var Attack = Btn_Attack.Update();
-            var EndTurn = Btn_EndTurn.Update();
-            var Stats = Btn_Stats.Update();
-            var Chat = Btn_Chat.Update();
-            var GameMenu = Btn_GameMenu.Update();
-            _ShowInf = false;
-
-            if (!map.IsPathFinding)
-            {
-                Btn_EndTurn.Enabled = true;
-                for(var i = 0; i < hand.CardsCount; i++)
                 {
-                    hand[i].Enabled = true;
+                    for (var i = 0; i < hand.CardsCount; i++)
+                    {
+                        hand[i].Enabled = false;
+                    }
                 }
-            }
-            else
-            {
-                for (var i = 0; i < hand.CardsCount; i++)
-                {
-                    hand[i].Enabled = false;
-                }
-            }
 
-            if ((MoveUpd == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_MOVEUNIT")) && map.SelectedTile.X != -1)
-            {
-                if (map.IsPathFinding)
+                if ((MoveUpd == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_MOVEUNIT")) && map.SelectedTile.X != -1)
                 {
-                    map.IsPathFinding = false;
-                    map.SetDefaultAnims();
-                    map.UpdateAllTiles(cam);
-                    map.CreatePathArrows(null, cam);
+                    if (map.IsPathFinding)
+                    {
+                        map.IsPathFinding = false;
+                        map.SetDefaultAnims();
+                        map.UpdateAllTiles(cam);
+                        map.CreatePathArrows(null, cam);
+                    }
+                    else
+                    if (map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING)
+                    {
+                        Btn_EndTurn.Enabled = false;
+                        map.IsPathFinding = true;
+                        map.PFStart = new Point(map.SelectedTile.X, map.SelectedTile.Y);
+                        map.HighLiteTilesWithPF();
+                        map.UpdateAllTiles(cam);
+                    }
                 }
                 else
-            	if(map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING)
-            	{
-                    Btn_EndTurn.Enabled = false;
-                    map.IsPathFinding = true;
-                	map.PFStart = new Point(map.SelectedTile.X, map.SelectedTile.Y);
-                    map.HighLiteTilesWithPF();
-                    map.UpdateAllTiles(cam);
-                }
-            }
-            else
-            if(MoveUpd == ButtonStates.ENTERED)
-            {
-                Inf.Appear();
-                Inf.Text = "Перемещение/ближний бой";
-                _ShowInf = true;
-            }
-
-            if (Attack == ButtonStates.ENTERED)
-            {
-                Inf.Appear();
-                Inf.Text = "Дальняя атака";
-                _ShowInf = true;
-            }
-            if (Stats == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_STATS"))
-            {
-                if (map.UI_VisibleState)
+                if (MoveUpd == ButtonStates.ENTERED)
                 {
-                    map.HideUnitStats();
+                    Inf.Appear();
+                    Inf.Text = "Перемещение/ближний бой";
+                    _ShowInf = true;
+                }
+
+                if (Attack == ButtonStates.ENTERED)
+                {
+                    Inf.Appear();
+                    Inf.Text = "Дальняя атака";
+                    _ShowInf = true;
+                }
+                if (Stats == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_STATS"))
+                {
+                    if (map.UI_VisibleState)
+                    {
+                        map.HideUnitStats();
+                    }
+                    else
+                    {
+                        map.ShowUnitStats();
+                    }
                 }
                 else
+                if (Stats == ButtonStates.ENTERED)
                 {
-                    map.ShowUnitStats();
+                    Inf.Appear();
+                    Inf.Text = "Скрыть/показать\n характ. юнитов";
+                    _ShowInf = true;
                 }
-            }
-            else
-            if (Stats == ButtonStates.ENTERED)
-            {
-                Inf.Appear();
-                Inf.Text = "Скрыть/показать\n характ. юнитов";
-                _ShowInf = true;
-            }
-            if (Chat == ButtonStates.ENTERED)
-            {
-                Inf.Appear();
-                Inf.Text = "Чат";
-                _ShowInf = true;
-            }
-            if (GameMenu == ButtonStates.ENTERED)
-            {
-                Inf.Appear();
-                Inf.Text = "Игровое меню";
-                _ShowInf = true;
-            }
-            if (PlayerPoints.Update() == ButtonStates.ENTERED)
-            {
-                Inf.Appear();
-                Inf.Text = "Очки/Необходимо\nдля победы";
-                _ShowInf = true;
-            }
-            if (OpponentPoints.Update() == ButtonStates.ENTERED)
-            {
-                Inf.Appear();
-                Inf.Text = "Очки/Необходимо\nдля победы";
-                _ShowInf = true;
-            }
-            if (PlayerMoney.Update() == ButtonStates.ENTERED)
-            {
-                Inf.Appear();
-                Inf.Text = "Ресурсы";
-                _ShowInf = true;
-            }
-            if (RoundTime.Update() == ButtonStates.ENTERED)
-            {
-                Inf.Appear();
-                Inf.Text = "Время хода";
-                _ShowInf = true;
-            }
+                if (Chat == ButtonStates.ENTERED)
+                {
+                    Inf.Appear();
+                    Inf.Text = "Чат";
+                    _ShowInf = true;
+                }
+                if (GameMenu == ButtonStates.ENTERED)
+                {
+                    Inf.Appear();
+                    Inf.Text = "Игровое меню";
+                    _ShowInf = true;
+                }
+                if (PlayerPoints.Update() == ButtonStates.ENTERED)
+                {
+                    Inf.Appear();
+                    Inf.Text = "Очки/Необходимо\nдля победы";
+                    _ShowInf = true;
+                }
+                if (OpponentPoints.Update() == ButtonStates.ENTERED)
+                {
+                    Inf.Appear();
+                    Inf.Text = "Очки/Необходимо\nдля победы";
+                    _ShowInf = true;
+                }
+                if (PlayerMoney.Update() == ButtonStates.ENTERED)
+                {
+                    Inf.Appear();
+                    Inf.Text = "Ресурсы";
+                    _ShowInf = true;
+                }
+                if (RoundTime.Update() == ButtonStates.ENTERED)
+                {
+                    Inf.Appear();
+                    Inf.Text = "Время хода";
+                    _ShowInf = true;
+                }
 
-            if (!_ShowInf)
-                Inf.Disappear();
-            else
-            {
-                Inf.Position = new Vector2(MouseControl.X + 10, MouseControl.Y);
+                if (!_ShowInf)
+                    Inf.Disappear();
+                else
+                {
+                    Inf.Position = new Vector2(MouseControl.X + 10, MouseControl.Y);
+                }
+                Inf.Update();
             }
-            Inf.Update();
         }
 
+        public void GameInit()
+        {
+        	Br.CurrentFrame = 0;
+        }
+        
+        public void StartVS()
+        {
+            _IsVs = true;
+        	IsStartVs = true;
+        	IsStopVs = false;
+            iteration = 0;
+            //PlayerIcon.Scale = new Vector2(2.5f);
+            PlayerIcon.Scale = Vector2.One;
+            PlayerIcon.Position = new Vector2(-PlayerIcon.Scale.X * PlayerIcon.Texture.Width, CurrentScreenRes.Y / 2 - PlayerIcon.Texture.Height * PlayerIcon.Scale.Y / 2);
+            //OpponentIcon.Scale = new Vector2(2.5f);
+            OpponentIcon.Scale = Vector2.One;
+            OpponentIcon.Position = new Vector2(OpponentIcon.Scale.X * PlayerIcon.Texture.Width + CurrentScreenRes.X, CurrentScreenRes.Y / 2 - OpponentIcon.Texture.Height * OpponentIcon.Scale.Y / 2);
+
+            _DestinationPointPlayer = new Vector2(Vs.Position.X - PlayerIcon.Texture.Width * PlayerIcon.Scale.X - 50, CurrentScreenRes.Y / 2 - PlayerIcon.Texture.Height * PlayerIcon.Scale.Y / 2);
+            _DestinationPointOpponent = new Vector2(Vs.Position.X + Vs.Texture.Width + 50, CurrentScreenRes.Y / 2 - OpponentIcon.Texture.Height * OpponentIcon.Scale.Y / 2);
+
+            PlayerName.Position = new Vector2(PlayerIcon.Position.X + PlayerIcon.Texture.Width / 2 * PlayerIcon.Scale.X - PlayerName.Font.MeasureString(PlayerName.Text).X, PlayerIcon.Position.Y + PlayerIcon.Texture.Height * PlayerIcon.Scale.Y);
+        	OpponentName.Position = new Vector2(OpponentIcon.Position.X + OpponentIcon.Texture.Width / 2 * OpponentIcon.Scale.X - OpponentName.Font.MeasureString(OpponentName.Text).X, OpponentIcon.Position.Y + OpponentIcon.Texture.Height * OpponentIcon.Scale.Y);
+        	PlayerName.Scale = new Vector2(2f);
+        	OpponentName.Scale = new Vector2(2f);
+        	
+        	//PlayerIcon.Position = new Vector2(Vs.Position.X - PlayerIcon.Texture.Width * PlayerIcon.Scale.X - 50, CurrentScreenRes.Y / 2 - PlayerIcon.Texture.Height * PlayerIcon.Scale.Y / 2);
+        	//OpponentIcon.Position = new Vector2(Vs.Position.X + Vs.Texture.Width + 50, CurrentScreenRes.Y / 2 - OpponentIcon.Texture.Height * OpponentIcon.Scale.Y / 2);
+
+            //PlayerName.Position = new Vector2(PlayerIcon.Position.X + PlayerIcon.Texture.Width / 2 * PlayerIcon.Scale.X - PlayerName.Font.MeasureString(PlayerName.Text).X, PlayerIcon.Position.Y + PlayerIcon.Texture.Height * PlayerIcon.Scale.Y);
+            //OpponentName.Position = new Vector2(OpponentIcon.Position.X + OpponentIcon.Texture.Width / 2 * OpponentIcon.Scale.X - OpponentName.Font.MeasureString(OpponentName.Text).X, OpponentIcon.Position.Y + OpponentIcon.Texture.Height * OpponentIcon.Scale.Y);
+        }
+                
+        public void StopVS()
+        {
+        	IsStopVs = true;
+        	IsStartVs = false;
+            _TmpPlDistance = PlayerIcon.Position / 40;
+            _TmpOpDistance = (OpponentIcon.Position - new Vector2(_CurrentScreenRes.X - OpponentIcon.Texture.Width * 0.4f, 0)) / 40;
+            _TmpIconScale = (PlayerIcon.Scale - new Vector2(0.40f)) / 40;
+
+            _TmpPlNameDistance = (PlayerName.Position - new Vector2(PlayerIcon.Texture.Width * 0.4f + 10, 0)) / 40;
+            _TmpOpNameDistance = (OpponentName.Position - new Vector2(_CurrentScreenRes.X - OpponentIcon.Texture.Width * 0.4f - OpponentName.Font.MeasureString(OpponentName.Text).X + 10, 0)) / 40;
+            _TmpTextScale = (PlayerName.Scale - new Vector2(1f)) / 40;
+            iteration = 0;
+        }
+                
+        public void BrUp()
+        {
+        	Br.ScreenBrUp();
+        }
+        
         public void Draw(SpriteBatch Target)
         {
+        	Br.Draw(Target);
+        	Vs.Draw(Target);
+        	
             UI_Bottom.Draw(Target);
             UI_BottomLeft.Draw(Target);
             UI_Up.Draw(Target);
