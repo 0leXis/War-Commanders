@@ -165,6 +165,7 @@ namespace GameCursachProject
             base.Update(gameTime);
             watch.Stop();
             Window.Title = watch.Elapsed.ToString() + "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y) + "|ZOOM|" + cam.Zoom.ToString() + "|POS|" + cam.Position.ToString();
+            Window.Title = CoordsConvert.WindowToWorldCoords(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), cam).ToString();
             //if (MouseControl.IsLeftBtnClicked)
             //    Window.Title = "Left";
             //if (MouseControl.IsRightBtnClicked)
@@ -173,19 +174,19 @@ namespace GameCursachProject
             //Window.Title = Map.Tiles[0][0].NotSelectedFrame.ToString() + " || " + Map.Tiles[1][0].NotSelectedFrame.ToString();
 
             /*PathFindingTest*/
-//            var Til = Map.GetTileIJByCoords(new Vector2(MouseControl.X, MouseControl.Y));
-//            List<Point> LastList = null;
-//            if (Til != null)
-//            {
-//                int PL;
-//                var TmpList = Map.PathFinding(1, 0, Til[0], Til[1], out PL);
-//                Map.CreatePathArrows(TmpList);
-//                if (TmpList != LastList)
-//                {
-//                    LastList = new List<Point>(TmpList);
-//                    Window.Title = PL.ToString();
-//                }
-//            }
+            //            var Til = Map.GetTileIJByCoords(new Vector2(MouseControl.X, MouseControl.Y));
+            //            List<Point> LastList = null;
+            //            if (Til != null)
+            //            {
+            //                int PL;
+            //                var TmpList = Map.PathFinding(1, 0, Til[0], Til[1], out PL);
+            //                Map.CreatePathArrows(TmpList);
+            //                if (TmpList != LastList)
+            //                {
+            //                    LastList = new List<Point>(TmpList);
+            //                    Window.Title = PL.ToString();
+            //                }
+            //            }
             /*PathFindingTest End*/
             watch.Reset();
             UpdateCamera();
@@ -209,14 +210,15 @@ namespace GameCursachProject
             laststate = state.ScrollWheelValue;
 
             var state2 = Keyboard.GetState();
+
             if (state2.IsKeyDown(Keys.W))
                 cam.Position -= new Vector2(0, 10f / cam.Zoom);
             else
-            if (state2.IsKeyDown(Keys.A))
-                cam.Position -= new Vector2(10f / cam.Zoom, 0);
-            else
             if (state2.IsKeyDown(Keys.S))
                 cam.Position += new Vector2(0, 10f / cam.Zoom);
+
+            if (state2.IsKeyDown(Keys.A))
+                cam.Position -= new Vector2(10f / cam.Zoom, 0);
             else
             if (state2.IsKeyDown(Keys.D))
                 cam.Position += new Vector2(10f / cam.Zoom, 0);
@@ -228,12 +230,13 @@ namespace GameCursachProject
             var LastMapVect = new Vector2(maprect.X + maprect.Width, maprect.Y + maprect.Height);
             if (cam.Position.X < FirstVect.X)
                 cam.Position = new Vector2(FirstVect.X, cam.Position.Y);
-            if (cam.Position.X > LastVect.X)
-                cam.Position = new Vector2(, cam.Position.Y);
             if (cam.Position.Y < FirstVect.Y)
                 cam.Position = new Vector2(cam.Position.X, FirstVect.Y);
-            if (cam.Position.Y> LastVect.Y)
-                cam.Position = new Vector2(cam.Position.X, );
+
+            if (cam.Position.X + cam.ScreenRes.X / cam.Zoom > LastVect.X)
+                cam.Position = new Vector2(LastVect.X - cam.ScreenRes.X / cam.Zoom, cam.Position.Y);
+            if (cam.Position.Y + cam.ScreenRes.Y / cam.Zoom > LastVect.Y)
+                cam.Position = new Vector2(cam.Position.X, LastVect.Y - cam.ScreenRes.Y / cam.Zoom);
         }
 
         private void UpdateGameObjects()

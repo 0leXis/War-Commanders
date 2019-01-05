@@ -10,14 +10,23 @@ namespace GameCursachProject
 {
     class Camera
     {
-        public float MAX_ZOOM = 0.2f;
+        public float MAX_ZOOM = 0.25f;
         public float MIN_ZOOM = 2f;
 
         private float _zoom;
+        private Vector2 _zoomoffset;
 
         public Vector2 Position { get; set; }
         public float Rotation { get; set; }
         public Vector2 ScreenRes { get; set; }
+
+        public Vector2 ZoomOffset
+        {
+            get
+            {
+                return _zoomoffset;
+            }
+        }
 
         public float Zoom //TODO: Плавный зум и перемещение
         {
@@ -39,12 +48,14 @@ namespace GameCursachProject
                 var lastpos = ScreenRes / _zoom;
         		_zoom = value;
         		Position += (lastpos - ScreenRes / _zoom) / 2;
-        	}
+                _zoomoffset += (lastpos - ScreenRes / _zoom) / 2;
+            }
         }
 
         public Camera(Vector2 ScreenRes)
         {
             _zoom = 1.0f;
+            _zoomoffset = Vector2.Zero;
             Rotation = 0.0f;
             Position = Vector2.Zero;
             this.ScreenRes = ScreenRes;

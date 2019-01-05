@@ -521,7 +521,7 @@ namespace GameCursachProject
 
         public Rectangle GetMapRectangle(int Offset)
         {
-            var MapWidthWithOffset = new Point((int)((Tiles.Length + Offset) * Tiles[0][0].FrameSize.X), (int)((Tiles[0].Length + Offset) * Tiles[0][0].FrameSize.Y));
+            var MapWidthWithOffset = new Point((int)((Tiles[0].Length / 2 + 3 + Offset) * Tiles[0][0].FrameSize.X + (Tiles[0].Length / 2 + Offset) * Tiles[0][0].FrameSize.X / 3), (int)((Tiles.Length + 3 + Offset) * Tiles[0][0].FrameSize.Y));
             return new Rectangle(Tiles[0][0].Position.ToPoint() - new Point(Offset * (int)Tiles[0][0].FrameSize.X, Offset * (int)Tiles[0][0].FrameSize.Y), MapWidthWithOffset);
         }
 
@@ -627,17 +627,29 @@ namespace GameCursachProject
                         Til.Draw(Target);
 
             Target.End();
+
             Target.Begin(SpriteSortMode.BackToFront);
-            	Info.Draw(Target);
+            foreach (var arrow in PathFindingArrows)
+            {
+                arrow.Draw(Target);
+            }
+            Target.End();
+
+            Target.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform(Target.GraphicsDevice));
+                foreach (var Tile in Tiles)
+                    foreach (var Til in Tile)
+                        if (Til != null)
+                            Til.DrawUnit(Target);
+            Target.End();
+
+            Target.Begin(SpriteSortMode.BackToFront);
+                Info.Draw(Target);
             	foreach (var Tile in Tiles)
                 	foreach (var Til in Tile)
                     	if (Til != null && Til.UnitOnTile != null)
                         	Til.UnitOnTile.DrawUI(Target, cam);
-                foreach (var arrow in PathFindingArrows)
-            	{
-                	arrow.Draw(Target);
-            	}
             Target.End();
+
             Target.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform(Target.GraphicsDevice));
         }
     }

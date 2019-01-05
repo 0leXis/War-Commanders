@@ -129,10 +129,14 @@ namespace GameCursachProject
             return base.Update(DontUpdBtnAnims, cam);
         }
 
+        public void DrawUnit(SpriteBatch Target)
+        {
+            if (UnitOnTile != null)
+                UnitOnTile.Draw(Target);
+        }
+
         public override void Draw(SpriteBatch Target)
         {
-            if(UnitOnTile != null)
-                UnitOnTile.Draw(Target);
             base.Draw(Target);
         }
     }
