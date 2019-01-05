@@ -164,7 +164,7 @@ namespace GameCursachProject
             //Window.Title = Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y) + "|---|" + Convert.ToString(arrow.EndPoint.X) + "||" + Convert.ToString(arrow.EndPoint.Y) + "|---|" + Convert.ToString(arrow._Rotation);
             base.Update(gameTime);
             watch.Stop();
-            Window.Title = watch.Elapsed.ToString() + "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y);
+            Window.Title = watch.Elapsed.ToString() + "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y) + "|ZOOM|" + cam.Zoom.ToString() + "|POS|" + cam.Position.ToString();
             //if (MouseControl.IsLeftBtnClicked)
             //    Window.Title = "Left";
             //if (MouseControl.IsRightBtnClicked)
@@ -188,33 +188,52 @@ namespace GameCursachProject
 //            }
             /*PathFindingTest End*/
             watch.Reset();
-            
-            var state = Mouse.GetState();
-            if(state.ScrollWheelValue - laststate < 0)
-            {
-            	cam.Zoom += (state.ScrollWheelValue - laststate) * 0.0001f;
-            }
-            else
-            if(state.ScrollWheelValue - laststate > 0)
-            {
-            	cam.Zoom += (state.ScrollWheelValue - laststate) * 0.0001f;
-            }
-            laststate = state.ScrollWheelValue;
-            var state2 = Keyboard.GetState();
-            if(state2.IsKeyDown(Keys.W))
-            	cam.Position -= new Vector2(0, 10f / cam.Zoom);
-            else
-            if(state2.IsKeyDown(Keys.A))
-            	cam.Position -= new Vector2(10f / cam.Zoom, 0);
-            else
-            if(state2.IsKeyDown(Keys.S))
-            	cam.Position += new Vector2(0, 10f / cam.Zoom);
-            else
-            if(state2.IsKeyDown(Keys.D))
-            	cam.Position += new Vector2(10f / cam.Zoom, 0);
+            UpdateCamera();
             //cam.Position += new Vector2(0.5f, 0.5f);
             //cam.Zoom = 0.25f;
             //cam.Rotation -= 0.01f;
+        }
+
+        private void UpdateCamera()
+        {
+            var state = Mouse.GetState();
+            if (state.ScrollWheelValue - laststate < 0)
+            {
+                cam.Zoom += (state.ScrollWheelValue - laststate) * 0.001f * cam.Zoom;
+            }
+            else
+            if (state.ScrollWheelValue - laststate > 0)
+            {
+                cam.Zoom += (state.ScrollWheelValue - laststate) * 0.001f * cam.Zoom;
+            }
+            laststate = state.ScrollWheelValue;
+
+            var state2 = Keyboard.GetState();
+            if (state2.IsKeyDown(Keys.W))
+                cam.Position -= new Vector2(0, 10f / cam.Zoom);
+            else
+            if (state2.IsKeyDown(Keys.A))
+                cam.Position -= new Vector2(10f / cam.Zoom, 0);
+            else
+            if (state2.IsKeyDown(Keys.S))
+                cam.Position += new Vector2(0, 10f / cam.Zoom);
+            else
+            if (state2.IsKeyDown(Keys.D))
+                cam.Position += new Vector2(10f / cam.Zoom, 0);
+
+            var maprectoffs = Map.GetMapRectangle(1);
+            var maprect = Map.GetMapRectangle(0);
+            var FirstVect = new Vector2(maprectoffs.X, maprectoffs.Y);
+            var LastVect = new Vector2(maprectoffs.X + maprectoffs.Width, maprectoffs.Y + maprectoffs.Height);
+            var LastMapVect = new Vector2(maprect.X + maprect.Width, maprect.Y + maprect.Height);
+            if (cam.Position.X < FirstVect.X)
+                cam.Position = new Vector2(FirstVect.X, cam.Position.Y);
+            if (cam.Position.X > LastVect.X)
+                cam.Position = new Vector2(, cam.Position.Y);
+            if (cam.Position.Y < FirstVect.Y)
+                cam.Position = new Vector2(cam.Position.X, FirstVect.Y);
+            if (cam.Position.Y> LastVect.Y)
+                cam.Position = new Vector2(cam.Position.X, );
         }
 
         private void UpdateGameObjects()

@@ -519,6 +519,12 @@ namespace GameCursachProject
                 ChangeTilesAnims(2, 1, new Animation(1, 1, true), TilCoords);
         }
 
+        public Rectangle GetMapRectangle(int Offset)
+        {
+            var MapWidthWithOffset = new Point((int)((Tiles.Length + Offset) * Tiles[0][0].FrameSize.X), (int)((Tiles[0].Length + Offset) * Tiles[0][0].FrameSize.Y));
+            return new Rectangle(Tiles[0][0].Position.ToPoint() - new Point(Offset * (int)Tiles[0][0].FrameSize.X, Offset * (int)Tiles[0][0].FrameSize.Y), MapWidthWithOffset);
+        }
+
         public void Update(ref bool IsMouseHandled, Hand hand, Camera cam)
         {
         	if(MouseControl.IsRightBtnClicked)
@@ -611,8 +617,6 @@ namespace GameCursachProject
                 }
             Info.Update();
         }
-
-        
         
         public void Draw(SpriteBatch Target, Camera cam)//TODO: Dobavit param dla begin
         {
