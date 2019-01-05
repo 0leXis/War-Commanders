@@ -57,7 +57,7 @@ namespace GameCursachProject
             Btn_GameMenu = new Button(new Vector2(Btn_Chat.Position.X + Btn_Chat.FrameSize.X + 1, Btn_Stats.Position.Y), ButtonGameMenu_Texture, ButtonGameMenu_Texture.Width / 3, 60, 0, new Animation(1, 1, true), 2, Layer - 0.001f);
         }
 
-        public void Update(ref bool IsMouseHandled, Map map)
+        public void Update(ref bool IsMouseHandled, Map map, Camera cam)
         {
             if (!IsMouseHandled)
             {
@@ -81,13 +81,14 @@ namespace GameCursachProject
             var GameMenu = Btn_GameMenu.Update();
             _ShowInf = false;
 
-            if (MoveUpd == ButtonStates.CLICKED && map.SelectedTile.X != -1 && !map.IsPathFinding)
+            if ((MoveUpd == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_MOVEUNIT")) && map.SelectedTile.X != -1 && !map.IsPathFinding)
             {
             	if(map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING)
             	{
             		map.IsPathFinding = true;
                 	map.PFStart = new Point(map.SelectedTile.X, map.SelectedTile.Y);
                     map.HighLiteTilesWithPF();
+                    map.UpdateAllTiles(cam);
                 }
             }
             else
@@ -104,7 +105,7 @@ namespace GameCursachProject
                 Inf.Text = "Дальняя атака";
                 _ShowInf = true;
             }
-            if (Stats == ButtonStates.CLICKED)
+            if (Stats == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_STATS"))
             {
                 if (map.UI_VisibleState)
                 {

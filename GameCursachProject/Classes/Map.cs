@@ -481,12 +481,12 @@ namespace GameCursachProject
         	}
         }
                 
-        public void UpdateAllTiles()
+        public void UpdateAllTiles(Camera cam)
         {
             for (var i = 0; i < Tiles.Length; i++)
                 for (var j = 0; j < Tiles[0].Length; j++)
                     if (!(i == _ChoosedTileI && j == _ChoosedTileJ) && Tiles[i][j] != null)
-                        Tiles[i][j].Update();
+                        Tiles[i][j].Update(cam: cam);
         }
 
         public void ShowUnitStats()
@@ -566,7 +566,7 @@ namespace GameCursachProject
                         		List<Point> Marked;
                         		UnitMove(PathFinding(PFStart.X, PFStart.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[PFStart.X][PFStart.Y].UnitOnTile.MovePointsLeft, out PL, out Marked));
                         		SetDefaultAnims();
-                                UpdateAllTiles();
+                                UpdateAllTiles(cam);
                         		CreatePathArrows(null, cam);
                         		DeSelectTile(SelectedTile);
                         		SelectTile(new Point(_ChoosedTileI, _ChoosedTileJ));

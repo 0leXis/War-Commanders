@@ -122,6 +122,14 @@ namespace GameCursachProject
             cam = new Camera(new Vector2(ScreenWidth, ScreenHeight));
             cam.Zoom = 0.25f;
             laststate = 0;
+
+            KeyBindings.Init();
+            KeyBindings.RegisterKeyBind("KEY_MOVEUNIT", Keys.M);
+            KeyBindings.RegisterKeyBind("KEY_STATS", Keys.T);
+            KeyBindings.RegisterKeyBind("KEY_CAMMOVE_UP", Keys.W);
+            KeyBindings.RegisterKeyBind("KEY_CAMMOVE_DOWN", Keys.S);
+            KeyBindings.RegisterKeyBind("KEY_CAMMOVE_LEFT", Keys.A);
+            KeyBindings.RegisterKeyBind("KEY_CAMMOVE_RIGHT", Keys.D);
         }
 
         /// <summary>
@@ -150,7 +158,9 @@ namespace GameCursachProject
                 UI.CurrentScreenRes = Hand.CurrentScreenRes;
                 cam.ScreenRes = new Vector2(ScreenWidth, ScreenHeight);
             }
+
             MouseControl.Update();
+            KeyBindings.Update();
 
             UpdateGameObjects();
 
@@ -209,18 +219,16 @@ namespace GameCursachProject
             }
             laststate = state.ScrollWheelValue;
 
-            var state2 = Keyboard.GetState();
-
-            if (state2.IsKeyDown(Keys.W))
+            if (KeyBindings.CheckKeyPressed("KEY_CAMMOVE_UP"))
                 cam.Position -= new Vector2(0, 10f / cam.Zoom);
             else
-            if (state2.IsKeyDown(Keys.S))
+            if (KeyBindings.CheckKeyPressed("KEY_CAMMOVE_DOWN"))
                 cam.Position += new Vector2(0, 10f / cam.Zoom);
 
-            if (state2.IsKeyDown(Keys.A))
+            if (KeyBindings.CheckKeyPressed("KEY_CAMMOVE_LEFT"))
                 cam.Position -= new Vector2(10f / cam.Zoom, 0);
             else
-            if (state2.IsKeyDown(Keys.D))
+            if (KeyBindings.CheckKeyPressed("KEY_CAMMOVE_RIGHT"))
                 cam.Position += new Vector2(10f / cam.Zoom, 0);
 
             var maprectoffs = Map.GetMapRectangle(1);
@@ -243,7 +251,7 @@ namespace GameCursachProject
         {
             var IsMouseHandled = false;
             Hand.Update(ref IsMouseHandled, Map, cam);
-            UI.Update(ref IsMouseHandled, Map);
+            UI.Update(ref IsMouseHandled, Map, cam);
             Map.Update(ref IsMouseHandled, Hand, cam);
         }
 
