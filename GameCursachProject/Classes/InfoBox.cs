@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameCursachProject
 {
-    class BtnInfo : BasicSprite, IDrawable
+    class InfoBox : BasicSprite, IDrawable
     {
         private BasicText _Text;
 
@@ -69,7 +69,7 @@ namespace GameCursachProject
             }
         }
 
-        public BtnInfo(Vector2 Position, Texture2D Texture, SpriteFont Font, Color TextColor, string InfoText, float Layer = DefaultLayer) : base(Position, Texture, Layer)
+        public InfoBox(Vector2 Position, Texture2D Texture, SpriteFont Font, Color TextColor, string InfoText, float Layer = DefaultLayer) : base(Position, Texture, Layer)
         {
             var VectTmp = Font.MeasureString(InfoText);
             _Text = new BasicText(new Vector2(Position.X + Texture.Width / 2 - VectTmp.X / 2, Position.Y + Texture.Height / 2 - VectTmp.Y / 2), InfoText, Font, TextColor, Layer - 0.0001f);

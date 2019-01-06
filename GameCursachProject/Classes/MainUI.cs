@@ -22,7 +22,7 @@ namespace GameCursachProject
 		public Button Btn_EndTurn { get; set; }
 		public Button Btn_Stats { get; set; }
 		
-        public BtnInfo Inf { get; set; }
+        public InfoBox Inf { get; set; }
 
         public Vector2 CurrentScreenRes
         {
@@ -50,7 +50,7 @@ namespace GameCursachProject
 
         public MainUI(Vector2 CurrentScreenRes, Texture2D UI_Info, Texture2D UI_Bottom, Texture2D UI_BottomLeft, Texture2D ButtonEndTurn_Texture, Texture2D ButtonMove_Texture, Texture2D ButtonAttack_Texture, Texture2D ButtonGameMenu_Texture, Texture2D ButtonChat_Texture, Texture2D ButtonStats_Texture, SpriteFont Font, float Layer = BasicSprite.DefaultLayer)
         {
-            Inf = new BtnInfo(Vector2.One, UI_Info, Font, Color.Black, " ", 0.01f);
+            Inf = new InfoBox(Vector2.One, UI_Info, Font, Color.Black, " ", 0.01f);
             Inf.Visible = false;
             _CurrentScreenRes = CurrentScreenRes;
             this.UI_Bottom = new BasicSprite(new Vector2(UI_BottomLeft.Width, _CurrentScreenRes.Y - UI_Bottom.Height), UI_Bottom, Layer);
