@@ -521,8 +521,8 @@ namespace GameCursachProject
 
         public Rectangle GetMapRectangle(int Offset)
         {
-            var MapWidthWithOffset = new Point((int)((Tiles[0].Length / 2 + 3 + Offset) * Tiles[0][0].FrameSize.X + (Tiles[0].Length / 2 + Offset) * Tiles[0][0].FrameSize.X / 3), (int)((Tiles.Length + 3 + Offset) * Tiles[0][0].FrameSize.Y));
-            return new Rectangle(Tiles[0][0].Position.ToPoint() - new Point(Offset * (int)Tiles[0][0].FrameSize.X, Offset * (int)Tiles[0][0].FrameSize.Y), MapWidthWithOffset);
+            var MapWidthWithOffset = new Point((int)((Tiles[0].Length / 2 + 3 + Offset) * Tiles[0][0].FrameSize.X + (Tiles[0].Length / 2 + Offset) * Tiles[0][0].FrameSize.X / 3), (int)((Tiles.Length + 4 + Offset) * Tiles[0][0].FrameSize.Y));
+            return new Rectangle(Tiles[0][0].Position.ToPoint() - new Point(Offset * (int)Tiles[0][0].FrameSize.X, (Offset + 1) * (int)Tiles[0][0].FrameSize.Y), MapWidthWithOffset);
         }
 
         public void Update(ref bool IsMouseHandled, Hand hand, Camera cam)

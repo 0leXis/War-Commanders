@@ -15,6 +15,9 @@ namespace GameCursachProject
 
         public BasicSprite UI_Bottom { get; set; }
         public BasicSprite UI_BottomLeft { get; set; }
+        public BasicSprite UI_Up { get; set; }
+        public BasicSprite UI_UpLeft { get; set; }
+        public BasicSprite UI_UpRight { get; set; }
         public Button Btn_Move { get; set; }
         public Button Btn_Attack { get; set; }
         public Button Btn_GameMenu { get; set; }
@@ -35,7 +38,9 @@ namespace GameCursachProject
                 _CurrentScreenRes = value;
                 UI_Bottom.Position = new Vector2(UI_BottomLeft.Texture.Width, _CurrentScreenRes.Y - UI_Bottom.Texture.Height);
                 UI_BottomLeft.Position = new Vector2(0, _CurrentScreenRes.Y - UI_BottomLeft.Texture.Height);
-                UI_Bottom.Scale = new Vector2((_CurrentScreenRes.X + 20 * _CurrentScreenRes.X) / 1280, UI_BottomLeft.Scale.Y);
+                UI_Bottom.Scale = new Vector2((_CurrentScreenRes.X + 20 * _CurrentScreenRes.X) / 1280, UI_Bottom.Scale.Y);
+                UI_Up.Scale = new Vector2((_CurrentScreenRes.X + 20 * _CurrentScreenRes.X) / 1280, UI_Bottom.Scale.Y);
+                UI_UpRight.Position = new Vector2(_CurrentScreenRes.X - UI_Up.Texture.Width, 0);
 
                 Btn_Move.Position = new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 30);
                 Btn_Attack.Position = new Vector2(Btn_Move.Position.X + Btn_Move.FrameSize.X + 1, this.UI_BottomLeft.Position.Y + 30);
@@ -48,14 +53,17 @@ namespace GameCursachProject
             }
         }
 
-        public MainUI(Vector2 CurrentScreenRes, Texture2D UI_Info, Texture2D UI_Bottom, Texture2D UI_BottomLeft, Texture2D ButtonEndTurn_Texture, Texture2D ButtonMove_Texture, Texture2D ButtonAttack_Texture, Texture2D ButtonGameMenu_Texture, Texture2D ButtonChat_Texture, Texture2D ButtonStats_Texture, SpriteFont Font, GraphicsDevice Gr, float Layer = BasicSprite.DefaultLayer)
+        public MainUI(Vector2 CurrentScreenRes, Texture2D UI_Info, Texture2D UI_Bottom, Texture2D UI_BottomLeft, Texture2D UI_Up, Texture2D UI_UpLeft, Texture2D UI_UpRight, Texture2D ButtonEndTurn_Texture, Texture2D ButtonMove_Texture, Texture2D ButtonAttack_Texture, Texture2D ButtonGameMenu_Texture, Texture2D ButtonChat_Texture, Texture2D ButtonStats_Texture, SpriteFont Font, GraphicsDevice Gr, float Layer = BasicSprite.DefaultLayer)
         {
             Inf = new InfoBox(Vector2.One, Color.Black, Color.LightBlue, Font, Color.Black, " ", Gr, 0.01f);
             Inf.Visible = false;
             _CurrentScreenRes = CurrentScreenRes;
             this.UI_Bottom = new BasicSprite(new Vector2(UI_BottomLeft.Width, _CurrentScreenRes.Y - UI_Bottom.Height), UI_Bottom, Layer);
             this.UI_BottomLeft = new BasicSprite(new Vector2(0, _CurrentScreenRes.Y - UI_BottomLeft.Height), UI_BottomLeft, Layer - 0.0001f);
-            
+            this.UI_Up = new BasicSprite(new Vector2(0, 0), UI_Up, Layer);
+            this.UI_UpLeft = new BasicSprite(new Vector2(0, 0), UI_UpLeft, Layer - 0.0001f);
+            this.UI_UpRight = new BasicSprite(new Vector2(_CurrentScreenRes.X - UI_UpRight.Width, 0), UI_UpRight, Layer - 0.0001f);
+
             Btn_Move = new Button(new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 30), ButtonMove_Texture, ButtonMove_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             Btn_Attack = new Button(new Vector2(Btn_Move.Position.X + Btn_Move.FrameSize.X + 1, this.UI_BottomLeft.Position.Y + 30), ButtonAttack_Texture, ButtonAttack_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             
@@ -183,6 +191,9 @@ namespace GameCursachProject
         {
             UI_Bottom.Draw(Target);
             UI_BottomLeft.Draw(Target);
+            UI_Up.Draw(Target);
+            UI_UpRight.Draw(Target);
+            UI_UpLeft.Draw(Target);
             Btn_Move.Draw(Target);
             Btn_Attack.Draw(Target);
             Btn_EndTurn.Draw(Target);

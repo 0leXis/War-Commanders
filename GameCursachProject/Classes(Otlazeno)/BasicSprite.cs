@@ -72,7 +72,7 @@ namespace GameCursachProject
         /// Увеличивает угол поворота спрайта на указанный угол
         /// </summary>
         /// <param name="Angle">Добавляемый угол</param>
-        public void RotateOn(Single Angle)
+        public void RotateOn(float Angle)
         {
             Rotation += Angle;
             if (Rotation >= 360)

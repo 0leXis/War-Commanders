@@ -117,7 +117,7 @@ namespace GameCursachProject
             UInfoTexture = Content.Load<Texture2D>(@"Textures\UnitHaracts");
             UInfoFont = Content.Load<SpriteFont>(@"Fonts\TileInfoFont");
 
-            UI = new MainUI(new Vector2(ScreenWidth, ScreenHeight), Content.Load<Texture2D>(@"Textures\UI_BtnInfo"), Content.Load<Texture2D>(@"Textures\UI_Main_Bottom"), Content.Load<Texture2D>(@"Textures\UI_Main_Bottom_Left"), Content.Load<Texture2D>(@"Textures\BtnNewTurn"), Content.Load<Texture2D>(@"Textures\BtnMove"), Content.Load<Texture2D>(@"Textures\BtnAttack"), Content.Load<Texture2D>(@"Textures\BtnMenu"),Content.Load<Texture2D>(@"Textures\BtnChat"), Content.Load<Texture2D>(@"Textures\BtnStats"), Content.Load<SpriteFont>(@"Fonts\ButtonFont"), graphics.GraphicsDevice, LAYER_UI_FAR);
+            UI = new MainUI(new Vector2(ScreenWidth, ScreenHeight), Content.Load<Texture2D>(@"Textures\UI_BtnInfo"), Content.Load<Texture2D>(@"Textures\UI_Main_Bottom"), Content.Load<Texture2D>(@"Textures\UI_Main_Bottom_Left"), Content.Load<Texture2D>(@"Textures\UI_Main_Up"), Content.Load<Texture2D>(@"Textures\UI_Main_Up_Left"), Content.Load<Texture2D>(@"Textures\UI_Main_Up_Right"), Content.Load<Texture2D>(@"Textures\BtnNewTurn"), Content.Load<Texture2D>(@"Textures\BtnMove"), Content.Load<Texture2D>(@"Textures\BtnAttack"), Content.Load<Texture2D>(@"Textures\BtnMenu"),Content.Load<Texture2D>(@"Textures\BtnChat"), Content.Load<Texture2D>(@"Textures\BtnStats"), Content.Load<SpriteFont>(@"Fonts\ButtonFont"), graphics.GraphicsDevice, LAYER_UI_FAR);
             // TODO: use this.Content to load your game content here
             cam = new Camera(new Vector2(ScreenWidth, ScreenHeight));
             cam.Zoom = 0.25f;
