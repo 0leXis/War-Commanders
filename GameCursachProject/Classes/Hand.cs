@@ -63,7 +63,7 @@ namespace GameCursachProject
             }
         }
 
-        public void Update(ref bool IsMouseHandled, Map TiledMap, Camera cam)
+        public void Update(ref bool IsMouseHandled, Map TiledMap, Camera cam, float CardAppearPos)
         {
             ChooseArrow.Update();
             for (var i = 0; i < KilledNonTargetCards.Count; i++)
@@ -124,7 +124,7 @@ namespace GameCursachProject
                         Cards[_ChoosedCard].Down();
                         Cards[_ChoosedCard].SetUpLayer();
                         Cards[_ChoosedCard].Position = new Vector2(MouseControl.X - (Cards[_ChoosedCard].FrameSize.X * 0.25f), MouseControl.Y - (Cards[_ChoosedCard].FrameSize.Y * 0.25f));
-                        if (Cards[_ChoosedCard].Position.Y < CurrentScreenRes.Y - CurrentScreenRes.Y / 2)
+                        if (MouseControl.Y < CardAppearPos)
                         {
                             IsMouseHandled = false;
                             if (Cards[_ChoosedCard].IsTargeted)
@@ -168,7 +168,7 @@ namespace GameCursachProject
                                 {
                                     Cards[_ChoosedCard].StopAnimation(true);
                                 }
-                                if (Cards[_ChoosedCard].Position.Y < CurrentScreenRes.Y - CurrentScreenRes.Y / 2)
+                                if (MouseControl.Y < CardAppearPos)
                                 {
                                 	var Tmp = TiledMap.GetTileIJByCoords(MouseControl.MouseToWorldCoords(cam));
                                     Tile TmpTile;

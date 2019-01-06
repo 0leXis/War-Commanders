@@ -81,8 +81,16 @@ namespace GameCursachProject
             var GameMenu = Btn_GameMenu.Update();
             _ShowInf = false;
 
-            if ((MoveUpd == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_MOVEUNIT")) && map.SelectedTile.X != -1 && !map.IsPathFinding)
+            if ((MoveUpd == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_MOVEUNIT")) && map.SelectedTile.X != -1)
             {
+                if (map.IsPathFinding)
+                {
+                    map.IsPathFinding = false;
+                    map.SetDefaultAnims();
+                    map.UpdateAllTiles(cam);
+                    map.CreatePathArrows(null, cam);
+                }
+                else
             	if(map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING)
             	{
             		map.IsPathFinding = true;

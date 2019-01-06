@@ -529,7 +529,15 @@ namespace GameCursachProject
         {
         	if(MouseControl.IsRightBtnClicked)
         	{
-                DeSelectTile(SelectedTile);
+                if (IsPathFinding)
+                {
+                    IsPathFinding = false;
+                    SetDefaultAnims();
+                    UpdateAllTiles(cam);
+                    CreatePathArrows(null, cam);
+                }
+                else
+                    DeSelectTile(SelectedTile);
         	}
             if (_ChoosedTileI == -1 || _ChoosedTileJ == -1)
             {

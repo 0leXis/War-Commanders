@@ -175,7 +175,7 @@ namespace GameCursachProject
             base.Update(gameTime);
             watch.Stop();
             Window.Title = watch.Elapsed.ToString() + "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y) + "|ZOOM|" + cam.Zoom.ToString() + "|POS|" + cam.Position.ToString();
-            Window.Title = CoordsConvert.WindowToWorldCoords(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), cam).ToString();
+            //Window.Title = CoordsConvert.WindowToWorldCoords(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), cam).ToString();
             //if (MouseControl.IsLeftBtnClicked)
             //    Window.Title = "Left";
             //if (MouseControl.IsRightBtnClicked)
@@ -250,7 +250,7 @@ namespace GameCursachProject
         private void UpdateGameObjects()
         {
             var IsMouseHandled = false;
-            Hand.Update(ref IsMouseHandled, Map, cam);
+            Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y);
             UI.Update(ref IsMouseHandled, Map, cam);
             Map.Update(ref IsMouseHandled, Hand, cam);
         }
