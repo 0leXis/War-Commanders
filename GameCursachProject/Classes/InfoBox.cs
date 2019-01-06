@@ -8,38 +8,42 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameCursachProject
 {
-    class InfoBox : BasicSprite, IDrawable
+    class InfoBox : IDrawable
     {
         private BasicText _Text;
 
         private int iteration;
-        private Vector2 LastScale;
         private bool IsAppearing = false;
+        private Point _Position;
+        private Vector2 _Scale;
+        private bool _Visible;
+        private float Layer;
+        private Texture2D RectTexture;
+        private Texture2D LineTexture;
 
-        new public Vector2 Position
+        public Vector2 Position
         {
             get
             {
-                return base.Position;
+                return _Position.ToVector2();
             }
             set
             {
-                base.Position = value;
+                _Position = value.ToPoint();
                 var VectTmp = _Text.Font.MeasureString(_Text.Text);
-                _Text.Position = new Vector2(value.X + Texture.Width / 2 * Scale.X - VectTmp.X / 2, value.Y + Texture.Height / 2 * Scale.Y - VectTmp.Y / 2);
+                _Text.Position = new Vector2(Position.X + 5, Position.Y + 2);
             }
         }
 
-        new public Vector2 Scale
+        public Vector2 Scale
         {
             get
             {
-                return base.Scale;
+                return _Text.Scale;
             }
             set
             {
                 _Text.Scale = value;
-                base.Scale = _Text.Font.MeasureString(_Text.Text) * _Text.Scale / new Vector2(Texture.Width, Texture.Height) + new Vector2(0.01f, 0.01f);
             }
         }
 
@@ -52,29 +56,35 @@ namespace GameCursachProject
             set
             {
                 _Text.Text = value;
-                base.Scale = _Text.Font.MeasureString(_Text.Text) * _Text.Scale / new Vector2(Texture.Width, Texture.Height) + new Vector2(0.01f, 0.01f);
             }
         }
 
-        new public bool Visible
+        public bool Visible
         {
             get
             {
-                return base.Visible;
+                return _Visible;
             }
             set
             {
                 _Text.Visible = value;
-                base.Visible = value;
+                _Visible = value;
             }
         }
 
-        public InfoBox(Vector2 Position, Texture2D Texture, SpriteFont Font, Color TextColor, string InfoText, float Layer = DefaultLayer) : base(Position, Texture, Layer)
+        public InfoBox(Vector2 Position, Color LineColor, Color RectColor, SpriteFont Font, Color TextColor, string InfoText, GraphicsDevice GrDevice, float Layer = BasicSprite.DefaultLayer)
         {
             var VectTmp = Font.MeasureString(InfoText);
-            _Text = new BasicText(new Vector2(Position.X + Texture.Width / 2 - VectTmp.X / 2, Position.Y + Texture.Height / 2 - VectTmp.Y / 2), InfoText, Font, TextColor, Layer - 0.0001f);
-            base.Scale = _Text.Font.MeasureString(_Text.Text) * _Text.Scale / (Scale * new Vector2(Texture.Width, Texture.Height));
-            _Text.Position = new Vector2(Position.X + Texture.Width / 2 * Scale.X - VectTmp.X / 2, Position.Y + Texture.Height / 2 * Scale.Y - VectTmp.Y / 2);
+
+            RectTexture = new Texture2D(GrDevice, 1, 1);
+            RectTexture.SetData(new Color[1] { RectColor });
+            LineTexture = new Texture2D(GrDevice, 1, 1);
+            LineTexture.SetData(new Color[1] { LineColor });
+
+            _Text = new BasicText(new Vector2(Position.X + 5, Position.Y + 2), InfoText, Font, TextColor, Layer - 0.0001f);
+            this.Position = Position;
+            Scale = new Vector2(1);
+            this.Layer = Layer;
             iteration = 0;
         }
 
@@ -109,10 +119,18 @@ namespace GameCursachProject
             }
         }
 
-        public override void Draw(SpriteBatch Target)
+        public void Draw(SpriteBatch Target)
         {
-            base.Draw(Target);
-            _Text.Draw(Target);
+            if (Visible)
+            {
+                var textwidth = _Text.Font.MeasureString(_Text.Text).ToPoint();
+                Target.Draw(RectTexture, new Rectangle(_Position, textwidth + new Point(9, 3)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, Layer);
+                Target.Draw(LineTexture, new Rectangle(_Position, new Point(textwidth.X + 9, 1)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, _Text.Layer);
+                Target.Draw(LineTexture, new Rectangle(new Point(_Position.X + textwidth.X + 9, _Position.Y), new Point(1, textwidth.Y + 4)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, _Text.Layer);
+                Target.Draw(LineTexture, new Rectangle(new Point(_Position.X, _Position.Y + textwidth.Y + 3), new Point(textwidth.X + 9, 1)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, _Text.Layer);
+                Target.Draw(LineTexture, new Rectangle(_Position, new Point(1, textwidth.Y + 3)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, _Text.Layer);
+                _Text.Draw(Target);
+            }
         }
     }
 }
