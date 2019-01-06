@@ -18,6 +18,22 @@ namespace GameCursachProject
         private Arrow ChooseArrow;
         public bool IsClick;
 
+        public int CardsCount
+        {
+            get
+            {
+                return Cards.Count;
+            }
+        }
+
+        public Card this[int i]
+        {
+            get
+            {
+                return Cards[i];
+            }
+        }
+
         public Vector2 CurrentScreenRes 
         {
         	get

@@ -129,7 +129,7 @@ namespace GameCursachProject
             }
         }
 
-        public Card(Vector2 Position, Texture2D Texture, Texture2D ArtTexture, Vector2 ArtOffset, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, Animation Disappear, Animation Appear, Animation Choosed, int ClickedFrame, SpriteFont Font, Color TextColor, string CardName, string DamageInfo, string DefenseInfo, string CostInfo, string MovePointsInfo, string HPInfo, int CardName_OffsY, int Stats_OffsY, int FirstStat_OffsX, int MidStat_OffsX, int StatCellWidth, bool IsTargeted, MapZones AllowedZones = MapZones.ALL, MapTiles AllowedTiles = MapTiles.NONE, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, Layer)
+        public Card(Vector2 Position, Texture2D Texture, Texture2D ArtTexture, Vector2 ArtOffset, int FrameSizeX, int FPS, int NotSelectedFrame, int DisabledFrame, Animation Selected, Animation Disappear, Animation Appear, Animation Choosed, int ClickedFrame, SpriteFont Font, Color TextColor, string CardName, string DamageInfo, string DefenseInfo, string CostInfo, string MovePointsInfo, string HPInfo, int CardName_OffsY, int Stats_OffsY, int FirstStat_OffsX, int MidStat_OffsX, int StatCellWidth, bool IsTargeted, MapZones AllowedZones = MapZones.ALL, MapTiles AllowedTiles = MapTiles.NONE, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, DisabledFrame, Layer)
         {
             _UpPosition = new Vector2(base.Position.X - FrameSize.X * 0.25f, base.Position.Y - FrameSize.Y * 0.5f);
             _DownPosition = new Vector2(base.Position.X, base.Position.Y);
@@ -158,7 +158,7 @@ namespace GameCursachProject
             this.IsTargeted = IsTargeted;
         }
 
-        public Card(Card card) : base(card.Position, card.Texture, (int)Math.Truncate(card.FrameSize.X), card.FPS, card.NotSelectedFrame, card.GetAnimation("Selected"), card.ClickedFrame, card.Layer)
+        public Card(Card card) : base(card.Position, card.Texture, (int)Math.Truncate(card.FrameSize.X), card.FPS, card.NotSelectedFrame, card.GetAnimation("Selected"), card.ClickedFrame, card.DisabledFrame, card.Layer)
         {
         	Art = new BasicSprite(card.Art.Position, card.Art.Texture, card.Art.Layer);
             CardName = new BasicText(card.CardName.Position, card.CardName.Text, card.CardName.Font, card.CardName.color, card.CardName.Layer);
@@ -372,6 +372,23 @@ namespace GameCursachProject
         {
             if (Visible)
             {
+                var TmpCardNameColor = CardName.color;
+                var TmpDamageInfoColor = DamageInfo.color;
+                var TmpDefenseInfoColor = DefenseInfo.color;
+                var TmpCostInfoColor = CostInfo.color;
+                var TmpMovePointsInfoColor = MovePointsInfo.color;
+                var TmpHPInfoColor = HPInfo.color;
+                if (!Enabled)
+                {
+                    CurrentFrame = DisabledFrame;
+                    CardName.color = Color.Gray;
+                    DamageInfo.color = Color.Gray;
+                    DefenseInfo.color = Color.Gray;
+                    CostInfo.color = Color.Gray;
+                    MovePointsInfo.color = Color.Gray;
+                    HPInfo.color = Color.Gray;
+                }
+
                 Target.Draw(Texture, Position, null, new Rectangle(Convert.ToInt32(CurrentFrame * FrameSize.X), 0, Convert.ToInt32(FrameSize.X), Convert.ToInt32(FrameSize.Y)), RotationPoint, 0, Scale, Color.White, SpriteEffects.None, Layer);
                 if (Art != null)
                     Art.Draw(Target);
@@ -387,6 +404,16 @@ namespace GameCursachProject
                     MovePointsInfo.Draw(Target);
                 if (HPInfo != null)
                     HPInfo.Draw(Target);
+
+                if (!Enabled)
+                {
+                    CardName.color = TmpCardNameColor;
+                    DamageInfo.color = TmpDamageInfoColor;
+                    DefenseInfo.color = TmpDefenseInfoColor;
+                    CostInfo.color = TmpCostInfoColor;
+                    MovePointsInfo.color = TmpMovePointsInfoColor;
+                    HPInfo.color = TmpHPInfoColor;
+                }
             }
         }
     }

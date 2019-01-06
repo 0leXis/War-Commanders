@@ -28,11 +28,16 @@ namespace GameCursachProject
         public int NotSelectedFrame { get; set; }
         //Кадр, когда кнопка нажата
         public int ClickedFrame { get; set; }
+        //Кадр, когда кнопка отключена
+        public int DisabledFrame { get; set; }
 
         //Предыдущий результат пересечения с курсором
         protected bool LastIntersectionCheckResult;
         //Результат пересечения с курсором
         protected bool IntersectionCheckResult;
+
+        //Можно ли нажимать
+        public bool Enabled { get; set; }
         //Координаты
         new public Vector2 Position
         {
@@ -137,13 +142,15 @@ namespace GameCursachProject
         /// <param name="Selected">Анимация, когда кнопка выбрана</param>
         /// <param name="ClickedFrame">Кадр, когда кнопка нажата</param>
         /// <param name="Layer">Слой, на котором расположена кнопка</param>
-        public Button(Vector2 Position, Texture2D Texture, string Text, SpriteFont Font, Color color, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer+0.0001f)
+        public Button(Vector2 Position, Texture2D Texture, string Text, SpriteFont Font, Color color, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, int DisabledFrame, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer+0.0001f)
         {
             AddAnimation("Selected", Selected);
             this.NotSelectedFrame = NotSelectedFrame;
             this.ClickedFrame = ClickedFrame;
+            this.DisabledFrame = DisabledFrame;
             Intersector = new Intersector(Position, new Vector2(Position.X + FrameSize.X, Position.Y), new Vector2(Position.X + FrameSize.X, Position.Y + FrameSize.Y), new Vector2(Position.X, Position.Y + FrameSize.Y));
             this.Text = new BasicText(new Vector2(Position.X + FrameSize.X / 2 - Font.MeasureString(Text).X / 2, Position.Y + FrameSize.Y / 2 - Font.MeasureString(Text).Y / 2), Text, Font, color, Layer);
+            Enabled = true;
         }
         /// <summary>
         /// Создает кнопку без текста
@@ -156,13 +163,15 @@ namespace GameCursachProject
         /// <param name="Selected">Анимация, когда кнопка выбрана</param>
         /// <param name="ClickedFrame">Кадр, когда кнопка нажата</param>
         /// <param name="Layer">Слой, на котором расположена кнопка</param>
-        public Button(Vector2 Position, Texture2D Texture, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer + 0.0001f)
+        public Button(Vector2 Position, Texture2D Texture, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, int DisabledFrame, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer + 0.0001f)
         {
             AddAnimation("Selected", Selected);
             this.NotSelectedFrame = NotSelectedFrame;
             this.ClickedFrame = ClickedFrame;
+            this.DisabledFrame = DisabledFrame;
             Intersector = new Intersector(Position, new Vector2(Position.X + FrameSize.X, Position.Y), new Vector2(Position.X + FrameSize.X, Position.Y + FrameSize.Y), new Vector2(Position.X, Position.Y + FrameSize.Y));
             this.Text = null;
+            Enabled = true;
         }
 
         /// <summary>
@@ -174,6 +183,11 @@ namespace GameCursachProject
         {
             if (Visible)
             {
+                if (!Enabled)
+                {
+                    CurrentFrame = DisabledFrame;
+                    return ButtonStates.NONE;
+                }
                 //Если отображение разрешено
                 //Определить пересечение с курсором
                 LastIntersectionCheckResult = IntersectionCheckResult;

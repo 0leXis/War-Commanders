@@ -47,17 +47,17 @@ namespace GameCursachProject
             this.UI_Bottom = new BasicSprite(new Vector2(UI_BottomLeft.Width, _CurrentScreenRes.Y - UI_Bottom.Height), UI_Bottom, Layer);
             this.UI_BottomLeft = new BasicSprite(new Vector2(0, _CurrentScreenRes.Y - UI_BottomLeft.Height), UI_BottomLeft, Layer - 0.0001f);
             
-            Btn_Move = new Button(new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 30), ButtonMove_Texture, ButtonMove_Texture.Width / 3, 60, 0, new Animation(1, 1, true), 2, Layer - 0.001f);
-            Btn_Attack = new Button(new Vector2(Btn_Move.Position.X + Btn_Move.FrameSize.X + 1, this.UI_BottomLeft.Position.Y + 30), ButtonAttack_Texture, ButtonAttack_Texture.Width / 3, 60, 0, new Animation(1, 1, true), 2, Layer - 0.001f);
+            Btn_Move = new Button(new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 30), ButtonMove_Texture, ButtonMove_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
+            Btn_Attack = new Button(new Vector2(Btn_Move.Position.X + Btn_Move.FrameSize.X + 1, this.UI_BottomLeft.Position.Y + 30), ButtonAttack_Texture, ButtonAttack_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             
-            Btn_EndTurn = new Button(new Vector2(this.UI_BottomLeft.Position.X, Btn_Move.Position.Y + Btn_Move.Texture.Height), ButtonEndTurn_Texture, "Закончить ход", Font, Color.Black, ButtonEndTurn_Texture.Width / 3, 60, 0, new Animation(1, 1, true), 2, Layer - 0.001f);
+            Btn_EndTurn = new Button(new Vector2(this.UI_BottomLeft.Position.X, Btn_Move.Position.Y + Btn_Move.Texture.Height), ButtonEndTurn_Texture, "Закончить ход", Font, Color.Black, ButtonEndTurn_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             
-            Btn_Stats = new Button(new Vector2(this.UI_BottomLeft.Position.X, Btn_EndTurn.Position.Y + Btn_EndTurn.Texture.Height), ButtonStats_Texture, ButtonStats_Texture.Width / 3, 60, 0, new Animation(1, 1, true), 2, Layer - 0.001f);
-            Btn_Chat = new Button(new Vector2(Btn_Stats.Position.X + Btn_Stats.FrameSize.X + 1, Btn_Stats.Position.Y), ButtonChat_Texture, ButtonChat_Texture.Width / 3, 60, 0, new Animation(1, 1, true), 2, Layer - 0.001f);
-            Btn_GameMenu = new Button(new Vector2(Btn_Chat.Position.X + Btn_Chat.FrameSize.X + 1, Btn_Stats.Position.Y), ButtonGameMenu_Texture, ButtonGameMenu_Texture.Width / 3, 60, 0, new Animation(1, 1, true), 2, Layer - 0.001f);
+            Btn_Stats = new Button(new Vector2(this.UI_BottomLeft.Position.X, Btn_EndTurn.Position.Y + Btn_EndTurn.Texture.Height), ButtonStats_Texture, ButtonStats_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
+            Btn_Chat = new Button(new Vector2(Btn_Stats.Position.X + Btn_Stats.FrameSize.X + 1, Btn_Stats.Position.Y), ButtonChat_Texture, ButtonChat_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
+            Btn_GameMenu = new Button(new Vector2(Btn_Chat.Position.X + Btn_Chat.FrameSize.X + 1, Btn_Stats.Position.Y), ButtonGameMenu_Texture, ButtonGameMenu_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
         }
 
-        public void Update(ref bool IsMouseHandled, Map map, Camera cam)
+        public void Update(ref bool IsMouseHandled, Map map, Hand hand, Camera cam)
         {
             if (!IsMouseHandled)
             {
@@ -81,6 +81,22 @@ namespace GameCursachProject
             var GameMenu = Btn_GameMenu.Update();
             _ShowInf = false;
 
+            if (!map.IsPathFinding)
+            {
+                Btn_EndTurn.Enabled = true;
+                for(var i = 0; i < hand.CardsCount; i++)
+                {
+                    hand[i].Enabled = true;
+                }
+            }
+            else
+            {
+                for (var i = 0; i < hand.CardsCount; i++)
+                {
+                    hand[i].Enabled = false;
+                }
+            }
+
             if ((MoveUpd == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_MOVEUNIT")) && map.SelectedTile.X != -1)
             {
                 if (map.IsPathFinding)
@@ -93,7 +109,8 @@ namespace GameCursachProject
                 else
             	if(map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING)
             	{
-            		map.IsPathFinding = true;
+                    Btn_EndTurn.Enabled = false;
+                    map.IsPathFinding = true;
                 	map.PFStart = new Point(map.SelectedTile.X, map.SelectedTile.Y);
                     map.HighLiteTilesWithPF();
                     map.UpdateAllTiles(cam);

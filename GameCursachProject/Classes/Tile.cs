@@ -70,7 +70,7 @@ namespace GameCursachProject
             }
         }
 
-        public Tile(Vector2 Position, Texture2D Texture, Texture2D HighLitedTexture, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, int MovingPointsNeeded, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, Layer)
+        public Tile(Vector2 Position, Texture2D Texture, Texture2D HighLitedTexture, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, int MovingPointsNeeded, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, NotSelectedFrame, Layer)
         {
         	TileContains = MapTiles.NONE;
             this.MovingPointsNeeded = MovingPointsNeeded;
