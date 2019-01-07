@@ -40,7 +40,7 @@ namespace GameCursachProject
                 UI_BottomLeft.Position = new Vector2(0, _CurrentScreenRes.Y - UI_BottomLeft.Texture.Height);
                 UI_Bottom.Scale = new Vector2((_CurrentScreenRes.X + 20 * _CurrentScreenRes.X) / 1280, UI_Bottom.Scale.Y);
                 UI_Up.Scale = new Vector2((_CurrentScreenRes.X + 20 * _CurrentScreenRes.X) / 1280, UI_Bottom.Scale.Y);
-                UI_UpRight.Position = new Vector2(_CurrentScreenRes.X - UI_Up.Texture.Width, 0);
+                UI_UpRight.Position = new Vector2(_CurrentScreenRes.X - UI_UpRight.Texture.Width, 0);
 
                 Btn_Move.Position = new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 30);
                 Btn_Attack.Position = new Vector2(Btn_Move.Position.X + Btn_Move.FrameSize.X + 1, this.UI_BottomLeft.Position.Y + 30);
