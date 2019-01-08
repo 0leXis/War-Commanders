@@ -99,7 +99,7 @@ namespace GameCursachProject
                     	while (TCPStream.DataAvailable)
                     	{
                         	var bytes = TCPStream.Read(readdata, 0, readdata.Length);
-                        	ReadStr += Encoding.Unicode.GetString(readdata, 0, bytes);
+                        	ReadStr += Encoding.UTF8.GetString(readdata, 0, bytes);
                     	}
 
                     	lock (LockObject)
@@ -108,7 +108,7 @@ namespace GameCursachProject
                             	MsgReadList.Enqueue(ReadStr);
                         	while (MsgWriteList.Count > 0)
                         	{
-                            	var data = Encoding.Unicode.GetBytes(MsgWriteList.Dequeue());
+                            	var data = Encoding.UTF8.GetBytes(MsgWriteList.Dequeue());
                             	TCPStream.Write(data, 0, data.Length);
                         	}
                         	if (ExitCommand)
@@ -126,7 +126,7 @@ namespace GameCursachProject
         	}
             catch (Exception e)
             {
-                Log.SendMessage(e.Message);
+                    	Log.SendMessage(e.Message);
             }
         }
     }
