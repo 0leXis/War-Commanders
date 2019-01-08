@@ -75,27 +75,27 @@ namespace GameCursachProject
             //Log.EnableFileLog = true;
 
             NI = new NetworkInterface();
-            //while (!NI.IsConnected)
-            //{
-            //    NI.ConnectTo(ServerIP);
-            //}
-            //while (true)
-            //{
-            //    var gg = NI.GetMsgs();
-            //    if (gg.Length > 0)
-            //    {
-            //        var str = "";
-            //        foreach (var g in gg)
-            //            str += g;
-            //        int[][] mass;
-            //        var jsonFormatter = new DataContractJsonSerializer(typeof(int[][]));
-            //        mass = (int[][])jsonFormatter.ReadObject(new MemoryStream(Encoding.UTF8.GetBytes(str)));
-            //        for (var i = 0; i < mass.Length; i++)
-            //            for (var j = 0; j < mass.Length; j++)
-            //                Log.SendMessage(mass[i][j].ToString());
-            //        break;
-            //    }
-            //}
+            while (!NI.IsConnected)
+            {
+                NI.ConnectTo(ServerIP);
+            }
+            while (true)
+            {
+                var gg = NI.GetMsgs();
+                if (gg.Length > 0)
+                {
+                    var str = "";
+                    foreach (var g in gg)
+                        str += g;
+                    int[][] mass;
+                    var jsonFormatter = new DataContractJsonSerializer(typeof(int[][]));
+                    mass = (int[][])jsonFormatter.ReadObject(new MemoryStream(Encoding.UTF8.GetBytes(str)));
+                    for (var i = 0; i < mass.Length; i++)
+                        for (var j = 0; j < mass.Length; j++)
+                            Log.SendMessage(mass[i][j].ToString());
+                    break;
+                }
+            }
 
             ScreenWidth = Window.ClientBounds.Width;
             ScreenHeight = Window.ClientBounds.Height;
