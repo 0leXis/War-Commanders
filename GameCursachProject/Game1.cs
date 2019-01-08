@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Threading.Tasks;
 using System.Diagnostics; //ДЫБУГ
-
+using System.Runtime.Serialization.Json;
+using System.IO;
+using System.Text;
 
 namespace GameCursachProject
 {
@@ -14,6 +16,9 @@ namespace GameCursachProject
     /// </summary>
     public class Game1 : Game
     {
+        static public NetworkInterface NI;
+        public const string ServerIP = "25.47.239.150:9080";
+
         public const float LAYER_MAP = 0.5f;
         public const float LAYER_UI_FAR = 0.4f;
         public const float LAYER_CARDS = 0.3f;
@@ -66,6 +71,31 @@ namespace GameCursachProject
         /// </summary>
         protected override void LoadContent()
         {
+            Log.EnableConsoleLog = true;
+            //Log.EnableFileLog = true;
+
+            NI = new NetworkInterface();
+            while (!NI.IsConnected)
+            {
+                NI.ConnectTo(ServerIP);
+            }
+            while (true)
+            {
+                var gg = NI.GetMsgs();
+                if (gg.Length > 0)
+                {
+                    var str = "";
+                    foreach (var g in gg)
+                        str += g;
+                    int[][] mass;
+                    var jsonFormatter = new DataContractJsonSerializer(typeof(int[][]));
+                    mass = (int[][])jsonFormatter.ReadObject(new MemoryStream(Encoding.UTF8.GetBytes(str)));
+                    for (var i = 0; i < mass.Length; i++)
+                        for (var j = 0; j < mass.Length; j++)
+                            Log.SendMessage(mass[i][j].ToString());
+                    break;
+                }
+            }
 
             ScreenWidth = Window.ClientBounds.Width;
             ScreenHeight = Window.ClientBounds.Height;
@@ -137,6 +167,10 @@ namespace GameCursachProject
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            NI.Disconnect();
+
+            Log.EnableConsoleLog = false;
+            //Log.EnableFileLog = false;
         }
 
         /// <summary>
@@ -200,8 +234,8 @@ namespace GameCursachProject
             //cam.Zoom = 0.25f;
             //cam.Rotation -= 0.01f;
             
-            foreach(var msg in Program.NI.GetMsgs())
-            	Log.SendMessage(string.Format("Server (from {0}): {1}", Program.NI.IP_Port, msg));
+            foreach(var msg in NI.GetMsgs())
+            	Log.SendMessage(string.Format("Server (from {0}): {1}", NI.IP_Port, msg));
         }
 
         private void UpdateCamera()

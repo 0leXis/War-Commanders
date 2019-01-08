@@ -1,12 +1,4 @@
-﻿/*
- * Created by SharpDevelop.
- * User: User
- * Date: 08.01.2019
- * Time: 14:49
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,15 +18,28 @@ namespace GameCursachProject
 
         private object LockObject = new object();
         private string _IP_Port;
-			
+
         public string IP_Port
         {
-        	get
-        	{
-        		return _IP_Port;
-        	}
+            get
+            {
+                return _IP_Port;
+            }
         }
-        
+
+        public bool IsConnected
+        {
+            get
+            {
+                lock (LockObject)
+                {
+                    if (Client == null)
+                        return false;
+                    return Client.Connected;
+                }
+            }
+        }
+
         public NetworkInterface()
         {
             MsgReadList = new Queue<string>();
@@ -43,11 +48,15 @@ namespace GameCursachProject
 
         public void ConnectTo(string IP_Port)
         {
-        	_IP_Port = IP_Port;
-            Client = new TcpClient();
-            ExitCommand = false;
-            DGThread = new Thread(new ParameterizedThreadStart(DataGetThread));
-            DGThread.Start(IP_Port);
+            if (DGThread == null || !DGThread.IsAlive)
+            {
+                Log.SendMessage("[WCNetwork]: Подключение к " + IP_Port);
+                _IP_Port = IP_Port;
+                Client = new TcpClient();
+                ExitCommand = false;
+                DGThread = new Thread(new ParameterizedThreadStart(DataGetThread));
+                DGThread.Start(IP_Port);
+            }
         }
 
         public void Disconnect()
@@ -82,7 +91,7 @@ namespace GameCursachProject
             }
         }
 
-        public void DataGetThread(object Data)
+        private void DataGetThread(object Data)
         {
         	try
             {
@@ -118,7 +127,7 @@ namespace GameCursachProject
                 	}
                 	catch (Exception e)
                 	{
-                    	Log.SendMessage(e.Message);
+                    	Log.SendMessage("[WCNetwork Error]: " + e.Message);
                 	}
             	}
             	TCPStream.Close();
@@ -126,7 +135,7 @@ namespace GameCursachProject
         	}
             catch (Exception e)
             {
-                    	Log.SendMessage(e.Message);
+                    	Log.SendMessage("[WCNetwork Error]: " + e.Message);
             }
         }
     }
