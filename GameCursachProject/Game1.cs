@@ -66,8 +66,6 @@ namespace GameCursachProject
         /// </summary>
         protected override void LoadContent()
         {
-            Log.EnableConsoleLog = true;
-            //Log.EnableFileLog = true;
 
             ScreenWidth = Window.ClientBounds.Width;
             ScreenHeight = Window.ClientBounds.Height;
@@ -139,8 +137,6 @@ namespace GameCursachProject
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            Log.EnableConsoleLog = false;
-            //Log.EnableFileLog = false;
         }
 
         /// <summary>
@@ -203,6 +199,9 @@ namespace GameCursachProject
             //cam.Position += new Vector2(0.5f, 0.5f);
             //cam.Zoom = 0.25f;
             //cam.Rotation -= 0.01f;
+            
+            foreach(var msg in Program.NI.GetMsgs())
+            	Log.SendMessage(string.Format("Server (from {0}): {1}", Program.NI.IP_Port, msg));
         }
 
         private void UpdateCamera()

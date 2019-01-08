@@ -145,6 +145,7 @@
     <Compile Include="Classes\Map\MapGetTile.cs" />
     <Compile Include="Classes\Map\MapPathFinding.cs" />
     <Compile Include="Classes\Map\MapUnits.cs" />
+    <Compile Include="Classes\NetworkInterface.cs" />
     <Compile Include="Classes\Tile.cs" />
     <Compile Include="Classes\UnitInfo.cs" />
     <Compile Include="Classes\TileInfo.cs" />
