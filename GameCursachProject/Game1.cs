@@ -79,6 +79,7 @@ namespace GameCursachProject
             {
                 NI.ConnectTo(ServerIP);
             }
+            int[][] mass;
             while (true)
             {
                 var gg = NI.GetMsgs();
@@ -87,7 +88,6 @@ namespace GameCursachProject
                     var str = "";
                     foreach (var g in gg)
                         str += g;
-                    int[][] mass;
                     var jsonFormatter = new DataContractJsonSerializer(typeof(int[][]));
                     mass = (int[][])jsonFormatter.ReadObject(new MemoryStream(Encoding.UTF8.GetBytes(str)));
                     for (var i = 0; i < mass.Length; i++)
@@ -109,11 +109,28 @@ namespace GameCursachProject
                 MapArr[i] = new Tile[15];
                 for (var j = 0; j < 15; j++)
                 {
+                	Texture2D Text;
+                	Texture2D Text2;
+                	switch(mass[i][j])
+                	{
+                		case 1:
+                			Text = Content.Load<Texture2D>(@"Textures\Tile_Forest");
+                			Text2 = Content.Load<Texture2D>(@"Textures\Tile_Forest_HL");
+                			break;
+                		case 2:
+                			Text = Content.Load<Texture2D>(@"Textures\Tile_Desert");
+                			Text2 = Content.Load<Texture2D>(@"Textures\Tile_Desert_HL");
+                			break;
+						default:     
+                			Text = Content.Load<Texture2D>(@"Textures\Tile_River");
+                			Text2 = Content.Load<Texture2D>(@"Textures\Tile_River_HL");
+                			break;                			
+                	}
                     if (j % 2 == 0)
-                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), Content.Load<Texture2D>(@"Textures\Tile_Forest"), Content.Load<Texture2D>(@"Textures\Tile_Forest_HL"), 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), LAYER_MAP);
+                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), Text, Text2, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), LAYER_MAP);
                     else
                         if (i != MapArr.GetLength(0) - 1)
-                            MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), Content.Load<Texture2D>(@"Textures\Tile_Desert"), Content.Load<Texture2D>(@"Textures\Tile_Desert_HL"), 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), LAYER_MAP);
+                            MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), Text, Text2, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), LAYER_MAP);
                         else
                             MapArr[i][j] = null;
                 }
