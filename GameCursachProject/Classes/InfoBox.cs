@@ -11,15 +11,13 @@ namespace GameCursachProject
     class InfoBox : IDrawable
     {
         private BasicText _Text;
+        private SimpleRectangle _Rect;
 
         private int iteration;
         private bool IsAppearing = false;
         private Point _Position;
-        private Vector2 _Scale;
         private bool _Visible;
         private float Layer;
-        private Texture2D RectTexture;
-        private Texture2D LineTexture;
 
         public Vector2 Position
         {
@@ -30,7 +28,7 @@ namespace GameCursachProject
             set
             {
                 _Position = value.ToPoint();
-                var VectTmp = _Text.Font.MeasureString(_Text.Text);
+                _Rect.Position = Position;
                 _Text.Position = new Vector2(Position.X + 5, Position.Y + 2);
             }
         }
@@ -44,6 +42,8 @@ namespace GameCursachProject
             set
             {
                 _Text.Scale = value;
+                var textwidth = _Text.Font.MeasureString(_Text.Text) * _Text.Scale;
+                _Rect.WidthHeight = textwidth + new Vector2(9, 3);
             }
         }
 
@@ -56,6 +56,8 @@ namespace GameCursachProject
             set
             {
                 _Text.Text = value;
+                var textwidth = _Text.Font.MeasureString(_Text.Text) * _Text.Scale;
+                _Rect.WidthHeight = textwidth + new Vector2(9, 3);
             }
         }
 
@@ -68,20 +70,16 @@ namespace GameCursachProject
             set
             {
                 _Text.Visible = value;
+                _Rect.Visible = value;
                 _Visible = value;
             }
         }
 
         public InfoBox(Vector2 Position, Color LineColor, Color RectColor, SpriteFont Font, Color TextColor, string InfoText, GraphicsDevice GrDevice, float Layer = BasicSprite.DefaultLayer)
         {
-            var VectTmp = Font.MeasureString(InfoText);
-
-            RectTexture = new Texture2D(GrDevice, 1, 1);
-            RectTexture.SetData(new Color[1] { RectColor });
-            LineTexture = new Texture2D(GrDevice, 1, 1);
-            LineTexture.SetData(new Color[1] { LineColor });
-
             _Text = new BasicText(new Vector2(Position.X + 5, Position.Y + 2), InfoText, Font, TextColor, Layer - 0.0001f);
+            var textwidth = _Text.Font.MeasureString(_Text.Text) * _Text.Scale;
+            _Rect = new SimpleRectangle(Position, textwidth + new Vector2(9, 3), LineColor, RectColor, GrDevice, Layer);
             this.Position = Position;
             Scale = new Vector2(1);
             this.Layer = Layer;
@@ -123,12 +121,7 @@ namespace GameCursachProject
         {
             if (Visible)
             {
-                var textwidth = _Text.Font.MeasureString(_Text.Text).ToPoint();
-                Target.Draw(RectTexture, new Rectangle(_Position, textwidth + new Point(9, 3)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, Layer);
-                Target.Draw(LineTexture, new Rectangle(_Position, new Point(textwidth.X + 9, 1)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, _Text.Layer);
-                Target.Draw(LineTexture, new Rectangle(new Point(_Position.X + textwidth.X + 9, _Position.Y), new Point(1, textwidth.Y + 4)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, _Text.Layer);
-                Target.Draw(LineTexture, new Rectangle(new Point(_Position.X, _Position.Y + textwidth.Y + 3), new Point(textwidth.X + 9, 1)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, _Text.Layer);
-                Target.Draw(LineTexture, new Rectangle(_Position, new Point(1, textwidth.Y + 3)), null, Color.White, 0, Vector2.Zero, SpriteEffects.None, _Text.Layer);
+                _Rect.Draw(Target);
                 _Text.Draw(Target);
             }
         }

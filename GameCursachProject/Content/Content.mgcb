@@ -27,6 +27,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/TileInfoFont.spritefont
 
+#begin Fonts/UI_MiniFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/UI_MiniFont.spritefont
+
 #begin Textures/AnimTest.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -147,6 +154,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Card.png
 
+#begin Textures/Player_Icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Player_Icon.png
+
 #begin Textures/TankPrototype.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -255,7 +274,7 @@
 /processorParam:TextureFormat=Color
 /build:Textures/TileHaracts.png
 
-#begin Textures/UI_BtnInfo.png
+#begin Textures/UI_Flag_Enemy.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -265,7 +284,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/UI_BtnInfo.png
+/build:Textures/UI_Flag_Enemy.png
+
+#begin Textures/UI_Flag_Player.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_Flag_Player.png
+
+#begin Textures/UI_HourGlass.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_HourGlass.png
 
 #begin Textures/UI_Main_Bottom.png
 /importer:TextureImporter
@@ -326,6 +369,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/UI_Main_Up_Right.png
+
+#begin Textures/UI_Money.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_Money.png
 
 #begin Textures/UnitHaracts.png
 /importer:TextureImporter

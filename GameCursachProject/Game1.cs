@@ -75,27 +75,27 @@ namespace GameCursachProject
             //Log.EnableFileLog = true;
 
             NI = new NetworkInterface();
-            while (!NI.IsConnected)
-            {
-                NI.ConnectTo(ServerIP);
-            }
-            int[][] mass;
-            while (true)
-            {
-                var gg = NI.GetMsgs();
-                if (gg.Length > 0)
-                {
-                    var str = "";
-                    foreach (var g in gg)
-                        str += g;
-                    var jsonFormatter = new DataContractJsonSerializer(typeof(int[][]));
-                    mass = (int[][])jsonFormatter.ReadObject(new MemoryStream(Encoding.UTF8.GetBytes(str)));
-                    for (var i = 0; i < mass.Length; i++)
-                        for (var j = 0; j < mass.Length; j++)
-                            Log.SendMessage(mass[i][j].ToString());
-                    break;
-                }
-            }
+            //while (!NI.IsConnected)
+            //{
+            //    NI.ConnectTo(ServerIP);
+            //}
+            //int[][] mass;
+            //while (true)
+            //{
+            //    var gg = NI.GetMsgs();
+            //    if (gg.Length > 0)
+            //    {
+            //        var str = "";
+            //        foreach (var g in gg)
+            //            str += g;
+            //        var jsonFormatter = new DataContractJsonSerializer(typeof(int[][]));
+            //        mass = (int[][])jsonFormatter.ReadObject(new MemoryStream(Encoding.UTF8.GetBytes(str)));
+            //        for (var i = 0; i < mass.Length; i++)
+            //            for (var j = 0; j < mass.Length; j++)
+            //                Log.SendMessage(mass[i][j].ToString());
+            //        break;
+            //    }
+            //}
 
             ScreenWidth = Window.ClientBounds.Width;
             ScreenHeight = Window.ClientBounds.Height;
@@ -111,8 +111,8 @@ namespace GameCursachProject
                 {
                 	Texture2D Text;
                 	Texture2D Text2;
-                	switch(mass[i][j])
-                	{
+                	switch(1)//mass[i][j]
+                    {
                 		case 1:
                 			Text = Content.Load<Texture2D>(@"Textures\Tile_Forest");
                 			Text2 = Content.Load<Texture2D>(@"Textures\Tile_Forest_HL");
@@ -162,7 +162,26 @@ namespace GameCursachProject
             UInfoTexture = Content.Load<Texture2D>(@"Textures\UnitHaracts");
             UInfoFont = Content.Load<SpriteFont>(@"Fonts\TileInfoFont");
 
-            UI = new MainUI(new Vector2(ScreenWidth, ScreenHeight), Content.Load<Texture2D>(@"Textures\UI_BtnInfo"), Content.Load<Texture2D>(@"Textures\UI_Main_Bottom"), Content.Load<Texture2D>(@"Textures\UI_Main_Bottom_Left"), Content.Load<Texture2D>(@"Textures\UI_Main_Up"), Content.Load<Texture2D>(@"Textures\UI_Main_Up_Left"), Content.Load<Texture2D>(@"Textures\UI_Main_Up_Right"), Content.Load<Texture2D>(@"Textures\BtnNewTurn"), Content.Load<Texture2D>(@"Textures\BtnMove"), Content.Load<Texture2D>(@"Textures\BtnAttack"), Content.Load<Texture2D>(@"Textures\BtnMenu"),Content.Load<Texture2D>(@"Textures\BtnChat"), Content.Load<Texture2D>(@"Textures\BtnStats"), Content.Load<SpriteFont>(@"Fonts\ButtonFont"), graphics.GraphicsDevice, LAYER_UI_FAR);
+            UI = new MainUI
+                (
+                new Vector2(ScreenWidth, ScreenHeight),
+                Content.Load<Texture2D>(@"Textures\UI_BtnInfo"), Content.Load<Texture2D>(@"Textures\UI_Main_Bottom"),
+                Content.Load<Texture2D>(@"Textures\UI_Main_Bottom_Left"), Content.Load<Texture2D>(@"Textures\UI_Main_Up"),
+                Content.Load<Texture2D>(@"Textures\UI_Main_Up_Left"), Content.Load<Texture2D>(@"Textures\UI_Main_Up_Right"),
+                Content.Load<Texture2D>(@"Textures\BtnNewTurn"), Content.Load<Texture2D>(@"Textures\BtnMove"),
+                Content.Load<Texture2D>(@"Textures\BtnAttack"), Content.Load<Texture2D>(@"Textures\BtnMenu"),
+                Content.Load<Texture2D>(@"Textures\BtnChat"), Content.Load<Texture2D>(@"Textures\BtnStats"),
+                Content.Load<Texture2D>(@"Textures\Player_Icon"), Content.Load<Texture2D>(@"Textures\Player_Icon"),
+                Content.Load<Texture2D>(@"Textures\UI_Flag_Player"), Content.Load<Texture2D>(@"Textures\UI_Flag_Enemy"),
+                Content.Load<Texture2D>(@"Textures\UI_Money"), Content.Load<Texture2D>(@"Textures\UI_HourGlass"),
+                Content.Load<SpriteFont>(@"Fonts\ButtonFont"),
+                Content.Load<SpriteFont>(@"Fonts\UI_MiniFont"), 
+                graphics.GraphicsDevice,
+                "Stalin", "Hitler",
+                "0", "1", "0", "1", "100",
+                "10", "5",
+                "1:30",
+                LAYER_UI_FAR);
             // TODO: use this.Content to load your game content here
             cam = new Camera(new Vector2(ScreenWidth, ScreenHeight));
             cam.Zoom = 0.25f;

@@ -146,7 +146,9 @@
     <Compile Include="Classes\Map\MapPathFinding.cs" />
     <Compile Include="Classes\Map\MapUnits.cs" />
     <Compile Include="Classes\NetworkInterface.cs" />
+    <Compile Include="Classes\SimpleRectangle.cs" />
     <Compile Include="Classes\Tile.cs" />
+    <Compile Include="Classes\UI_Resource_Info.cs" />
     <Compile Include="Classes\UnitInfo.cs" />
     <Compile Include="Classes\TileInfo.cs" />
     <Compile Include="Classes\Unit.cs" />

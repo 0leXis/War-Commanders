@@ -28,7 +28,20 @@ namespace GameCursachProject
             this.Points = new Vector2[Points.Length];
             Points.CopyTo(this.Points, 0);
         }
-        
+
+        /// <summary>
+        /// Создает прямоугольный объект проверки пересечения
+        /// </summary>
+        /// <param name="rect">Прямоугольник</param>
+        public Intersector(Rectangle rect)
+        {
+            Points = new Vector2[4];
+            Points[0] = new Vector2(rect.X, rect.Y);
+            Points[1] = new Vector2(rect.X + rect.Width, rect.Y);
+            Points[2] = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
+            Points[3] = new Vector2(rect.X, rect.Y + rect.Height);
+        }
+
         /// <summary>
         /// Получает набор точек по смещению относительно первой точки
         /// </summary>

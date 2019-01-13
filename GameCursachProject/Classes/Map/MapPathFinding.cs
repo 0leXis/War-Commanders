@@ -10,35 +10,39 @@ namespace GameCursachProject
 {
     partial class Map
     {
-        private List<Point> GetSmez(Point vers, int stopi, int stopj)
+        private List<Point> GetSmez(Point vers, int stopi, int stopj, bool isfirst)
         {
             var list = new List<Point>();
+            if(!isfirst && Tiles[vers.X][vers.Y].UnitOnTile != null)
+            {
+                return list;
+            }
             if (vers.X - 1 >= 0)
             {
-                if (Tiles[vers.X - 1][vers.Y] != null && (!(Tiles[vers.X - 1][vers.Y].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X - 1][vers.Y].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X - 1 == stopi && vers.Y == stopj)))
+                if (Tiles[vers.X - 1][vers.Y] != null)
                     list.Add(new Point(vers.X - 1, vers.Y));
             }
             if (vers.X + 1 < Tiles.Length)
             {
-                if (Tiles[vers.X + 1][vers.Y] != null && (!(Tiles[vers.X + 1][vers.Y].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X + 1][vers.Y].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X + 1 == stopi && vers.Y == stopj)))
+                if (Tiles[vers.X + 1][vers.Y] != null)
                     list.Add(new Point(vers.X + 1, vers.Y));
             }
             if (vers.Y % 2 == 0)
             {
                 if (vers.Y + 1 < Tiles[0].Length)
                 {
-                    if (Tiles[vers.X][vers.Y + 1] != null && (!(Tiles[vers.X][vers.Y + 1].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X][vers.Y + 1].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X == stopi && vers.Y + 1 == stopj)))
+                    if (Tiles[vers.X][vers.Y + 1] != null)
                         list.Add(new Point(vers.X, vers.Y + 1));
                     if (vers.X - 1 >= 0)
-                        if (Tiles[vers.X - 1][vers.Y + 1] != null && (!(Tiles[vers.X - 1][vers.Y + 1].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X - 1][vers.Y + 1].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X - 1 == stopi && vers.Y + 1 == stopj)))
+                        if (Tiles[vers.X - 1][vers.Y + 1] != null)
                             list.Add(new Point(vers.X - 1, vers.Y + 1));
                 }
                 if (vers.Y - 1 >= 0)
                 {
-                    if (Tiles[vers.X][vers.Y - 1] != null && (!(Tiles[vers.X][vers.Y - 1].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X][vers.Y - 1].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X == stopi && vers.Y - 1 == stopj)))
+                    if (Tiles[vers.X][vers.Y - 1] != null)
                         list.Add(new Point(vers.X, vers.Y - 1));
                     if (vers.X - 1 >= 0)
-                        if (Tiles[vers.X - 1][vers.Y - 1] != null && (!(Tiles[vers.X - 1][vers.Y - 1].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X - 1][vers.Y - 1].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X - 1 == stopi && vers.Y - 1 == stopj)))
+                        if (Tiles[vers.X - 1][vers.Y - 1] != null)
                             list.Add(new Point(vers.X - 1, vers.Y - 1));
                 }
             }
@@ -46,18 +50,18 @@ namespace GameCursachProject
             {
                 if (vers.Y + 1 < Tiles[0].Length)
                 {
-                    if (Tiles[vers.X][vers.Y + 1] != null && (!(Tiles[vers.X][vers.Y + 1].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X][vers.Y + 1].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X == stopi && vers.Y + 1 == stopj)))
+                    if (Tiles[vers.X][vers.Y + 1] != null)
                         list.Add(new Point(vers.X, vers.Y + 1));
                     if (vers.X + 1 < Tiles.Length)
-                        if (Tiles[vers.X + 1][vers.Y + 1] != null && (!(Tiles[vers.X + 1][vers.Y + 1].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X + 1][vers.Y + 1].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X + 1 == stopi && vers.Y + 1 == stopj)))
+                        if (Tiles[vers.X + 1][vers.Y + 1] != null)
                             list.Add(new Point(vers.X + 1, vers.Y + 1));
                 }
                 if (vers.Y - 1 >= 0)
                 {
-                    if (Tiles[vers.X][vers.Y - 1] != null && (!(Tiles[vers.X][vers.Y - 1].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X][vers.Y - 1].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X == stopi && vers.Y - 1 == stopj)))
+                    if (Tiles[vers.X][vers.Y - 1] != null)
                         list.Add(new Point(vers.X, vers.Y - 1));
                     if (vers.X + 1 < Tiles.Length)
-                        if (Tiles[vers.X + 1][vers.Y - 1] != null && (!(Tiles[vers.X + 1][vers.Y - 1].TileContains == MapTiles.WITH_UNIT || Tiles[vers.X + 1][vers.Y - 1].TileContains == MapTiles.WITH_UNIT_AND_BUILDING) || (vers.X + 1 == stopi && vers.Y - 1 == stopj)))
+                        if (Tiles[vers.X + 1][vers.Y - 1] != null)
                             list.Add(new Point(vers.X + 1, vers.Y - 1));
                 }
             }
@@ -74,6 +78,7 @@ namespace GameCursachProject
                     dlini[i, j] = double.PositiveInfinity;
             var used = new HashSet<Point>();
             var needuse = new HashSet<Point>();
+            var first = true;
             dlini[starti, startj] = 0;
             puti[starti, startj] = new List<Point>
             {
@@ -98,7 +103,7 @@ namespace GameCursachProject
                     break;
                 used.Add(v);
                 needuse.Remove(v);
-                foreach (var rebro in GetSmez(v, stopi, stopj))
+                foreach (var rebro in GetSmez(v, stopi, stopj, first))
                 {
                     if (!used.Contains(rebro))
                         if (dlini[v.X, v.Y] + Tiles[rebro.X][rebro.Y].MovingPointsNeeded < dlini[rebro.X, rebro.Y] && dlini[v.X, v.Y] + Tiles[rebro.X][rebro.Y].MovingPointsNeeded <= MovePoints)
@@ -112,6 +117,7 @@ namespace GameCursachProject
                             needuse.Add(rebro);
                         }
                 }
+                first = false;
             }
             PathLength = (int)dlini[stopi, stopj];
             Marked = marked;
