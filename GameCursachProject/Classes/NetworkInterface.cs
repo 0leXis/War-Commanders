@@ -127,7 +127,7 @@ namespace GameCursachProject
                 	}
                 	catch (Exception e)
                 	{
-                    	Log.SendMessage("[WCNetwork Error]: " + e.Message);
+                    	Log.SendError("[WCNetwork]: " + e.Message);
                 	}
             	}
             	TCPStream.Close();
@@ -135,7 +135,7 @@ namespace GameCursachProject
         	}
             catch (Exception e)
             {
-                    	Log.SendMessage("[WCNetwork Error]: " + e.Message);
+                    	Log.SendError("[WCNetwork]: " + e.Message);
             }
         }
     }

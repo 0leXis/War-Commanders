@@ -6,24 +6,30 @@ using System.Text;
 using System.Threading.Tasks;
 using NLua;
 
-namespace GameCursachProject.Classes
+namespace GameCursachProject
 {
     class Script
     {
         private Lua LuaScript;
-
         public string TextScript { get; set; }
 
-        public Script(string TextScript_FileName, bool IsFromFile = false)
+        public Script(string TextScript_FileName, string NameSpace, bool IsFromFile = false)
         {
             LuaScript = new Lua();
             LuaScript.LoadCLRPackage();
-
+            LuaScript.DoString("import '"+NameSpace+"'");
+            LuaScript.DoString("import ('MonoGame.Framework', 'Microsoft.Xna.Framework')");
             if (IsFromFile)
-                TextScript = TextScript_FileName;
-            else
                 using (var Fil = new StreamReader(TextScript_FileName, Encoding.Default))
                     TextScript = Fil.ReadToEnd();
+            else
+                TextScript = TextScript_FileName;
+        }
+
+        public void LoadScript(string TextScript_FileName)
+        {
+            using (var Fil = new StreamReader(TextScript_FileName, Encoding.Default))
+                TextScript = Fil.ReadToEnd();
         }
 
         public object[] DoScript()
@@ -43,7 +49,7 @@ namespace GameCursachProject.Classes
 
         public LuaFunction GetFunc(string FuncName)
         {
-            return LuaScript[FuncName] as LuaFunction;
+            return LuaScript.GetFunction(FuncName);
         }
     }
 }

@@ -79,7 +79,7 @@ namespace GameCursachProject
             }
         }
 
-        public void Update(ref bool IsMouseHandled, Map TiledMap, Camera cam, float CardAppearPos)
+        public void Update(ref bool IsMouseHandled, Map TiledMap, Camera cam, float CardAppearPos, string AttScript, Script ScrForUnit)
         {
             ChooseArrow.Update();
             for (var i = 0; i < KilledNonTargetCards.Count; i++)
@@ -197,7 +197,7 @@ namespace GameCursachProject
                                         if (TmpTile != null && TiledMap.CheckTileAllowed(new Point(Tmp[0], Tmp[1]), MapZones.RIGHT, Cards[_ChoosedCard].AllowedTiles))//TODO: Убрать костыль TmpTile.NotSelectedFrame != 0, ввести тип Player для поиска правильной стороны
                                         {
                                             //TEST: Юниты
-                                            TmpTile.SpawnUnit(new Unit(Vector2.Zero, Game1.TankTexture, Game1.UInfoTexture, Game1.UInfoFont, Color.White, 392, 60, 5, 3, 6, 1, 0.4f), MapZones.RIGHT, TiledMap.UI_VisibleState);
+                                            TmpTile.SpawnUnit(new Unit(Vector2.Zero, Game1.TankTexture, Game1.UInfoTexture, Game1.UInfoFont, Color.White, 392, 60, 5, 3, 6, 1, AttScript, ScrForUnit, 0.4f), MapZones.RIGHT, TiledMap.UI_VisibleState);
                                             Cards.RemoveAt(_ChoosedCard);
                                         }
                                         else

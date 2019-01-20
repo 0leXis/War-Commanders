@@ -130,6 +130,7 @@
     <Compile Include="Classes%28Otlazeno%29\BasicSprite.cs" />
     <Compile Include="Classes%28Otlazeno%29\BasicText.cs" />
     <Compile Include="Classes%28Otlazeno%29\Button.cs" />
+    <Compile Include="Classes\GameState.cs" />
     <Compile Include="Classes\InfoBox.cs" />
     <Compile Include="Classes\Camera.cs" />
     <Compile Include="Classes\Card.cs" />
@@ -227,11 +228,20 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.manifest" />
+    <None Include="Content\Scripts\TestScript.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProfilingSessions\Session20181208_115135.sdps" />
     <Content Include="ProfilingSessions\Session20181208_115432.sdps" />
+    <None Include="x64\lua52.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="x86\lua52.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

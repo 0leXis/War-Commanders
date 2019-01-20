@@ -66,5 +66,41 @@ namespace GameCursachProject
                 LogFile.WriteAsync(logbuffer, 0, logbuffer.Length);
             }
         }
+        /// <summary>
+        /// Отправляет отладочную информацию об ошибке
+        /// </summary>
+        /// <param name="Message"></param>
+        static public void SendError(string Message)
+        {
+            if (EnableConsoleLog)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("ERROR[" + DateTime.Now.ToString() + "]: " + Message);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            if (EnableFileLog)
+            {
+                var logbuffer = Encoding.Default.GetBytes("ERROR[" + DateTime.Now.ToString() + "]: " + Message + Environment.NewLine);
+                LogFile.WriteAsync(logbuffer, 0, logbuffer.Length);
+            }
+        }
+        /// <summary>
+        /// Отправляет отладочную информацию о предупреждении
+        /// </summary>
+        /// <param name="Message"></param>
+        static public void SendWarning(string Message)
+        {
+            if (EnableConsoleLog)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("WARNING[" + DateTime.Now.ToString() + "]: " + Message);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            if (EnableFileLog)
+            {
+                var logbuffer = Encoding.Default.GetBytes("WARNING[" + DateTime.Now.ToString() + "]: " + Message + Environment.NewLine);
+                LogFile.WriteAsync(logbuffer, 0, logbuffer.Length);
+            }
+        }
     }
 }

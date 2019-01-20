@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NLua;
 
 namespace GameCursachProject
 {
@@ -33,6 +34,12 @@ namespace GameCursachProject
         private int iteration = 0;
         private Queue<MoveInfo> MoveList;
         private Vector2 AddVector;
+        //Attack script
+        private bool IsAttacking;
+        private LuaFunction AttScr_StartAttack;
+        private LuaFunction AttScr_Update;
+        private LuaFunction AttScr_Draw;
+
         public UnitInfo UI_UnitInfo;
 
         public int Speed { get; set; }
@@ -66,7 +73,7 @@ namespace GameCursachProject
         	}
         }
 
-        public Unit(Vector2 Position, Texture2D Texture, Texture2D UInfoTexture, SpriteFont UInfoFont, Color UInfoColor, int FrameSizeX, int FPS, int Speed, int Damage, int HP, int Armor, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer)
+        public Unit(Vector2 Position, Texture2D Texture, Texture2D UInfoTexture, SpriteFont UInfoFont, Color UInfoColor, int FrameSizeX, int FPS, int Speed, int Damage, int HP, int Armor, string AttackScript, Script ScrEngine, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer)
         {
         	MoveList = new Queue<MoveInfo>();
             this.Speed = Speed;
@@ -75,6 +82,12 @@ namespace GameCursachProject
             this.HP = HP;
             this.Armor = Armor;
             UI_UnitInfo = new UnitInfo(new Vector2(Position.X + (FrameSizeX - UInfoTexture.Width) / 2, Position.Y + FrameSize.Y), UInfoTexture, UInfoFont, UInfoColor, Speed.ToString(), Armor.ToString(), Damage.ToString(), HP.ToString(), Layer - 0.001f);
+
+            ScrEngine.TextScript = AttackScript;
+            ScrEngine.DoScript();
+            AttScr_StartAttack = ScrEngine.GetFunc("StartAttack");
+            AttScr_Update = ScrEngine.GetFunc("Update");
+            AttScr_Draw = ScrEngine.GetFunc("Draw");
         }
 
         public Unit(Unit OldUnit) : base(OldUnit.Position, OldUnit.Texture, (int)OldUnit.FrameSize.X, OldUnit.FPS, OldUnit.Layer)
@@ -95,6 +108,10 @@ namespace GameCursachProject
 
             UI_UnitInfo = new UnitInfo(new Vector2(Position.X + (FrameSize.X - OldUnit.UI_UnitInfo.Texture.Width) / 2, Position.Y + FrameSize.Y), OldUnit.UI_UnitInfo.Texture, OldUnit.UI_UnitInfo._DamageInfo.Font, OldUnit.UI_UnitInfo._DamageInfo.color, OldUnit.Speed.ToString(), OldUnit.Armor.ToString(), OldUnit.Damage.ToString(), OldUnit.HP.ToString(), OldUnit.Layer - 0.001f);
             UI_UnitInfo.Visible = OldUnit.UI_UnitInfo.Visible;
+
+            AttScr_StartAttack = OldUnit.AttScr_StartAttack;
+            AttScr_Update = OldUnit.AttScr_Update;
+            AttScr_Draw = OldUnit.AttScr_Draw;
         }
 
         public void Spawn()
@@ -110,9 +127,16 @@ namespace GameCursachProject
             }
         }
 
+        public void Attack()
+        {
+            IsAttacking = true;
+            AttScr_StartAttack.Call(this);
+        }
+
         public void MoveTo(Vector2 FirstPoint, Vector2 LastPoint, Directions Direct)
         {
-        	MoveList.Enqueue(new MoveInfo(FirstPoint, LastPoint, Direct));
+            Attack();
+            MoveList.Enqueue(new MoveInfo(FirstPoint, LastPoint, Direct));
         }
         
         public void SetFrame(Directions CurrDirect)
@@ -142,7 +166,7 @@ namespace GameCursachProject
         
         public void Update()
         {
-        	if(MoveList.Count > 0 && !(IsSpawning || IsMoving))
+            if (MoveList.Count > 0 && !(IsSpawning || IsMoving))
         	{
         		var NextMove = MoveList.Dequeue();
         		AddVector = new Vector2((NextMove.FirstPoint.X - NextMove.LastPoint.X) / 20, (NextMove.FirstPoint.Y - NextMove.LastPoint.Y) / 20);
@@ -168,6 +192,10 @@ namespace GameCursachProject
             		}
             	iteration++;
         	}
+            if (IsAttacking)
+            {
+                AttScr_Update.Call(this);
+            }
         }
 
         public void DrawUI(SpriteBatch Target, Camera cam)
@@ -183,6 +211,10 @@ namespace GameCursachProject
         {
             if (Visible)
             {
+                if (IsAttacking)
+                {
+                    AttScr_Draw.Call(this, Target);
+                }
                 base.Draw(Target);
             }
         }

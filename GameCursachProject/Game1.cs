@@ -42,6 +42,9 @@ namespace GameCursachProject
 
         int ScreenHeight, ScreenWidth;
 
+        Script UnitAttEngine;
+        string TestScript;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -194,6 +197,10 @@ namespace GameCursachProject
             KeyBindings.RegisterKeyBind("KEY_CAMMOVE_DOWN", Keys.S);
             KeyBindings.RegisterKeyBind("KEY_CAMMOVE_LEFT", Keys.A);
             KeyBindings.RegisterKeyBind("KEY_CAMMOVE_RIGHT", Keys.D);
+
+            UnitAttEngine = new Script("", "GameCursachProject", false);
+            using (var Fil = new StreamReader(@"Content\Scripts\TestScript.lua", Encoding.Default))
+                TestScript = Fil.ReadToEnd();
         }
 
         /// <summary>
@@ -322,11 +329,11 @@ namespace GameCursachProject
             if (UI.IsVs)
             {
                 UI.Update(ref IsMouseHandled, Map, Hand, cam);
-                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y);
+                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, TestScript, UnitAttEngine);
             }
             else
             {
-                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y);
+                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, TestScript, UnitAttEngine);
                 UI.Update(ref IsMouseHandled, Map, Hand, cam);
             }
             Map.Update(ref IsMouseHandled, Hand, cam);
