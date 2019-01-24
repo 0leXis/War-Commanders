@@ -34,7 +34,15 @@ namespace GameCursachProject
 
         public object[] DoScript()
         {
-            return LuaScript.DoString(TextScript);
+        	try
+        	{
+            	return LuaScript.DoString(TextScript);
+        	}
+            catch(Exception e)
+            {
+            	Log.SendError("[Script]" + e);
+            }
+            return null;
         }
 
         public void RegisterVar(ref object Obj, string VarName)

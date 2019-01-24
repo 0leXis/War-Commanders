@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace GameCursachProject
 {
@@ -13,10 +14,19 @@ namespace GameCursachProject
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
-            {
-                game.Run();
-            }
+            //TODO: РАСКОММЕНТИТЬ НА РЕЛИЗ
+            //try
+            //{
+                using (var game = new Game1())
+                {
+                    game.Run();
+                }
+            //}
+            //catch(Exception e)
+            //{
+            //    Log.SendError("[Game]" + e.ToString());
+            //    MessageBox.Show(e.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
     }
 }

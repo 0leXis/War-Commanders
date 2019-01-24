@@ -39,7 +39,8 @@ namespace GameCursachProject
         private LuaFunction AttScr_StartAttack;
         private LuaFunction AttScr_Update;
         private LuaFunction AttScr_Draw;
-
+        private LuaTable ScriptRuntimeInfo;
+        
         public UnitInfo UI_UnitInfo;
 
         public int Speed { get; set; }
@@ -92,6 +93,7 @@ namespace GameCursachProject
 
         public Unit(Unit OldUnit) : base(OldUnit.Position, OldUnit.Texture, (int)OldUnit.FrameSize.X, OldUnit.FPS, OldUnit.Layer)
         {
+        	ScriptRuntimeInfo = OldUnit.ScriptRuntimeInfo;
             MoveList = new Queue<MoveInfo>(OldUnit.MoveList);
             IsSpawning = OldUnit.IsSpawning;
             IsMoving = OldUnit.IsMoving;
@@ -130,7 +132,15 @@ namespace GameCursachProject
         public void Attack()
         {
             IsAttacking = true;
-            AttScr_StartAttack.Call(this);
+            var tmp = AttScr_StartAttack.Call(this);
+            if(tmp == null)
+            {
+            	ScriptRuntimeInfo = null;
+            }
+            else
+            {
+            	ScriptRuntimeInfo = tmp[0] as LuaTable;
+            }
         }
 
         public void MoveTo(Vector2 FirstPoint, Vector2 LastPoint, Directions Direct)
@@ -194,7 +204,16 @@ namespace GameCursachProject
         	}
             if (IsAttacking)
             {
-                AttScr_Update.Call(this);
+            	var tmp = AttScr_Update.Call(this, ScriptRuntimeInfo, IsAttacking);
+            	if(tmp == null)
+            	{
+            		ScriptRuntimeInfo = null;
+            	}
+            	else
+            	{
+            		ScriptRuntimeInfo = tmp[0] as LuaTable;
+            		IsAttacking = (bool)tmp[1];
+            	}
             }
         }
 
@@ -213,7 +232,15 @@ namespace GameCursachProject
             {
                 if (IsAttacking)
                 {
-                    AttScr_Draw.Call(this, Target);
+                	var tmp = AttScr_Draw.Call(this, Target, ScriptRuntimeInfo);
+                	if(tmp == null)
+            		{
+            			ScriptRuntimeInfo = null;
+            		}
+            		else
+            		{
+            			ScriptRuntimeInfo = tmp[0] as LuaTable;
+            		}
                 }
                 base.Draw(Target);
             }

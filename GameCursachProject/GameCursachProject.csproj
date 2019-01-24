@@ -130,6 +130,7 @@
     <Compile Include="Classes%28Otlazeno%29\BasicSprite.cs" />
     <Compile Include="Classes%28Otlazeno%29\BasicText.cs" />
     <Compile Include="Classes%28Otlazeno%29\Button.cs" />
+    <Compile Include="Classes\ContentLoader.cs" />
     <Compile Include="Classes\GameState.cs" />
     <Compile Include="Classes\InfoBox.cs" />
     <Compile Include="Classes\Camera.cs" />
@@ -175,6 +176,7 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Runtime.Serialization.Json" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

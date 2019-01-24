@@ -66,6 +66,7 @@ namespace GameCursachProject
 
             base.Initialize();
             this.IsMouseVisible = true;
+            ContentLoader.Init(Content);
         }
 
         /// <summary>
@@ -338,7 +339,7 @@ namespace GameCursachProject
             }
             Map.Update(ref IsMouseHandled, Hand, cam);
         }
-
+        
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
