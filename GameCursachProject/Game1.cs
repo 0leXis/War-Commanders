@@ -32,7 +32,6 @@ namespace GameCursachProject
         Map Map;
         Hand Hand;
         MainUI UI;
-
         Camera cam;
 
         Stopwatch watch; //Дыбуг
@@ -49,9 +48,10 @@ namespace GameCursachProject
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            this.Window.AllowUserResizing = true;
+            this.Window.AllowUserResizing = true;//TODO: Онли в меню настройки
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+            ContentLoader.Init(Content);
         }
         
         /// <summary>
@@ -65,8 +65,7 @@ namespace GameCursachProject
             // TODO: Add your initialization logic here
 
             base.Initialize();
-            this.IsMouseVisible = true;
-            ContentLoader.Init(Content);
+            IsMouseVisible = true;
         }
 
         /// <summary>
@@ -147,20 +146,20 @@ namespace GameCursachProject
             //        Til.Position = new Vector2(Til.Position.X * Til.Scale.X, Til.Position.Y * Til.Scale.Y);
             //    }
             char a = Convert.ToChar(12);
-            var Arr = new Card[10];
-            Arr[0] = new Card(new Vector2(100, 300), Content.Load<Texture2D>(@"Textures\Card"), Content.Load<Texture2D>(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(0, 0, true), new Animation(2, 6, false), new Animation(7, 9, false), new Animation(1, 1, true), 0, Content.Load<SpriteFont>(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, false, Layer: LAYER_CARDS)
-            {
-                Scale = new Vector2(0.5f, 0.5f)
-            };
-            for (var i = 1; i < Arr.Length; i++)
-            {
-                Arr[i] = new Card(new Vector2(100 + i * 60, 300), Content.Load<Texture2D>(@"Textures\Card"), Content.Load<Texture2D>(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(0, 0, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, Content.Load<SpriteFont>(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, Layer: LAYER_CARDS + 0.001f * i)
-                {
-                    Scale = new Vector2(0.5f, 0.5f),
-                    AllowedZones = MapZones.RIGHT
-                };
-            }
-            Hand = new Hand(new Vector2(ScreenWidth / 2, ScreenHeight - 175), Arr, new Vector2(ScreenWidth, ScreenHeight), Content.Load<Texture2D>(@"Textures\ArrowSegment"), Content.Load<Texture2D>(@"Textures\ArrowEnd"));
+            //var Arr = new Card[10];
+            //Arr[0] = new Card(new Vector2(100, 300), Content.Load<Texture2D>(@"Textures\Card"), Content.Load<Texture2D>(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(0, 0, true), new Animation(2, 6, false), new Animation(7, 9, false), new Animation(1, 1, true), 0, Content.Load<SpriteFont>(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, false, Layer: LAYER_CARDS)
+            //{
+            //    Scale = new Vector2(0.5f, 0.5f)
+            //};
+            //for (var i = 1; i < Arr.Length; i++)
+            //{
+            //    Arr[i] = new Card(new Vector2(100 + i * 60, 300), Content.Load<Texture2D>(@"Textures\Card"), Content.Load<Texture2D>(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(0, 0, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, Content.Load<SpriteFont>(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, Layer: LAYER_CARDS + 0.001f * i)
+            //    {
+            //        Scale = new Vector2(0.5f, 0.5f),
+            //        AllowedZones = MapZones.RIGHT
+            //    };
+            //}
+            Hand = new Hand(new Vector2(ScreenWidth / 2, ScreenHeight - 175), null, new Vector2(ScreenWidth, ScreenHeight), Content.Load<Texture2D>(@"Textures\ArrowSegment"), Content.Load<Texture2D>(@"Textures\ArrowEnd"), LAYER_CARDS);
 
             TankTexture = Content.Load<Texture2D>(@"Textures\TankPrototype");
             UInfoTexture = Content.Load<Texture2D>(@"Textures\UnitHaracts");

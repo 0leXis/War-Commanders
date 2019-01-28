@@ -56,6 +56,10 @@ namespace GameCursachProject
         
         public BasicText TileName { get; set; }
         
+        public CardChoose Cardchoose { get; set; }
+        public BasicText ChooseText { get; set; }
+        public Button ChooseConfirm { get; set; }
+
         public Vector2 CurrentScreenRes
         {
             get
@@ -88,8 +92,11 @@ namespace GameCursachProject
 
                 Br.ScreenRes = value;
                 Vs.Position = CurrentScreenRes / 2 - new Vector2(Vs.Texture.Width, Vs.Texture.Height) / 2;
-                
-				TileName.Position = new Vector2(UI_BottomLeft.Position.X + UI_BottomLeft.Texture.Width / 2 - TileName.Font.MeasureString(TileName.Text).X / 2, UI_BottomLeft.Position.Y + 5);
+                Cardchoose.ScreenRes = value;
+
+                TileName.Position = new Vector2(UI_BottomLeft.Position.X + UI_BottomLeft.Texture.Width / 2 - TileName.Font.MeasureString(TileName.Text).X / 2, UI_BottomLeft.Position.Y + 5);
+                ChooseText.Position = new Vector2((CurrentScreenRes.X - ChooseText.Font.MeasureString(ChooseText.Text).X) / 2, 125);
+                ChooseConfirm.Position = new Vector2((CurrentScreenRes.X - ChooseConfirm.FrameSize.X) / 2, 600);
             }
         }
 
@@ -150,14 +157,37 @@ namespace GameCursachProject
             
             Br = new ScreenBr(CurrentScreenRes, 60, 220, Gr, 0.1f);
             this.Vs = new BasicSprite(CurrentScreenRes / 2 - new Vector2(Vs.Width, Vs.Height) / 2, Vs, 0.09f);
+            Cardchoose = new CardChoose(CurrentScreenRes, ContentLoader.LoadTexture(@"Textures\Card_Replace"));
+            ChooseText = new BasicText(Vector2.Zero, "Выберите карты, которые хотите заменить", Font, Color.White, 0.001f);
+            ChooseText.Visible = false;
+            ChooseText.Position = new Vector2((CurrentScreenRes.X - Font.MeasureString(ChooseText.Text).X) / 2, 125);
+            ChooseConfirm = new Button(new Vector2((CurrentScreenRes.X - ButtonEndTurn_Texture.Width / 4) / 2, 600), ButtonEndTurn_Texture, "Заменить", Font, Color.Black, ButtonEndTurn_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, 0.001f);
+            ChooseConfirm.Visible = false;
+
             StartVS();
         }
 
         public void Update(ref bool IsMouseHandled, Map map, Hand hand, Camera cam)
         {
         	Br.UpdateAnims();
+            Cardchoose.Update();
             if (_IsVs)
             {
+                if(ChooseConfirm.Update() == ButtonStates.CLICKED)
+                {
+                    ChooseConfirm.Visible = false;
+                    var replacedcards = Cardchoose.GetReplacedCards();
+                    var CardsToReplace = new List<Card>();
+                    foreach(var rep in replacedcards)
+                    {
+                        if (rep)
+                        {
+                            CardsToReplace.Add(new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f));
+                        }
+                    }
+                    Cardchoose.ReplaceCards(CardsToReplace.ToArray());
+                    iteration = 0;
+                }
                 IsMouseHandled = true;
                 if(iteration < 120)
                 {
@@ -199,7 +229,20 @@ namespace GameCursachProject
                             OpponentName.Scale = Vector2.One;
                             PlayerName.Position = PlayerIcon.Position + new Vector2(PlayerIcon.Texture.Width * PlayerIcon.Scale.X + 10, 0);
                             OpponentName.Position = OpponentIcon.Position - new Vector2(OpponentName.Font.MeasureString(OpponentName.Text).X + 10, 0);
+                            ChooseText.Visible = true;
+                            ChooseConfirm.Visible = true;
+                            Cardchoose.ShowCards(true,
+                                new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f),
+                                new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f),
+                                new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f), 
+                                new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f));
+                        }
+                        else
+                        {
                             _IsVs = false;
+                            ChooseText.Visible = false;
+                            hand.AddCards(20, Cardchoose.GetCards(true).ToArray());
+                            Cardchoose.ClearCardList();
                             Br.ScreenBrUp();
                         }
                     }
@@ -408,7 +451,10 @@ namespace GameCursachProject
         {
         	Br.Draw(Target);
         	Vs.Draw(Target);
-        	
+            Cardchoose.Draw(Target);
+            ChooseText.Draw(Target);
+            ChooseConfirm.Draw(Target);
+
             UI_Bottom.Draw(Target);
             UI_BottomLeft.Draw(Target);
             UI_Up.Draw(Target);

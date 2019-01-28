@@ -16,6 +16,8 @@ namespace GameCursachProject
         private Vector2 _StartPoint;
         private Vector2 _CurrentScreenRes;
         private Arrow ChooseArrow;
+        private float CardLayer;
+
         public bool IsClick;
 
         public int CardsCount
@@ -43,40 +45,54 @@ namespace GameCursachProject
         	set
         	{
         		_CurrentScreenRes = value;
-        		CalculateCardPosition(false);
+        		CalculateCardPosition(10, false);
         	}
         }
 
         public int ChoosedCard { get { return _ChoosedCard; } }
 
-        public Hand(Vector2 CenterPoint, Card[] Cards, Vector2 CurrentScreenRes, Texture2D ArrowSegment, Texture2D ArrowEndSegment)
+        public Hand(Vector2 CenterPoint, Card[] Cards, Vector2 CurrentScreenRes, Texture2D ArrowSegment, Texture2D ArrowEndSegment, float CardLayer)
         {
             this.Cards = new List<Card>();
             KilledNonTargetCards = new List<Card>();
-            foreach (var Card in Cards)
-                this.Cards.Add(Card);
+            this.CardLayer = CardLayer;
+            if(Cards != null)
+                foreach (var Card in Cards)
+                    this.Cards.Add(Card);
             this.CurrentScreenRes = CurrentScreenRes;
-            ChooseArrow = new Arrow(new Vector2((300 + CurrentScreenRes.X) / 2, CurrentScreenRes.Y + 20), new Vector2(400, 400), ArrowSegment, ArrowEndSegment, Cards[0].Layer + 0.01f);
+            ChooseArrow = new Arrow(new Vector2((300 + CurrentScreenRes.X) / 2, CurrentScreenRes.Y + 20), new Vector2(400, 400), ArrowSegment, ArrowEndSegment, 0.30f);
             ChooseArrow.Visible = false;
             ChooseArrow.Disappear();
             IsClick = false;
         }
 
-        private void CalculateCardPosition(bool WithAnim, params int[] WithoutCards)
+        private void CalculateCardPosition(int MoveSpeed, bool WithAnim, params int[] WithoutCards)
         {
             if (Cards.Count != 0)
             {
             	_StartPoint = new Vector2((CurrentScreenRes.X - (Cards.Count - WithoutCards.Length - 1) * Cards[0].FrameSize.X * 2 / 5 + Cards[0].FrameSize.X) / 2, CurrentScreenRes.Y - Cards[0].FrameSize.Y * 0.5f);
                 var tmp = 0;
                 for (var i = 0; i < Cards.Count; i++)
+                {
+                    Cards[i].Layer = CardLayer + i * 0.001f;
                     if (WithoutCards.Contains(i))
                         tmp += 1;
                     else
-                        if (WithAnim)
-                            Cards[i].StartMove(new Vector2(_StartPoint.X + (i - tmp) * Cards[0].FrameSize.X * 2 / 5, _StartPoint.Y));
-                        else
-                            Cards[i].Position = new Vector2(_StartPoint.X + (i - tmp) * Cards[0].FrameSize.X * 2 / 5, _StartPoint.Y);
+                    if (WithAnim)
+                        Cards[i].StartMove(new Vector2(_StartPoint.X + (i - tmp) * Cards[0].FrameSize.X * 2 / 5, _StartPoint.Y), MoveSpeed);
+                    else
+                        Cards[i].Position = new Vector2(_StartPoint.X + (i - tmp) * Cards[0].FrameSize.X * 2 / 5, _StartPoint.Y);
+                }
             }
+        }
+
+        public void AddCards(int MoveSpeed, params Card[] Cards)
+        {
+            foreach(var card in Cards)
+            {
+                this.Cards.Add(card);
+            }
+            CalculateCardPosition(MoveSpeed, true);
         }
 
         public void Update(ref bool IsMouseHandled, Map TiledMap, Camera cam, float CardAppearPos, string AttScript, Script ScrForUnit)
@@ -136,7 +152,7 @@ namespace GameCursachProject
                     var Upd = Cards[_ChoosedCard].Update();
                     if (IsClick || Upd == ButtonStates.PRESSED)
                     {
-                        CalculateCardPosition(true, _ChoosedCard);
+                        CalculateCardPosition(10, true, _ChoosedCard);
                         Cards[_ChoosedCard].Down();
                         Cards[_ChoosedCard].SetUpLayer();
                         Cards[_ChoosedCard].Position = new Vector2(MouseControl.X - (Cards[_ChoosedCard].FrameSize.X * 0.25f), MouseControl.Y - (Cards[_ChoosedCard].FrameSize.Y * 0.25f));
@@ -197,11 +213,11 @@ namespace GameCursachProject
                                         if (TmpTile != null && TiledMap.CheckTileAllowed(new Point(Tmp[0], Tmp[1]), MapZones.RIGHT, Cards[_ChoosedCard].AllowedTiles))//TODO: Убрать костыль TmpTile.NotSelectedFrame != 0, ввести тип Player для поиска правильной стороны
                                         {
                                             //TEST: Юниты
-                                            TmpTile.SpawnUnit(new Unit(Vector2.Zero, Game1.TankTexture, Game1.UInfoTexture, Game1.UInfoFont, Color.White, 392, 60, 5, 3, 6, 1, AttScript, ScrForUnit, 0.4f), MapZones.RIGHT, TiledMap.UI_VisibleState);
+                                            TmpTile.SpawnUnit(new Unit(Vector2.Zero, Game1.TankTexture, Game1.UInfoTexture, Game1.UInfoFont, Color.White, 392, 60, 5, 3, 6, 1, Side.PLAYER, AttScript, ScrForUnit, 0.4f), MapZones.RIGHT, TiledMap.UI_VisibleState);
                                             Cards.RemoveAt(_ChoosedCard);
                                         }
                                         else
-                                            CalculateCardPosition(true);
+                                            CalculateCardPosition(10, true);
                                     }
                                     else
                                     {
@@ -213,7 +229,7 @@ namespace GameCursachProject
                                     TiledMap.SetDefaultAnims();
                                 }
                                 else
-                                    CalculateCardPosition(true);
+                                    CalculateCardPosition(10, true);
                                 _ChoosedCard = -1;
                             }
                         }

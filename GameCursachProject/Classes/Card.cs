@@ -23,7 +23,7 @@ namespace GameCursachProject
 
     class Card : Button, IDrawable
     {
-        private const float UpLayer = 0.15f;
+        private const float UpLayer = 0.005f;
         private float LastLayer;
         private Vector2 _UpPosition;
         private Vector2 _DownPosition;
@@ -31,6 +31,7 @@ namespace GameCursachProject
         private bool IsDown, LockClicking, IsMoving;
         private byte iteration;
         private byte moveiteration;
+        private int MoveSpeed;
 
         public bool IsTargeted { get; set; }
         public bool IsDisappearing { get; set; }
@@ -45,6 +46,7 @@ namespace GameCursachProject
         public int FirstStat_OffsX { get; set; }
         public int MidStat_OffsX { get; set; }
         public int StatCellWidth { get; set; }
+        public bool UpdBtnAnims { get; set; }
 
         public BasicText CardName { get; set; }
         public BasicText CardDescription { get; set; }
@@ -129,7 +131,7 @@ namespace GameCursachProject
             }
         }
 
-        public Card(Vector2 Position, Texture2D Texture, Texture2D ArtTexture, Vector2 ArtOffset, int FrameSizeX, int FPS, int NotSelectedFrame, int DisabledFrame, Animation Selected, Animation Disappear, Animation Appear, Animation Choosed, int ClickedFrame, SpriteFont Font, Color TextColor, string CardName, string DamageInfo, string DefenseInfo, string CostInfo, string MovePointsInfo, string HPInfo, int CardName_OffsY, int Stats_OffsY, int FirstStat_OffsX, int MidStat_OffsX, int StatCellWidth, bool IsTargeted, MapZones AllowedZones = MapZones.ALL, MapTiles AllowedTiles = MapTiles.NONE, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, DisabledFrame, Layer)
+        public Card(Vector2 Position, Texture2D Texture, Texture2D ArtTexture, Vector2 ArtOffset, int FrameSizeX, int FPS, int NotSelectedFrame, int DisabledFrame, Animation Selected, Animation Disappear, Animation Appear, Animation Choosed, int ClickedFrame, SpriteFont Font, Color TextColor, string CardName, string DamageInfo, string DefenseInfo, string CostInfo, string MovePointsInfo, string HPInfo, int CardName_OffsY, int Stats_OffsY, int FirstStat_OffsX, int MidStat_OffsX, int StatCellWidth, bool IsTargeted, MapZones AllowedZones = MapZones.ALL, CardCanUseOnTiles AllowedTiles = CardCanUseOnTiles.ONLY_NONE, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, DisabledFrame, Layer)
         {
             _UpPosition = new Vector2(base.Position.X - FrameSize.X * 0.25f, base.Position.Y - FrameSize.Y * 0.5f);
             _DownPosition = new Vector2(base.Position.X, base.Position.Y);
@@ -156,6 +158,11 @@ namespace GameCursachProject
             LockClicking = false;
             IsMoving = false;
             this.IsTargeted = IsTargeted;
+            MoveSpeed = 0;
+            UpdBtnAnims = false;
+
+            this.AllowedTiles = AllowedTiles;
+            this.AllowedZones = AllowedZones;
         }
 
         public Card(Card card) : base(card.Position, card.Texture, (int)Math.Truncate(card.FrameSize.X), card.FPS, card.NotSelectedFrame, card.GetAnimation("Selected"), card.ClickedFrame, card.DisabledFrame, card.Layer)
@@ -189,6 +196,8 @@ namespace GameCursachProject
             FirstStat_OffsX = card.FirstStat_OffsX;
             MidStat_OffsX = card.MidStat_OffsX;
             StatCellWidth = card.StatCellWidth;
+            MoveSpeed = card.MoveSpeed;
+            UpdBtnAnims = card.UpdBtnAnims;
             if(card.IsDisappearing)
             {
             	Art.Visible = false;
@@ -199,6 +208,9 @@ namespace GameCursachProject
                 MovePointsInfo.Visible = false;
                 HPInfo.Visible = false;
             }
+
+            AllowedTiles = card.AllowedTiles;
+            AllowedZones = card.AllowedZones;
         }
 
         public void Appear()
@@ -238,7 +250,7 @@ namespace GameCursachProject
             if (IsMoving)
             {
                 Position = new Vector2(_Position.X + _MoveVector.X, _Position.Y + _MoveVector.Y);
-                if (moveiteration == 10)
+                if (moveiteration == MoveSpeed)
                 {
                     LockClicking = false;
                     IsMoving = false;
@@ -247,11 +259,12 @@ namespace GameCursachProject
             }
         }
 
-        public void StartMove(Vector2 NewPoint)
+        public void StartMove(Vector2 NewPoint, int MoveSpeed = 10)
         {
+            this.MoveSpeed = MoveSpeed;
             LockClicking = true;
             IsMoving = true;
-            _MoveVector = new Vector2((NewPoint.X - _Position.X) / 10, (NewPoint.Y - _Position.Y) / 10);
+            _MoveVector = new Vector2((NewPoint.X - _Position.X) / MoveSpeed, (NewPoint.Y - _Position.Y) / MoveSpeed);
             moveiteration = 0;
         }
 
@@ -273,6 +286,23 @@ namespace GameCursachProject
                 Art.Layer = base.Layer + 0.0001f;
                 CardName.Layer = base.Layer - 0.0001f;
                 IsDown = false;
+        }
+
+        public void SetUp()
+        {
+            Position = _DownPosition;
+            Scale = new Vector2(1, 1);
+            Art.Position = Position + ArtOffset * Scale;
+            CardName.Position = new Vector2(Position.X + (FrameSize.X - CardName.Font.MeasureString(CardName.Text).X) / 2 * Scale.X, Position.Y + CardName_OffsY * Scale.Y);
+            DamageInfo.Position = new Vector2(Position.X + (FirstStat_OffsX + (StatCellWidth - DamageInfo.Font.MeasureString(DamageInfo.Text).X) / 2) * Scale.X, Position.Y + Stats_OffsY * Scale.Y);
+            DefenseInfo.Position = new Vector2(Position.X + (FirstStat_OffsX + StatCellWidth + (StatCellWidth - DefenseInfo.Font.MeasureString(DefenseInfo.Text).X) / 2) * Scale.X, Position.Y + Stats_OffsY * Scale.Y);
+            CostInfo.Position = new Vector2(Position.X + (FirstStat_OffsX + MidStat_OffsX + StatCellWidth * 2 + (StatCellWidth - CostInfo.Font.MeasureString(CostInfo.Text).X) / 2) * Scale.X, Position.Y + Stats_OffsY * Scale.Y);
+            MovePointsInfo.Position = new Vector2(Position.X + (FirstStat_OffsX + MidStat_OffsX * 2 + StatCellWidth * 3 + (StatCellWidth - MovePointsInfo.Font.MeasureString(MovePointsInfo.Text).X) / 2) * Scale.X, Position.Y + Stats_OffsY * Scale.Y);
+            HPInfo.Position = new Vector2(Position.X + (FirstStat_OffsX + MidStat_OffsX * 2 + StatCellWidth * 4 + (StatCellWidth - HPInfo.Font.MeasureString(HPInfo.Text).X) / 2) * Scale.X, Position.Y + Stats_OffsY * Scale.Y);
+            SetUpLayer();
+            Art.Layer = base.Layer + 0.0001f;
+            CardName.Layer = base.Layer - 0.0001f;
+            IsDown = false;
         }
 
         public void Down()
@@ -307,7 +337,7 @@ namespace GameCursachProject
 
         public void MoveUpdate()
         {
-            if (moveiteration < 10)
+            if (moveiteration < MoveSpeed)
                 moveiteration++;
             Move();
         }
@@ -330,7 +360,11 @@ namespace GameCursachProject
             {
                 if (iteration < 60)
                     iteration++;
-                var result = base.Update(true);
+                ButtonStates result;
+                if (UpdBtnAnims)
+                    result = base.Update(false);
+                else
+                    result = base.Update(true);
                 if (IsPressed)
                 {
                     base.Layer = UpLayer;

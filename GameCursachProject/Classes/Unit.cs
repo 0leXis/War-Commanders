@@ -9,6 +9,8 @@ using NLua;
 
 namespace GameCursachProject
 {
+    enum Side { PLAYER, OPPONENT }
+
 	enum Directions { DOWN, DOWN_LEFT, UP_LEFT, UP, UP_RIGHT, DOWN_RIGHT}
 	
 	struct MoveInfo
@@ -48,6 +50,7 @@ namespace GameCursachProject
         public int Armor { get; set; }
         public int Damage { get; set; }
         public int HP { get; set; }
+        public Side side { get; set; }
 
         new public Vector2 Position
         {
@@ -74,11 +77,12 @@ namespace GameCursachProject
         	}
         }
 
-        public Unit(Vector2 Position, Texture2D Texture, Texture2D UInfoTexture, SpriteFont UInfoFont, Color UInfoColor, int FrameSizeX, int FPS, int Speed, int Damage, int HP, int Armor, string AttackScript, Script ScrEngine, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer)
+        public Unit(Vector2 Position, Texture2D Texture, Texture2D UInfoTexture, SpriteFont UInfoFont, Color UInfoColor, int FrameSizeX, int FPS, int Speed, int Damage, int HP, int Armor, Side side, string AttackScript, Script ScrEngine, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer)
         {
+            this.side = side;
         	MoveList = new Queue<MoveInfo>();
             this.Speed = Speed;
-            this.MovePointsLeft = Speed;
+            MovePointsLeft = Speed;
             this.Damage = Damage;
             this.HP = HP;
             this.Armor = Armor;
@@ -114,6 +118,7 @@ namespace GameCursachProject
             AttScr_StartAttack = OldUnit.AttScr_StartAttack;
             AttScr_Update = OldUnit.AttScr_Update;
             AttScr_Draw = OldUnit.AttScr_Draw;
+            side = OldUnit.side;
         }
 
         public void Spawn()

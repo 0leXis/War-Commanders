@@ -20,43 +20,50 @@ namespace GameCursachProject
                     case CardCanUseOnTiles.ONLY_NONE:
                         for (var i = 0; i < Tiles.Length; i++)
                             for (var j = 0; j < Tiles[0].Length; j++)
-                                if (Tiles[i][j].TileContains == MapTiles.NONE)
-                                    TileList.Add(new Point(i, j));
+                                if (Tiles[i][j] != null)
+                                    if (Tiles[i][j].TileContains == MapTiles.NONE)
+                                        TileList.Add(new Point(i, j));
                         break;
                     case CardCanUseOnTiles.ONLY_WITH_BUILDING:
                         for (var i = 0; i < Tiles.Length; i++)
                             for (var j = 0; j < Tiles[0].Length; j++)
-                                if (Tiles[i][j].TileContains == MapTiles.WITH_BUILDING)
+                                if (Tiles[i][j] != null)
+                                    if (Tiles[i][j].TileContains == MapTiles.WITH_BUILDING)
                                     TileList.Add(new Point(i, j));
                         break;
                     case CardCanUseOnTiles.ONLY_WITH_UNIT:
                         for (var i = 0; i < Tiles.Length; i++)
                             for (var j = 0; j < Tiles[0].Length; j++)
-                                if (Tiles[i][j].TileContains == MapTiles.WITH_UNIT)
+                                if (Tiles[i][j] != null)
+                                    if (Tiles[i][j].TileContains == MapTiles.WITH_UNIT)
                                     TileList.Add(new Point(i, j));
                         break;
                     case CardCanUseOnTiles.WITH_BUILDING_AND_WITH_UNIT:
                         for (var i = 0; i < Tiles.Length; i++)
                             for (var j = 0; j < Tiles[0].Length; j++)
-                                if (Tiles[i][j].TileContains == MapTiles.WITH_UNIT_AND_BUILDING)
+                                if (Tiles[i][j] != null)
+                                    if (Tiles[i][j].TileContains == MapTiles.WITH_UNIT_AND_BUILDING)
                                     TileList.Add(new Point(i, j));
                         break;
                     case CardCanUseOnTiles.NONE_OR_WITH_BUILDING:
                         for (var i = 0; i < Tiles.Length; i++)
                             for (var j = 0; j < Tiles[0].Length; j++)
-                                if (Tiles[i][j].TileContains == MapTiles.NONE || Tiles[i][j].TileContains == MapTiles.WITH_BUILDING)
+                                if (Tiles[i][j] != null)
+                                    if (Tiles[i][j].TileContains == MapTiles.NONE || Tiles[i][j].TileContains == MapTiles.WITH_BUILDING)
                                     TileList.Add(new Point(i, j));
                         break;
                     case CardCanUseOnTiles.NONE_OR_WITH_UNIT:
                         for (var i = 0; i < Tiles.Length; i++)
                             for (var j = 0; j < Tiles[0].Length; j++)
-                                if (Tiles[i][j].TileContains == MapTiles.NONE || Tiles[i][j].TileContains == MapTiles.WITH_UNIT)
+                                if (Tiles[i][j] != null)
+                                    if (Tiles[i][j].TileContains == MapTiles.NONE || Tiles[i][j].TileContains == MapTiles.WITH_UNIT)
                                     TileList.Add(new Point(i, j));
                         break;
                     case CardCanUseOnTiles.WITH_BUILDING_OR_WITH_UNIT:
                         for (var i = 0; i < Tiles.Length; i++)
                             for (var j = 0; j < Tiles[0].Length; j++)
-                                if (Tiles[i][j].TileContains == MapTiles.WITH_BUILDING || Tiles[i][j].TileContains == MapTiles.WITH_UNIT)
+                                if (Tiles[i][j] != null)
+                                    if (Tiles[i][j].TileContains == MapTiles.WITH_BUILDING || Tiles[i][j].TileContains == MapTiles.WITH_UNIT)
                                     TileList.Add(new Point(i, j));
                         break;
                 }
