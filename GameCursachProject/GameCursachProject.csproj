@@ -130,6 +130,7 @@
     <Compile Include="Classes%28Otlazeno%29\BasicSprite.cs" />
     <Compile Include="Classes%28Otlazeno%29\BasicText.cs" />
     <Compile Include="Classes%28Otlazeno%29\Button.cs" />
+    <Compile Include="Classes\CapturePointInfo.cs" />
     <Compile Include="Classes\CardChoose.cs" />
     <Compile Include="Classes\ContentLoader.cs" />
     <Compile Include="Classes\GameState.cs" />

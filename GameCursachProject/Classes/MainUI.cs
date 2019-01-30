@@ -60,6 +60,8 @@ namespace GameCursachProject
         public BasicText ChooseText { get; set; }
         public Button ChooseConfirm { get; set; }
 
+        public CapturePointInfo[] CPInfos { get; set; }
+
         public Vector2 CurrentScreenRes
         {
             get
@@ -97,6 +99,15 @@ namespace GameCursachProject
                 TileName.Position = new Vector2(UI_BottomLeft.Position.X + UI_BottomLeft.Texture.Width / 2 - TileName.Font.MeasureString(TileName.Text).X / 2, UI_BottomLeft.Position.Y + 5);
                 ChooseText.Position = new Vector2((CurrentScreenRes.X - ChooseText.Font.MeasureString(ChooseText.Text).X) / 2, value.Y / 2 - 250);
                 ChooseConfirm.Position = new Vector2((CurrentScreenRes.X - ChooseConfirm.FrameSize.X) / 2, value.Y / 2 + 250);
+
+                if(CPInfos.Length != 0)
+                {
+                    var StartPos = new Vector2((CurrentScreenRes.X - CPInfos.Length * CPInfos[0].Neutral_Texture.Width) / 2, 0);
+                    for (var i = 0; i < CPInfos.Length; i++)
+                    {
+                        CPInfos[i].Position = new Vector2(StartPos.X + i * CPInfos[i].Neutral_Texture.Width, 0);
+                    }
+                }
             }
         }
 
@@ -108,7 +119,8 @@ namespace GameCursachProject
             Texture2D ButtonMove_Texture, Texture2D ButtonAttack_Texture, Texture2D ButtonGameMenu_Texture, 
             Texture2D ButtonChat_Texture, Texture2D ButtonStats_Texture, Texture2D PlayerIcon, 
             Texture2D OpponentIcon, Texture2D PlayerPointsIcon, Texture2D OpponentPointsIcon,
-            Texture2D PlayerMoneyIcon, Texture2D RoundTimeIcon, Texture2D Vs,
+            Texture2D PlayerMoneyIcon, Texture2D RoundTimeIcon, Texture2D Vs, 
+            Texture2D CPAllied, Texture2D CPEnemy, Texture2D CPNeutral,
             SpriteFont Font,
             SpriteFont ResFont,
             GraphicsDevice Gr, 
@@ -116,6 +128,7 @@ namespace GameCursachProject
             string OpponentPoints, string OpponentPoints_Inc, string Points_Needed,
             string PlayerMoney, string PlayerMoney_Inc,
             string RoundTime,
+            string[] CPNames,
             float Layer = BasicSprite.DefaultLayer
             )
         {
@@ -163,6 +176,13 @@ namespace GameCursachProject
             ChooseText.Position = new Vector2((CurrentScreenRes.X - Font.MeasureString(ChooseText.Text).X) / 2, CurrentScreenRes.Y / 2 - 250);
             ChooseConfirm = new Button(new Vector2((CurrentScreenRes.X - ButtonEndTurn_Texture.Width / 4) / 2, CurrentScreenRes.Y / 2 + 250), ButtonEndTurn_Texture, "Заменить", Font, Color.Black, ButtonEndTurn_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, 0.001f);
             ChooseConfirm.Visible = false;
+
+            CPInfos = new CapturePointInfo[CPNames.Length];
+            var StartPos = new Vector2((CurrentScreenRes.X - CPNames.Length * CPNeutral.Width) / 2, 0);
+            for(var i = 0; i < CPNames.Length; i++)
+            {
+                CPInfos[i] = new CapturePointInfo(new Vector2(StartPos.X + i * CPNeutral.Width, 0), CPAllied, CPEnemy, CPNeutral, Font, CPNames[i], this.UI_Up.Layer - 0.001f);
+            }
 
             StartVS();
         }
@@ -469,6 +489,9 @@ namespace GameCursachProject
             OpponentPoints.Draw(Target);
             PlayerMoney.Draw(Target);
             RoundTime.Draw(Target);
+
+            foreach(var cp in CPInfos)
+                cp.Draw(Target);
 
             TileName.Draw(Target);
             Btn_Move.Draw(Target);

@@ -138,7 +138,7 @@ namespace GameCursachProject
                             MapArr[i][j] = null;
                 }
             }
-            Map = new Map(MapArr, 0, 1, new Animation(1, 1, true), Content.Load<Texture2D>(@"Textures\ArrowSegment"), Content.Load<Texture2D>(@"Textures\ArrowEnd"), Content.Load<Texture2D>(@"Textures\TileHaracts"), Content.Load<SpriteFont>(@"Fonts\TileInfoFont"), Color.White);
+            Map = new Map(MapArr, 0, 1, new Animation(1, 1, true), Content.Load<Texture2D>(@"Textures\ArrowSegment"), Content.Load<Texture2D>(@"Textures\ArrowEnd"), Content.Load<Texture2D>(@"Textures\TileHaracts"), Content.Load<Texture2D>(@"Textures\Neutral"), Content.Load<Texture2D>(@"Textures\Allied"), Content.Load<Texture2D>(@"Textures\Enemy"), Content.Load<SpriteFont>(@"Fonts\TileInfoFont"), Color.White, new Point[] {new Point(0,7), new Point(3, 7) , new Point(6, 7) });
             //foreach (var Til in Map)
             //    if (Til != null)
             //    {
@@ -176,14 +176,15 @@ namespace GameCursachProject
                 Content.Load<Texture2D>(@"Textures\Player_Icon"), Content.Load<Texture2D>(@"Textures\Player_Icon"),
                 Content.Load<Texture2D>(@"Textures\UI_Flag_Player"), Content.Load<Texture2D>(@"Textures\UI_Flag_Enemy"),
                 Content.Load<Texture2D>(@"Textures\UI_Money"), Content.Load<Texture2D>(@"Textures\UI_HourGlass"),
-                Content.Load<Texture2D>(@"Textures\Vs"),
+                Content.Load<Texture2D>(@"Textures\Vs"), Content.Load<Texture2D>(@"Textures\UI_Allied"),
+                Content.Load<Texture2D>(@"Textures\UI_Enemy"), Content.Load<Texture2D>(@"Textures\UI_Neutral"),
                 Content.Load<SpriteFont>(@"Fonts\ButtonFont"),
                 Content.Load<SpriteFont>(@"Fonts\UI_MiniFont"), 
                 graphics.GraphicsDevice,
                 "Stalin", "Hitler",
                 "0", "1", "0", "1", "100",
                 "10", "5",
-                "1:30",
+                "1:30", new string[] {"A", "B", "C"},
                 LAYER_UI_FAR);
             // TODO: use this.Content to load your game content here
             cam = new Camera(new Vector2(ScreenWidth, ScreenHeight));
