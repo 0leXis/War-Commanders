@@ -90,7 +90,7 @@ namespace GameCursachProject
 
             ScrEngine.TextScript = AttackScript;
             ScrEngine.DoScript();
-            AttScr_StartAttack = ScrEngine.GetFunc("StartAttack");
+            AttScr_StartAttack = ScrEngine.GetFunc("Init");
             AttScr_Update = ScrEngine.GetFunc("Update");
             AttScr_Draw = ScrEngine.GetFunc("Draw");
         }

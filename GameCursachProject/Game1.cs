@@ -107,33 +107,31 @@ namespace GameCursachProject
             watch = new Stopwatch();//ДЫБГ
             var MapArr = new Tile[8][];
             var Rnd = new Random();
-            for(var i = 0; i< 8; i++)
+            Texture2D Text = Content.Load<Texture2D>(@"Textures\Tile");
+            Texture2D TextHL = Content.Load<Texture2D>(@"Textures\TileHL");
+            Texture2D TextDec;
+            for (var i = 0; i< 8; i++)
             {
                 MapArr[i] = new Tile[15];
                 for (var j = 0; j < 15; j++)
                 {
-                	Texture2D Text;
-                	Texture2D Text2;
                 	switch(1)//mass[i][j]
                     {
                 		case 1:
-                			Text = Content.Load<Texture2D>(@"Textures\Tile_Forest");
-                			Text2 = Content.Load<Texture2D>(@"Textures\Tile_Forest_HL");
+                            TextDec = Content.Load<Texture2D>(@"Textures\Tile_Forest");
                 			break;
                 		case 2:
-                			Text = Content.Load<Texture2D>(@"Textures\Tile_Desert");
-                			Text2 = Content.Load<Texture2D>(@"Textures\Tile_Desert_HL");
+                            TextDec = Content.Load<Texture2D>(@"Textures\Tile_Desert");
                 			break;
-						default:     
-                			Text = Content.Load<Texture2D>(@"Textures\Tile_River");
-                			Text2 = Content.Load<Texture2D>(@"Textures\Tile_River_HL");
+						default:
+                            TextDec = Content.Load<Texture2D>(@"Textures\Tile_River");
                 			break;                			
                 	}
                     if (j % 2 == 0)
-                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), Text, Text2, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5),"ТОЛИК", LAYER_MAP);
+                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), Text, TextHL, TextDec, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5),"ТОЛИК", LAYER_MAP);
                     else
                         if (i != MapArr.GetLength(0) - 1)
-                            MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), Text, Text2, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), "Лес гномов", LAYER_MAP);
+                            MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), Text, TextHL, TextDec, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), "Лес гномов", LAYER_MAP);
                         else
                             MapArr[i][j] = null;
                 }

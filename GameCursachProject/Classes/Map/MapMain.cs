@@ -85,7 +85,7 @@ namespace GameCursachProject
             ControlPoints = new BasicSprite[CPTiles.Length];
             for(var i = 0; i < CPTiles.Length; i++)
             {
-                ControlPoints[i] = new BasicSprite(Tiles[CPTiles[i].X][CPTiles[i].Y].Position, CPNeutral, Tiles[0][0].Layer - 0.001f);
+                ControlPoints[i] = new BasicSprite(Tiles[CPTiles[i].X][CPTiles[i].Y].Position, CPNeutral, Tiles[0][0].Layer + 0.001f);
             }
         }
                 
@@ -204,7 +204,10 @@ namespace GameCursachProject
             foreach (var Tile in Tiles)
                 foreach (var Til in Tile)
                     if (Til != null)
+                    {
+                        Til.DrawDecoration(Target);
                         Til.Draw(Target);
+                    }
 
             foreach (var CP in ControlPoints)
                 CP.Draw(Target);

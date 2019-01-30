@@ -1,6 +1,6 @@
 ﻿
-function StartAttack(Sender)
-	Data = {}
+function Init(Sender)
+	local Data = {}
 	Data.Bullet = BasicSprite(Sender.Position, ContentLoader.LoadTexture('Textures\\Bullet'), 0.1)
 	return Data
 end

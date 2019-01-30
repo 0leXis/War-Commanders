@@ -13,6 +13,7 @@ namespace GameCursachProject
     {
         private bool LockClicking;
 		private ButtonStates LastState;
+        private BasicSprite Decoration;
 		private Texture2D MainTexture;
 		private Texture2D HighLitedTexture;
 		
@@ -40,6 +41,7 @@ namespace GameCursachProject
                     new Vector2(3 * _FrameSize.X * _Scale.X / 4, _FrameSize.Y * _Scale.Y / 2),
                     new Vector2(_FrameSize.X * _Scale.X / 4, _FrameSize.Y * _Scale.Y / 2)
                 );
+                Decoration.Position = value;
             }
         }
 
@@ -67,19 +69,34 @@ namespace GameCursachProject
                     new Vector2(3 * _FrameSize.X * _Scale.X / 4, _FrameSize.Y * _Scale.Y / 2),
                     new Vector2(_FrameSize.X * _Scale.X / 4, _FrameSize.Y * _Scale.Y / 2)
                 );
+                Decoration.Scale = value;
+            }
+        }
+
+        new public float Layer
+        {
+            get
+            {
+                return base.Layer;
+            }
+            set
+            {
+                base.Layer = value;
+                Decoration.Layer = value + 0.003f;
             }
         }
 
         public string TileName { get; set; }
         
-        public Tile(Vector2 Position, Texture2D Texture, Texture2D HighLitedTexture, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, int MovingPointsNeeded, string TileName, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, NotSelectedFrame, Layer)
+        public Tile(Vector2 Position, Texture2D Texture, Texture2D HighLitedTexture, Texture2D DecorationTexture, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, int MovingPointsNeeded, string TileName, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, NotSelectedFrame, Layer)
         {
         	this.TileName = TileName;
         	TileContains = MapTiles.NONE;
             this.MovingPointsNeeded = MovingPointsNeeded;
             this.HighLitedTexture = HighLitedTexture;
-            this.MainTexture = Texture;
-            
+            MainTexture = Texture;
+            Decoration = new BasicSprite(Position, DecorationTexture, Layer + 0.003f);
+
             Intersector.GetPointsFromOffsets
             (
                 new Vector2(_Position.X, _Position.Y + _FrameSize.Y * _Scale.Y / 2),
@@ -135,6 +152,11 @@ namespace GameCursachProject
         {
             if (UnitOnTile != null)
                 UnitOnTile.Draw(Target);
+        }
+
+        public void DrawDecoration(SpriteBatch Target)
+        {
+            Decoration.Draw(Target);
         }
 
         public override void Draw(SpriteBatch Target)
