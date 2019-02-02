@@ -36,13 +36,14 @@ namespace GameCursachProject
 
         Stopwatch watch; //Дыбуг
         static public Texture2D TankTexture;
-        static public Texture2D UInfoTexture;
+        static public Texture2D UInfoTexture_Allied;
+        static public Texture2D UInfoTexture_Enemy;
         static public SpriteFont UInfoFont;
 
         int ScreenHeight, ScreenWidth;
 
-        Script UnitAttEngine;
-        string TestScript;
+        static public Script UnitAttEngine;
+        static public string TestScript;
 
         public Game1()
         {
@@ -136,7 +137,7 @@ namespace GameCursachProject
                             MapArr[i][j] = null;
                 }
             }
-            Map = new Map(MapArr, 0, 1, new Animation(1, 1, true), Content.Load<Texture2D>(@"Textures\ArrowSegment"), Content.Load<Texture2D>(@"Textures\ArrowEnd"), Content.Load<Texture2D>(@"Textures\TileHaracts"), Content.Load<Texture2D>(@"Textures\Neutral"), Content.Load<Texture2D>(@"Textures\Allied"), Content.Load<Texture2D>(@"Textures\Enemy"), Content.Load<SpriteFont>(@"Fonts\TileInfoFont"), Color.White, new Point[] {new Point(0,7), new Point(3, 7) , new Point(6, 7) });
+            Map = new Map(MapArr, 0, 1, new Animation(1, 1, true), Content.Load<Texture2D>(@"Textures\ArrowSegment"), Content.Load<Texture2D>(@"Textures\ArrowEnd"), Content.Load<Texture2D>(@"Textures\TileHaracts"), Content.Load<Texture2D>(@"Textures\Neutral"), Content.Load<Texture2D>(@"Textures\Allied"), Content.Load<Texture2D>(@"Textures\Enemy"), Content.Load<Texture2D>(@"Textures\Attack_Radius"), Content.Load<SpriteFont>(@"Fonts\TileInfoFont"), Color.White, new Point[] {new Point(0,7), new Point(3, 7) , new Point(6, 7) });
             //foreach (var Til in Map)
             //    if (Til != null)
             //    {
@@ -160,7 +161,8 @@ namespace GameCursachProject
             Hand = new Hand(new Vector2(ScreenWidth / 2, ScreenHeight - 175), null, new Vector2(ScreenWidth, ScreenHeight), Content.Load<Texture2D>(@"Textures\ArrowSegment"), Content.Load<Texture2D>(@"Textures\ArrowEnd"), LAYER_CARDS);
 
             TankTexture = Content.Load<Texture2D>(@"Textures\TankPrototype");
-            UInfoTexture = Content.Load<Texture2D>(@"Textures\UnitHaracts");
+            UInfoTexture_Allied = Content.Load<Texture2D>(@"Textures\UnitHaracts_Allied");
+            UInfoTexture_Enemy = Content.Load<Texture2D>(@"Textures\UnitHaracts_Enemy");
             UInfoFont = Content.Load<SpriteFont>(@"Fonts\TileInfoFont");
 
             UI = new MainUI
@@ -191,6 +193,7 @@ namespace GameCursachProject
 
             KeyBindings.Init();
             KeyBindings.RegisterKeyBind("KEY_MOVEUNIT", Keys.M);
+            KeyBindings.RegisterKeyBind("KEY_ATTACKUNIT", Keys.F);
             KeyBindings.RegisterKeyBind("KEY_STATS", Keys.T);
             KeyBindings.RegisterKeyBind("KEY_CAMMOVE_UP", Keys.W);
             KeyBindings.RegisterKeyBind("KEY_CAMMOVE_DOWN", Keys.S);
@@ -200,6 +203,9 @@ namespace GameCursachProject
             UnitAttEngine = new Script("", "GameCursachProject", false);
             using (var Fil = new StreamReader(@"Content\Scripts\TestScript.lua", Encoding.Default))
                 TestScript = Fil.ReadToEnd();
+
+            //TEST
+            Map.GetTile(4,6).SpawnUnit(new Unit(Vector2.Zero, TankTexture, UInfoTexture_Enemy, UInfoFont, Color.White, 392, 60, 5, 3, 6, 1, 2, Side.OPPONENT, Game1.TestScript, Game1.UnitAttEngine, 0.4f), MapZones.RIGHT, Map.UI_VisibleState);
         }
 
         /// <summary>

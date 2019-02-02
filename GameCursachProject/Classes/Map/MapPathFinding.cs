@@ -10,7 +10,7 @@ namespace GameCursachProject
 {
     partial class Map
     {
-        private List<Point> GetSmez(Point vers, int stopi, int stopj, bool isfirst)
+        private List<Point> GetSmez(Point vers, bool isfirst)
         {
             var list = new List<Point>();
             if(!isfirst && Tiles[vers.X][vers.Y].UnitOnTile != null)
@@ -103,9 +103,14 @@ namespace GameCursachProject
                     break;
                 used.Add(v);
                 needuse.Remove(v);
-                foreach (var rebro in GetSmez(v, stopi, stopj, first))
+                foreach (var rebro in GetSmez(v, first))
                 {
                     if (!used.Contains(rebro))
+                    {
+                        if (Tiles[rebro.X][rebro.Y].UnitOnTile != null && Tiles[rebro.X][rebro.Y].UnitOnTile.side == Side.PLAYER)
+                        {
+                            continue;
+                        }
                         if (dlini[v.X, v.Y] + Tiles[rebro.X][rebro.Y].MovingPointsNeeded < dlini[rebro.X, rebro.Y] && dlini[v.X, v.Y] + Tiles[rebro.X][rebro.Y].MovingPointsNeeded <= MovePoints)
                         {
                             marked.Add(new Point(rebro.X, rebro.Y));
@@ -116,6 +121,7 @@ namespace GameCursachProject
                             };
                             needuse.Add(rebro);
                         }
+                    }
                 }
                 first = false;
             }
@@ -144,7 +150,7 @@ namespace GameCursachProject
         {
             int PL;
             List<Point> Marked;
-            PathFinding(PFStart.X, PFStart.Y, 0, 0, Tiles[PFStart.X][PFStart.Y].UnitOnTile.MovePointsLeft, out PL, out Marked);
+            PathFinding(ActionStartPoint.X, ActionStartPoint.Y, 0, 0, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked);
             foreach (var Til in Marked)
                 if (!ChangedAnimTiles.Contains(Til))
                     ChangedAnimTiles.Add(Til);

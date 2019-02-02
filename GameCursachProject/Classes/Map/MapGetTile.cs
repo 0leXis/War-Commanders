@@ -152,7 +152,7 @@ namespace GameCursachProject
                 }
             }
             if (ChangedAnimTiles.Count > 0)
-                SetDefaultAnims();
+                SetDefault();
             ChangedAnimTiles = new List<Point>(TileList);
             return TileList.ToArray();
         }

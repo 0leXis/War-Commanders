@@ -158,6 +158,7 @@
     <Compile Include="Classes%28Otlazeno%29\Log.cs" />
     <Compile Include="Classes\KeyBindings.cs" />
     <Compile Include="Classes\MainUI.cs" />
+    <Compile Include="Classes\Map\MapAttack.cs" />
     <Compile Include="Classes\Map\MapMain.cs" />
     <Compile Include="Classes%28Otlazeno%29\MouseControl.cs" />
     <Compile Include="Classes\Map\MapChangeAnims.cs" />

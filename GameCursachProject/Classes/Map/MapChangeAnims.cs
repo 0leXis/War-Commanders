@@ -21,8 +21,9 @@ namespace GameCursachProject
                 }
         }
 
-        public void SetDefaultAnims()
+        public void SetDefault()
         {
+            Attack_Radius.Visible = false;
             foreach (var Coord in ChangedAnimTiles)
                 if (Tiles[Coord.X][Coord.Y] != null)
                 {

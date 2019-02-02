@@ -8,7 +8,7 @@ using NLua;
 
 namespace GameCursachProject
 {
-    class Script
+    public class Script
     {
         private Lua LuaScript;
         public string TextScript { get; set; }

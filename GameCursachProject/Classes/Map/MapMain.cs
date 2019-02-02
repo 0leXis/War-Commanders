@@ -24,14 +24,19 @@ namespace GameCursachProject
         private Texture2D CPAllied;
         private Texture2D CPEnemy;
 
+        private BasicSprite Attack_Radius;
+
         private TileInfo Info;
         private bool _UI_VisibleState;
 
         private int _ChoosedTileI = -1;
         private int _ChoosedTileJ = -1;
 
+        public bool IsAttack { get; set; }
+        public Point AttackStart { get; set; }
+
         public bool IsPathFinding { get; set; }
-        public Point PFStart { get; set; }
+        public Point ActionStartPoint { get; set; }
         
         public int ChoosedTileI { get { return _ChoosedTileI; } }
         public int ChoosedTileJ { get { return _ChoosedTileJ; } }
@@ -55,7 +60,7 @@ namespace GameCursachProject
             }
         }
 
-        public Map(Tile[][] Tiles, int DefaultNotSelectedFrame, int DefaultClickedFrame, Animation DefaultSelectedAnim, Texture2D ArrowSegment, Texture2D ArrowEndSegment, Texture2D TileInfoTexture, Texture2D CPNeutral, Texture2D CPAllied, Texture2D CPEnemy, SpriteFont InfoFont, Color InfoColor, Point[] CPTiles)
+        public Map(Tile[][] Tiles, int DefaultNotSelectedFrame, int DefaultClickedFrame, Animation DefaultSelectedAnim, Texture2D ArrowSegment, Texture2D ArrowEndSegment, Texture2D TileInfoTexture, Texture2D CPNeutral, Texture2D CPAllied, Texture2D CPEnemy, Texture2D Attack_Radius, SpriteFont InfoFont, Color InfoColor, Point[] CPTiles)
         {
             ChangedAnimTiles = new List<Point>();
             PathFindingArrows = new List<Arrow>();
@@ -67,6 +72,10 @@ namespace GameCursachProject
             {
                 Visible = false
             };
+
+            this.Attack_Radius = new BasicSprite(Vector2.Zero, Attack_Radius, Tiles[0][0].Layer + 0.002f);
+            this.Attack_Radius.Visible = false;
+
             this.Tiles = new Tile[Tiles.Length][];
             this.ArrowSegment = ArrowSegment;
             this.ArrowEndSegment = ArrowEndSegment;
@@ -104,7 +113,15 @@ namespace GameCursachProject
                 if (IsPathFinding)
                 {
                     IsPathFinding = false;
-                    SetDefaultAnims();
+                    SetDefault();
+                    UpdateAllTiles(cam);
+                    CreatePathArrows(null, cam);
+                }
+                else
+                if (IsAttack)
+                {
+                    IsAttack = false;
+                    SetDefault();
                     UpdateAllTiles(cam);
                     CreatePathArrows(null, cam);
                 }
@@ -144,15 +161,29 @@ namespace GameCursachProject
                         		IsPathFinding = false;
                         		int PL;
                         		List<Point> Marked;
-                        		UnitMove(PathFinding(PFStart.X, PFStart.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[PFStart.X][PFStart.Y].UnitOnTile.MovePointsLeft, out PL, out Marked));
-                        		SetDefaultAnims();
+
+                        		UnitMove(PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked));
+
+                        		SetDefault();
                                 UpdateAllTiles(cam);
                         		CreatePathArrows(null, cam);
                         		DeSelectTile(SelectedTile);
                         		SelectTile(new Point(_ChoosedTileI, _ChoosedTileJ));
                         		//Переместить
                         	}
-                        	else
+                            else
+                            if (IsAttack)
+                            {
+                                IsAttack = false;
+
+                                if(EnemyFinding(ActionStartPoint.X, ActionStartPoint.Y, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.AttackDistance).Contains(new Point(_ChoosedTileI, _ChoosedTileJ)))
+                                    Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.Attack(Tiles[_ChoosedTileI][_ChoosedTileJ].UnitOnTile);
+
+                                SetDefault();
+                                UpdateAllTiles(cam);
+                                CreatePathArrows(null, cam);
+                            }
+                            else
                         	{
                         		if(SelectedTile.X != -1)
                         		{
@@ -166,14 +197,36 @@ namespace GameCursachProject
                         {
                         	int PL;
                         	List<Point> Marked;
-                        	CreatePathArrows(PathFinding(PFStart.X, PFStart.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[PFStart.X][PFStart.Y].UnitOnTile.MovePointsLeft, out PL, out Marked), cam);
+                        	CreatePathArrows(PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked), cam);
                         	foreach(var Til in Marked)
                         		if(!ChangedAnimTiles.Contains(Til))
                         			ChangedAnimTiles.Add(Til);
                         	foreach(var TilCoords in Marked)
                         		ChangeTilesAnims(2, 1, new Animation(1, 1, true), TilCoords);
                         }
-                        
+                        else
+                        if (IsAttack)
+                        {
+                            Attack_Radius.Visible = true;
+                            var EnFind = EnemyFinding(ActionStartPoint.X, ActionStartPoint.Y, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.AttackDistance);
+                            foreach (var Til in EnFind)
+                                if (!ChangedAnimTiles.Contains(Til))
+                                    ChangedAnimTiles.Add(Til);
+                            foreach (var TilCoords in EnFind)
+                                ChangeTilesAnims(2, 1, new Animation(1, 1, true), TilCoords);
+                            if(EnFind.Contains(new Point(_ChoosedTileI, _ChoosedTileJ)))
+                            {
+                                var TmpList = new List<Point>();
+                                TmpList.Add(new Point(ActionStartPoint.X, ActionStartPoint.Y));
+                                TmpList.Add(new Point(_ChoosedTileI, _ChoosedTileJ));
+                                CreatePathArrows(TmpList, cam);
+                            }
+                            else
+                            {
+                                CreatePathArrows(null, cam);
+                            }
+                        }
+
                         if(hand.ChoosedCard == -1)
                         {
                             Info.Appear();
@@ -211,6 +264,8 @@ namespace GameCursachProject
 
             foreach (var CP in ControlPoints)
                 CP.Draw(Target);
+
+            Attack_Radius.Draw(Target);
 
             Target.End();
 

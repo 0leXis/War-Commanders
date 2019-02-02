@@ -39,7 +39,7 @@ namespace GameCursachProject
                 _MovePointsInfo.Position = new Vector2(value.X + CellWidth * 2 + CellWidth / 2 - VectTmp.X / 2, value.Y + Texture.Height / 2 - VectTmp.Y / 2 + 1);
 
                 VectTmp = _HPInfo.Font.MeasureString(_HPInfo.Text);
-                _HPInfo.Position = new Vector2(value.X + CellWidth * 3 + CellWidth / 2 - VectTmp.X / 2, value.Y + Texture.Height / 2 - VectTmp.Y / 2 + 1);
+                _HPInfo.Position = new Vector2(value.X + CellWidth * 3 + CellWidth / 2 - VectTmp.X / 2 - 1, value.Y + Texture.Height / 2 - VectTmp.Y / 2 + 1);
             }
         }
 
@@ -135,7 +135,7 @@ namespace GameCursachProject
             _MovePointsInfo = new BasicText(new Vector2(Position.X + CellWidth * 2 + CellWidth / 2 - VectTmp.X / 2, Position.Y + Texture.Height / 2 - VectTmp.Y / 2 + 1), MovePoints, Font, TextColor, Layer - 0.0001f);
 
             VectTmp = Font.MeasureString(HP);
-            _HPInfo = new BasicText(new Vector2(Position.X + CellWidth * 3 + CellWidth / 2 - VectTmp.X / 2, Position.Y + Texture.Height / 2 - VectTmp.Y / 2 + 1), HP, Font, TextColor, Layer - 0.0001f);
+            _HPInfo = new BasicText(new Vector2(Position.X + CellWidth * 3 + CellWidth / 2 - VectTmp.X / 2 - 1, Position.Y + Texture.Height / 2 - VectTmp.Y / 2 + 1), HP, Font, TextColor, Layer - 0.0001f);
 
             iteration = 0;
         }

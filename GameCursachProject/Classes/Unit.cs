@@ -11,7 +11,7 @@ namespace GameCursachProject
 {
     enum Side { PLAYER, OPPONENT }
 
-	enum Directions { DOWN, DOWN_LEFT, UP_LEFT, UP, UP_RIGHT, DOWN_RIGHT}
+	enum Directions { DOWN, DOWN_LEFT, UP_LEFT, UP, UP_RIGHT, DOWN_RIGHT, LEFT, RIGHT}
 	
 	struct MoveInfo
 	{
@@ -50,6 +50,7 @@ namespace GameCursachProject
         public int Armor { get; set; }
         public int Damage { get; set; }
         public int HP { get; set; }
+        public int AttackDistance { get; set; }
         public Side side { get; set; }
 
         new public Vector2 Position
@@ -77,7 +78,7 @@ namespace GameCursachProject
         	}
         }
 
-        public Unit(Vector2 Position, Texture2D Texture, Texture2D UInfoTexture, SpriteFont UInfoFont, Color UInfoColor, int FrameSizeX, int FPS, int Speed, int Damage, int HP, int Armor, Side side, string AttackScript, Script ScrEngine, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer)
+        public Unit(Vector2 Position, Texture2D Texture, Texture2D UInfoTexture, SpriteFont UInfoFont, Color UInfoColor, int FrameSizeX, int FPS, int Speed, int Damage, int HP, int Armor, int AttackDistance, Side side, string AttackScript, Script ScrEngine, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer)
         {
             this.side = side;
         	MoveList = new Queue<MoveInfo>();
@@ -86,6 +87,7 @@ namespace GameCursachProject
             this.Damage = Damage;
             this.HP = HP;
             this.Armor = Armor;
+            this.AttackDistance = AttackDistance;
             UI_UnitInfo = new UnitInfo(new Vector2(Position.X + (FrameSizeX - UInfoTexture.Width) / 2, Position.Y + FrameSize.Y), UInfoTexture, UInfoFont, UInfoColor, Speed.ToString(), Armor.ToString(), Damage.ToString(), HP.ToString(), Layer - 0.001f);
 
             ScrEngine.TextScript = AttackScript;
@@ -111,6 +113,7 @@ namespace GameCursachProject
             Damage = OldUnit.Damage;
             HP = OldUnit.HP;
             Armor = OldUnit.Armor;
+            AttackDistance = OldUnit.AttackDistance;
 
             UI_UnitInfo = new UnitInfo(new Vector2(Position.X + (FrameSize.X - OldUnit.UI_UnitInfo.Texture.Width) / 2, Position.Y + FrameSize.Y), OldUnit.UI_UnitInfo.Texture, OldUnit.UI_UnitInfo._DamageInfo.Font, OldUnit.UI_UnitInfo._DamageInfo.color, OldUnit.Speed.ToString(), OldUnit.Armor.ToString(), OldUnit.Damage.ToString(), OldUnit.HP.ToString(), OldUnit.Layer - 0.001f);
             UI_UnitInfo.Visible = OldUnit.UI_UnitInfo.Visible;
@@ -134,10 +137,10 @@ namespace GameCursachProject
             }
         }
 
-        public void Attack()
+        public void Attack(Unit EnemyUnit)
         {
             IsAttacking = true;
-            var tmp = AttScr_StartAttack.Call(this);
+            var tmp = AttScr_StartAttack.Call(this, EnemyUnit);
             if(tmp == null)
             {
             	ScriptRuntimeInfo = null;
@@ -150,35 +153,19 @@ namespace GameCursachProject
 
         public void MoveTo(Vector2 FirstPoint, Vector2 LastPoint, Directions Direct)
         {
-            Attack();
             MoveList.Enqueue(new MoveInfo(FirstPoint, LastPoint, Direct));
         }
         
         public void SetFrame(Directions CurrDirect)
         {
-        	switch (CurrDirect)
-        	{
-        		case Directions.DOWN:
-        			CurrentFrame = 0;
-        			break;
-       			case Directions.DOWN_LEFT:
-        			CurrentFrame = 1;
-        			break;
-        		case Directions.UP_LEFT:
-        			CurrentFrame = 2;
-        			break;
-        		case Directions.UP:
-        			CurrentFrame = 3;
-        			break;
-        		case Directions.UP_RIGHT:
-        			CurrentFrame = 4;
-        			break;
-        		case Directions.DOWN_RIGHT:
-        			CurrentFrame = 5;
-        			break;
-        	}
+            CurrentFrame = (int)CurrDirect;
         }
-        
+
+        public void SetFrame(int CurrDirect)
+        {
+            CurrentFrame = CurrDirect;
+        }
+
         public void Update()
         {
             if (MoveList.Count > 0 && !(IsSpawning || IsMoving))

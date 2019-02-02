@@ -82,6 +82,30 @@
 /processorParam:TextureFormat=Color
 /build:Textures/ArrowSegment.png
 
+#begin Textures/Attack_Radius.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Attack_Radius.png
+
+#begin Textures/BABAH.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BABAH.png
+
 #begin Textures/BtnAttack.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -442,7 +466,7 @@
 /processorParam:TextureFormat=Color
 /build:Textures/UI_Neutral.png
 
-#begin Textures/UnitHaracts.png
+#begin Textures/UnitHaracts_Allied.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -452,7 +476,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/UnitHaracts.png
+/build:Textures/UnitHaracts_Allied.png
+
+#begin Textures/UnitHaracts_Enemy.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UnitHaracts_Enemy.png
 
 #begin Textures/Vs.png
 /importer:TextureImporter

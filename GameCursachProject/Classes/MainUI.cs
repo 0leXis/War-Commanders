@@ -289,16 +289,20 @@ namespace GameCursachProject
                 }
 
                 var MoveUpd = Btn_Move.Update();
-                var Attack = Btn_Attack.Update();
-                var EndTurn = Btn_EndTurn.Update();
-                var Stats = Btn_Stats.Update();
-                var Chat = Btn_Chat.Update();
-                var GameMenu = Btn_GameMenu.Update();
+                var AttackUpd = Btn_Attack.Update();
+                var EndTurnUpd = Btn_EndTurn.Update();
+                var StatsUpd = Btn_Stats.Update();
+                var ChatUpd = Btn_Chat.Update();
+                var GameMenuUpd = Btn_GameMenu.Update();
                 _ShowInf = false;
 
-                if (!map.IsPathFinding)
+                if (!(map.IsPathFinding || map.IsAttack))
                 {
                     Btn_EndTurn.Enabled = true;
+                    if(!map.IsPathFinding)
+                        Btn_Attack.Enabled = true;
+                    if (!map.IsAttack)
+                        Btn_Move.Enabled = true;
                     for (var i = 0; i < hand.CardsCount; i++)
                     {
                         hand[i].Enabled = true;
@@ -312,21 +316,22 @@ namespace GameCursachProject
                     }
                 }
 
-                if ((MoveUpd == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_MOVEUNIT")) && map.SelectedTile.X != -1)
+                if ((MoveUpd == ButtonStates.CLICKED || (Btn_Move.Enabled && KeyBindings.CheckKeyReleased("KEY_MOVEUNIT"))) && map.SelectedTile.X != -1)
                 {
                     if (map.IsPathFinding)
                     {
                         map.IsPathFinding = false;
-                        map.SetDefaultAnims();
+                        map.SetDefault();
                         map.UpdateAllTiles(cam);
                         map.CreatePathArrows(null, cam);
                     }
                     else
-                    if (map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING)
+                    if ((map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING) && map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).UnitOnTile.side == Side.PLAYER)
                     {
+                        Btn_Attack.Enabled = false;
                         Btn_EndTurn.Enabled = false;
                         map.IsPathFinding = true;
-                        map.PFStart = new Point(map.SelectedTile.X, map.SelectedTile.Y);
+                        map.ActionStartPoint = new Point(map.SelectedTile.X, map.SelectedTile.Y);
                         map.HighLiteTilesWithPF();
                         map.UpdateAllTiles(cam);
                     }
@@ -339,13 +344,36 @@ namespace GameCursachProject
                     _ShowInf = true;
                 }
 
-                if (Attack == ButtonStates.ENTERED)
+                if ((AttackUpd == ButtonStates.CLICKED || (Btn_Attack.Enabled && KeyBindings.CheckKeyReleased("KEY_ATTACKUNIT"))) && map.SelectedTile.X != -1)
+                {
+                    if (map.IsAttack)
+                    {
+                        map.IsAttack = false;
+                        map.SetDefault();
+                        map.UpdateAllTiles(cam);
+                        map.CreatePathArrows(null, cam);
+                    }
+                    else
+                    if ((map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING) && map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).UnitOnTile.side == Side.PLAYER)
+                    {
+                        Btn_EndTurn.Enabled = false;
+                        Btn_Move.Enabled = false;
+                        map.IsAttack = true;
+                        map.ActionStartPoint = new Point(map.SelectedTile.X, map.SelectedTile.Y);
+                        map.HighLiteTilesWithEnemy();
+                        map.UpdateAllTiles(cam);
+                    }
+                }
+                else
+                if (AttackUpd == ButtonStates.ENTERED)
                 {
                     Inf.Appear();
                     Inf.Text = "Дальняя атака";
                     _ShowInf = true;
                 }
-                if (Stats == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_STATS"))
+
+
+                if (StatsUpd == ButtonStates.CLICKED || KeyBindings.CheckKeyReleased("KEY_STATS"))
                 {
                     if (map.UI_VisibleState)
                     {
@@ -357,19 +385,19 @@ namespace GameCursachProject
                     }
                 }
                 else
-                if (Stats == ButtonStates.ENTERED)
+                if (StatsUpd == ButtonStates.ENTERED)
                 {
                     Inf.Appear();
                     Inf.Text = "Скрыть/показать\n характ. юнитов";
                     _ShowInf = true;
                 }
-                if (Chat == ButtonStates.ENTERED)
+                if (ChatUpd == ButtonStates.ENTERED)
                 {
                     Inf.Appear();
                     Inf.Text = "Чат";
                     _ShowInf = true;
                 }
-                if (GameMenu == ButtonStates.ENTERED)
+                if (GameMenuUpd == ButtonStates.ENTERED)
                 {
                     Inf.Appear();
                     Inf.Text = "Игровое меню";
