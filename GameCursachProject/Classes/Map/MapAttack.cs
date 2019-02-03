@@ -10,6 +10,15 @@ namespace GameCursachProject
 {
     partial class Map
     {
+        public void RemoveUnit(Unit unit)
+        {
+            Tiles[unit.ParentTile.X][unit.ParentTile.Y].UnitOnTile = null;
+            if(Tiles[unit.ParentTile.X][unit.ParentTile.Y].TileContains == MapTiles.WITH_UNIT)
+                Tiles[unit.ParentTile.X][unit.ParentTile.Y].TileContains = MapTiles.NONE;
+            else
+                Tiles[unit.ParentTile.X][unit.ParentTile.Y].TileContains = MapTiles.WITH_BUILDING;
+        }
+
         private List<Point> GetAttack(Point vers)
         {
             var list = new List<Point>();

@@ -205,7 +205,7 @@ namespace GameCursachProject
                 TestScript = Fil.ReadToEnd();
 
             //TEST
-            Map.GetTile(4,6).SpawnUnit(new Unit(Vector2.Zero, TankTexture, UInfoTexture_Enemy, UInfoFont, Color.White, 392, 60, 5, 3, 6, 1, 2, Side.OPPONENT, Game1.TestScript, Game1.UnitAttEngine, 0.4f), MapZones.RIGHT, Map.UI_VisibleState);
+            Map.GetTile(4,6).SpawnUnit(new Unit(Vector2.Zero, TankTexture, UInfoTexture_Enemy, UInfoFont, Color.White, 392, 20, 5, 3, 6, 1, 2, Side.OPPONENT, Game1.TestScript, Game1.UnitAttEngine, new Point(4, 6), new Animation(8, 17, false), 0.4f), MapZones.RIGHT, Map.UI_VisibleState);
         }
 
         /// <summary>

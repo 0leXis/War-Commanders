@@ -125,10 +125,10 @@ namespace GameCursachProject
                 UnitToSpawn.UI_Visible = false;
         }
 
-        public void UpdateUnit()
+        public void UpdateUnit(Map map, Camera cam)
         {
             if (UnitOnTile != null)
-                UnitOnTile.Update();
+                UnitOnTile.Update(map, cam);
         }
 
         public void HighLite()

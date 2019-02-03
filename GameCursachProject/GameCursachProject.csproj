@@ -148,6 +148,8 @@
     <Compile Include="Classes\CapturePointInfo.cs" />
     <Compile Include="Classes\CardChoose.cs" />
     <Compile Include="Classes\ContentLoader.cs" />
+    <Compile Include="Classes\FlyingText.cs" />
+    <Compile Include="Classes\FlyingTextProcessor.cs" />
     <Compile Include="Classes\GameState.cs" />
     <Compile Include="Classes\InfoBox.cs" />
     <Compile Include="Classes\Camera.cs" />

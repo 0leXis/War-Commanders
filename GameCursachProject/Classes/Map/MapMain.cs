@@ -143,7 +143,7 @@ namespace GameCursachProject
                             }
                             else
                                 Tiles[i][j].StopAnimation(true, Tiles[i][j].NotSelectedFrame);
-                            Tiles[i][j].UpdateUnit();
+                            Tiles[i][j].UpdateUnit(this, cam);
                         }
             }
             else
@@ -245,10 +245,11 @@ namespace GameCursachProject
                         for (var j = 0; j < Tiles[0].Length; j++)
                             if (Tiles[i][j] != null)
                             {
-                                Tiles[i][j].UpdateUnit();
+                                Tiles[i][j].UpdateUnit(this, cam);
                             }
                 }
             Info.Update();
+            FlyingTextProcessor.Update();
         }
         
         public void Draw(SpriteBatch Target, Camera cam)//TODO: Dobavit param dla begin
@@ -281,6 +282,8 @@ namespace GameCursachProject
                     foreach (var Til in Tile)
                         if (Til != null)
                             Til.DrawUnit(Target);
+
+            FlyingTextProcessor.Draw(Target);
             Target.End();
 
             Target.Begin(SpriteSortMode.BackToFront);

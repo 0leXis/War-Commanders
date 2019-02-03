@@ -55,7 +55,6 @@ function Init(Sender, AttackedUnit)
 	Data.Explosion:AddAnimation('BABAH', 0, 14, false)
 	Data.Explosion.Visible = false
 	Data.LoopOn = true
-	Log.SendMessage(tostring(kgrad))--убрать
 	return Data
 end
 

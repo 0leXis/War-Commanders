@@ -50,17 +50,13 @@ namespace GameCursachProject
         {
             if (Path != null && (Path[0].X != Path[Path.Count - 1].X || Path[0].Y != Path[Path.Count - 1].Y))
             {
-                if (Tiles[Path[0].X][Path[0].Y].TileContains == MapTiles.WITH_UNIT_AND_BUILDING)
-                    Tiles[Path[0].X][Path[0].Y].TileContains = MapTiles.WITH_BUILDING;
-                else
-                    Tiles[Path[0].X][Path[0].Y].TileContains = MapTiles.NONE;
 
                 if (Tiles[Path[Path.Count - 1].X][Path[Path.Count - 1].Y].TileContains == MapTiles.WITH_BUILDING)
                     Tiles[Path[Path.Count - 1].X][Path[Path.Count - 1].Y].TileContains = MapTiles.WITH_UNIT_AND_BUILDING;
                 else
                     Tiles[Path[Path.Count - 1].X][Path[Path.Count - 1].Y].TileContains = MapTiles.WITH_UNIT;
-                Tiles[Path[Path.Count - 1].X][Path[Path.Count - 1].Y].UnitOnTile = new Unit(Tiles[Path[0].X][Path[0].Y].UnitOnTile);
-                Tiles[Path[0].X][Path[0].Y].UnitOnTile = null;
+                Tiles[Path[Path.Count - 1].X][Path[Path.Count - 1].Y].UnitOnTile = new Unit(Tiles[Path[0].X][Path[0].Y].UnitOnTile, new Point(Path[Path.Count - 1].X, Path[Path.Count - 1].Y));
+                RemoveUnit(Tiles[Path[0].X][Path[0].Y].UnitOnTile);
                 for (var i = 0; i < Path.Count - 1; i++)
                 {
                     Tiles[Path[Path.Count - 1].X][Path[Path.Count - 1].Y].UnitOnTile.MoveTo(GetTileCenterByIJ(Path[i].X, Path[i].Y), GetTileCenterByIJ(Path[i + 1].X, Path[i + 1].Y), GetDirection(Path[i], Path[i + 1]));
