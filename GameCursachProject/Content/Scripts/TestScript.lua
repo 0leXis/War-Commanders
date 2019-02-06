@@ -50,8 +50,8 @@ function Init(Sender, AttackedUnit)
 	end
 
 	Data.EndPoint = AttackedUnit.Position + AttackedUnit.FrameSize / 2
-	Data.Bullet = BasicSprite(Sender.Position + Sender.FrameSize / 2, ContentLoader.LoadTexture('Textures\\Bullet'), Vector2(0,5), k, 0.4)
-	Data.Explosion = AnimatedSprite(Data.EndPoint - Vector2(50), ContentLoader.LoadTexture('Textures\\BABAH'), 100, 20, 0.1)
+	Data.Bullet = BasicSprite(Sender.Position + Sender.FrameSize / 2, GameContent.Bullet, Vector2(0,5), k, 0.4)
+	Data.Explosion = AnimatedSprite(Data.EndPoint - Vector2(50), GameContent.Explosion, 100, 20, 0.1)
 	Data.Explosion:AddAnimation('BABAH', 0, 14, false)
 	Data.Explosion.Visible = false
 	Data.LoopOn = true

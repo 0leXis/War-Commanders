@@ -24,6 +24,13 @@ namespace GameCursachProject
         private Vector2 _TmpIconScale;
         private Vector2 _TmpTextScale;
 
+        private bool IsEnemyTurn;
+        private bool IsEnTurnMove;
+        private Vector2 offset;
+        private int ETiteration;
+
+        private GameState Parent;
+
         private bool _IsVs;
         public bool IsVs { get { return _IsVs; } }
 
@@ -55,7 +62,9 @@ namespace GameCursachProject
         public BasicSprite Vs { get; set; }
         
         public BasicText TileName { get; set; }
-        
+        public BasicText EnemyTurnText { get; set; }
+        public BasicSprite EnemyTurnSprite { get; set; }
+
         public CardChoose Cardchoose { get; set; }
         public BasicText ChooseText { get; set; }
         public Button ChooseConfirm { get; set; }
@@ -108,6 +117,13 @@ namespace GameCursachProject
                         CPInfos[i].Position = new Vector2(StartPos.X + i * CPInfos[i].Neutral_Texture.Width, 0);
                     }
                 }
+
+                EnemyTurnSprite.Position = UI_BottomLeft.Position;
+                EnemyTurnText.Position = new Vector2(UI_BottomLeft.Position.X + (EnemyTurnSprite.Texture.Width - EnemyTurnText.Font.MeasureString(EnemyTurnText.Text).X) / 2, UI_BottomLeft.Position.Y + 5);
+                if (IsEnemyTurn)
+                {
+                    SetEnemyTurn();
+                }
             }
         }
 
@@ -120,10 +136,11 @@ namespace GameCursachProject
             Texture2D ButtonChat_Texture, Texture2D ButtonStats_Texture, Texture2D PlayerIcon, 
             Texture2D OpponentIcon, Texture2D PlayerPointsIcon, Texture2D OpponentPointsIcon,
             Texture2D PlayerMoneyIcon, Texture2D RoundTimeIcon, Texture2D Vs, 
-            Texture2D CPAllied, Texture2D CPEnemy, Texture2D CPNeutral,
+            Texture2D CPAllied, Texture2D CPEnemy, Texture2D CPNeutral, Texture2D EnemyTurn,
             SpriteFont Font,
             SpriteFont ResFont,
             GraphicsDevice Gr, 
+            GameState Parent,
             string PlayerName, string OpponentName, string PlayerPoints, string PlayerPoints_Inc, 
             string OpponentPoints, string OpponentPoints_Inc, string Points_Needed,
             string PlayerMoney, string PlayerMoney_Inc,
@@ -132,6 +149,8 @@ namespace GameCursachProject
             float Layer = BasicSprite.DefaultLayer
             )
         {
+            this.Parent = Parent;
+
             Inf = new InfoBox(Vector2.One, Color.Black, Color.LightBlue, Font, Color.Black, " ", Gr, 0.01f);
             Inf.Visible = false;
             _CurrentScreenRes = CurrentScreenRes;
@@ -167,10 +186,13 @@ namespace GameCursachProject
             Btn_Stats = new Button(new Vector2(this.UI_BottomLeft.Position.X, Btn_EndTurn.Position.Y + Btn_EndTurn.Texture.Height), ButtonStats_Texture, ButtonStats_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             Btn_Chat = new Button(new Vector2(Btn_Stats.Position.X + Btn_Stats.FrameSize.X + 1, Btn_Stats.Position.Y), ButtonChat_Texture, ButtonChat_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
             Btn_GameMenu = new Button(new Vector2(Btn_Chat.Position.X + Btn_Chat.FrameSize.X + 1, Btn_Stats.Position.Y), ButtonGameMenu_Texture, ButtonGameMenu_Texture.Width / 4, 60, 0, new Animation(1, 1, true), 2, 3, Layer - 0.001f);
-            
+
+            EnemyTurnSprite = new BasicSprite(this.UI_BottomLeft.Position, EnemyTurn, this.UI_BottomLeft.Layer + 0.0005f);
+            EnemyTurnText = new BasicText(new Vector2(this.UI_BottomLeft.Position.X + (EnemyTurn.Width - Font.MeasureString("Ход противника").X) / 2, this.UI_BottomLeft.Position.Y + 5), "Ход противника", Font, Color.Black, this.UI_BottomLeft.Layer + 0.0003f);
+
             Br = new ScreenBr(CurrentScreenRes, 60, 220, Gr, 0.1f);
             this.Vs = new BasicSprite(CurrentScreenRes / 2 - new Vector2(Vs.Width, Vs.Height) / 2, Vs, 0.09f);
-            Cardchoose = new CardChoose(CurrentScreenRes, ContentLoader.LoadTexture(@"Textures\Card_Replace"));
+            Cardchoose = new CardChoose(CurrentScreenRes, GameContent.UI_CardReplace);
             ChooseText = new BasicText(Vector2.Zero, "Выберите карты, которые хотите заменить", Font, Color.White, 0.001f);
             ChooseText.Visible = false;
             ChooseText.Position = new Vector2((CurrentScreenRes.X - Font.MeasureString(ChooseText.Text).X) / 2, CurrentScreenRes.Y / 2 - 250);
@@ -185,10 +207,13 @@ namespace GameCursachProject
             }
 
             StartVS();
+
+            IsEnemyTurn = false;
         }
 
         public void Update(ref bool IsMouseHandled, Map map, Hand hand, Camera cam)
         {
+            EnemyTurnMoveProcess();
         	Br.UpdateAnims();
             Cardchoose.Update();
             if (_IsVs)
@@ -202,7 +227,7 @@ namespace GameCursachProject
                     {
                         if (rep)
                         {
-                            CardsToReplace.Add(new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f));
+                            CardsToReplace.Add(new Card(Vector2.One, GameContent.CardTexture, GameContent.Card_Decorations[0], new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f));
                         }
                     }
                     Cardchoose.ReplaceCards(CardsToReplace.ToArray());
@@ -252,10 +277,10 @@ namespace GameCursachProject
                             ChooseText.Visible = true;
                             ChooseConfirm.Visible = true;
                             Cardchoose.ShowCards(true,
-                                new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f),
-                                new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f),
-                                new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f), 
-                                new Card(Vector2.One, ContentLoader.LoadTexture(@"Textures\Card"), ContentLoader.LoadTexture(@"Textures\Tiger"), new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, ContentLoader.LoadFont(@"Fonts\TileInfoFont"), Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f));
+                                new Card(Vector2.One, GameContent.CardTexture, GameContent.Card_Decorations[0], new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f),
+                                new Card(Vector2.One, GameContent.CardTexture, GameContent.Card_Decorations[0], new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f),
+                                new Card(Vector2.One, GameContent.CardTexture, GameContent.Card_Decorations[0], new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f), 
+                                new Card(Vector2.One, GameContent.CardTexture, GameContent.Card_Decorations[0], new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f));
                         }
                         else
                         {
@@ -428,6 +453,16 @@ namespace GameCursachProject
                     _ShowInf = true;
                 }
 
+                //*TEST
+                if(EndTurnUpd == ButtonStates.CLICKED)
+                {
+                    if(IsEnemyTurn)
+                        SetPlayerTurn();
+                    else
+                        SetEnemyTurn();
+                }
+                //*TEST
+
                 if (!_ShowInf)
                     Inf.Disappear();
                 else
@@ -495,6 +530,41 @@ namespace GameCursachProject
         	Br.ScreenBrUp();
         }
         
+        public void SetEnemyTurn()
+        {
+            Parent.SetEnemyTurn();
+            IsEnemyTurn = true;
+            IsEnTurnMove = true;
+            ETiteration = 0;
+            offset = new Vector2(0, EnemyTurnSprite.Texture.Height / 10);
+        }
+
+        public void SetPlayerTurn()
+        {
+            Parent.SetPlayerTurn();
+            IsEnemyTurn = false;
+            IsEnTurnMove = false;
+            EnemyTurnSprite.Position = UI_BottomLeft.Position;
+            EnemyTurnText.Position = new Vector2(UI_BottomLeft.Position.X + (EnemyTurnSprite.Texture.Width - EnemyTurnText.Font.MeasureString(EnemyTurnText.Text).X) / 2, UI_BottomLeft.Position.Y + 5);
+        }
+
+        public void EnemyTurnMoveProcess()
+        {
+            if (IsEnTurnMove)
+            {
+                if(ETiteration < 10)
+                {
+                    EnemyTurnSprite.Position -= offset;
+                    EnemyTurnText.Position -= offset;
+                }
+                else
+                {
+                    IsEnTurnMove = false;
+                }
+                ETiteration++;
+            }
+        }
+
         public void Draw(SpriteBatch Target)
         {
         	Br.Draw(Target);
@@ -508,6 +578,9 @@ namespace GameCursachProject
             UI_Up.Draw(Target);
             UI_UpRight.Draw(Target);
             UI_UpLeft.Draw(Target);
+
+            EnemyTurnSprite.Draw(Target);
+            EnemyTurnText.Draw(Target);
 
             PlayerIcon.Draw(Target);
             OpponentIcon.Draw(Target);

@@ -7,6 +7,8 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using System.Text;
+using System.IO;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -33,5 +35,12 @@ namespace GameCursachProject
 		{
 			return content.Load<SpriteFont>(Path);
 		}
+
+        public static string LoadScript(string Path)
+        {
+            using (var Fil = new StreamReader(Path, Encoding.Default))
+                return Fil.ReadToEnd();
+        }
+
 	}
 }

@@ -150,6 +150,7 @@
     <Compile Include="Classes\ContentLoader.cs" />
     <Compile Include="Classes\FlyingText.cs" />
     <Compile Include="Classes\FlyingTextProcessor.cs" />
+    <Compile Include="Classes\GameContent.cs" />
     <Compile Include="Classes\GameState.cs" />
     <Compile Include="Classes\InfoBox.cs" />
     <Compile Include="Classes\Camera.cs" />

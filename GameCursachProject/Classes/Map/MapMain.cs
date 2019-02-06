@@ -106,7 +106,7 @@ namespace GameCursachProject
                         Tiles[i][j].Update(cam: cam);
         }
 
-        public void Update(ref bool IsMouseHandled, Hand hand, Camera cam)
+        public void Update(ref bool IsMouseHandled, Hand hand, Camera cam, bool IsPlayerTurn)
         {
         	if(MouseControl.IsRightBtnClicked)
         	{
@@ -189,7 +189,8 @@ namespace GameCursachProject
                         		{
                         			DeSelectTile(SelectedTile);
                         		}
-                        		SelectTile(new Point(_ChoosedTileI, _ChoosedTileJ));
+                                if(IsPlayerTurn)
+                        		    SelectTile(new Point(_ChoosedTileI, _ChoosedTileJ));
                         	}
                         }
                         
