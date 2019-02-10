@@ -130,6 +130,7 @@ namespace GameCursachProject
                 GameContent.UI_EnemyPoint, GameContent.UI_NeutralPoint, GameContent.UI_EnemyTurn,
                 GameContent.UI_ButtonFont,
                 GameContent.UI_MiniFont,
+                GameContent.UI_NewTurnFont,
                 gr_Device, this,
                 "Stalin", "Hitler",
                 "0", "1", "0", "1", "100",
@@ -155,7 +156,7 @@ namespace GameCursachProject
             //TEST
             Map.GetTile(4, 6).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitTextures[0], GameContent.UI_Info_Enemy, GameContent.UI_InfoFont, Color.White, 392, 20, 5, 3, 6, 1, 2, Side.OPPONENT, GameContent.UnitAttackScripts[0], UnitAttEngine, new Point(4, 6), new Animation(8, 17, false), 0.4f), MapZones.RIGHT, Map.UI_VisibleState);
             //TEST
-            IsPlayerTurn = true;
+            SetEnemyTurn();
         }
 
         public void Update()
@@ -251,6 +252,13 @@ namespace GameCursachProject
         private void UpdateGameObjects()
         {
             var IsMouseHandled = false;
+            if (UI.IsPlayerTurnSturted)
+            {
+                for (var i = 0; i < Hand.CardsCount; i++)
+                {
+                    Hand[i].Enabled = false;
+                }
+            }
             if (UI.IsVs)
             {
                 UI.Update(ref IsMouseHandled, Map, Hand, cam);

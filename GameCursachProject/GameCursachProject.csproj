@@ -169,6 +169,7 @@
     <Compile Include="Classes\Map\MapPathFinding.cs" />
     <Compile Include="Classes\Map\MapUnits.cs" />
     <Compile Include="Classes\NetworkInterface.cs" />
+    <Compile Include="Classes\ScalingText.cs" />
     <Compile Include="Classes\ScreenBr.cs" />
     <Compile Include="Classes\Script.cs" />
     <Compile Include="Classes\SimpleRectangle.cs" />

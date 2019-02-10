@@ -119,23 +119,31 @@ namespace GameCursachProject
             }
         }
 
-        public void Update()
+        public int Update()
         {
+            var result = -1;
             for(var i = 0; i < Cards.Count; i++)
             {
                 Cards[i].MoveUpdate();
                 Cards[i].UpdateAnims();
                 if (Cards[i].Update() == ButtonStates.CLICKED)
                 {
-                    if (Replaced[i])
+                    if (WithReplace)
                     {
-                        Replaced[i] = false;
-                        Replaces[i].Visible = false;
+                        if (Replaced[i])
+                        {
+                            Replaced[i] = false;
+                            Replaces[i].Visible = false;
+                        }
+                        else
+                        {
+                            Replaced[i] = true;
+                            Replaces[i].Visible = true;
+                        }
                     }
                     else
                     {
-                        Replaced[i] = true;
-                        Replaces[i].Visible = true;
+                        result = i;
                     }
                 }
                 Cards[i].SetUp();
@@ -144,6 +152,7 @@ namespace GameCursachProject
                     Cards[i].PlayAnimation("Selected");
                 }
             }
+            return result;
         }
 
         public void Draw(SpriteBatch Target)

@@ -43,7 +43,7 @@ namespace GameCursachProject
         static public SpriteFont UI_ButtonFont;
         static public SpriteFont UI_MiniFont;
         static public SpriteFont UI_InfoFont;
-
+        static public SpriteFont UI_NewTurnFont;
         static public List<Texture2D> UI_Player_Icons = new List<Texture2D>();
 
         static public Texture2D TileBorder;
@@ -93,6 +93,7 @@ namespace GameCursachProject
             UI_ButtonFont = ContentLoader.LoadFont(@"Fonts\ButtonFont");
             UI_MiniFont = ContentLoader.LoadFont(@"Fonts\UI_MiniFont");
             UI_InfoFont = ContentLoader.LoadFont(@"Fonts\TileInfoFont");
+            UI_NewTurnFont = ContentLoader.LoadFont(@"Fonts\NewTurnFont");
 
             TileBorder = ContentLoader.LoadTexture(@"Textures\Tile");
             TileBorder_HL = ContentLoader.LoadTexture(@"Textures\TileHL");

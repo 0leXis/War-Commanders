@@ -20,6 +20,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/ButtonFont.spritefont
 
+#begin Fonts/NewTurnFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/NewTurnFont.spritefont
+
 #begin Fonts/TileInfoFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

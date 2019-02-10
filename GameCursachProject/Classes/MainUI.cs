@@ -25,6 +25,8 @@ namespace GameCursachProject
         private Vector2 _TmpTextScale;
 
         private bool IsEnemyTurn;
+        private bool IsPlayerTurnCardShown;
+        public bool IsPlayerTurnSturted { get; set; }
         private bool IsEnTurnMove;
         private Vector2 offset;
         private int ETiteration;
@@ -64,6 +66,7 @@ namespace GameCursachProject
         public BasicText TileName { get; set; }
         public BasicText EnemyTurnText { get; set; }
         public BasicSprite EnemyTurnSprite { get; set; }
+        public ScalingText NewTurnText { get; set; }
 
         public CardChoose Cardchoose { get; set; }
         public BasicText ChooseText { get; set; }
@@ -109,7 +112,9 @@ namespace GameCursachProject
                 ChooseText.Position = new Vector2((CurrentScreenRes.X - ChooseText.Font.MeasureString(ChooseText.Text).X) / 2, value.Y / 2 - 250);
                 ChooseConfirm.Position = new Vector2((CurrentScreenRes.X - ChooseConfirm.FrameSize.X) / 2, value.Y / 2 + 250);
 
-                if(CPInfos.Length != 0)
+                NewTurnText.Position = (CurrentScreenRes - NewTurnText.Font.MeasureString(NewTurnText.Text)) / 2;
+
+                if (CPInfos.Length != 0)
                 {
                     var StartPos = new Vector2((CurrentScreenRes.X - CPInfos.Length * CPInfos[0].Neutral_Texture.Width) / 2, 0);
                     for (var i = 0; i < CPInfos.Length; i++)
@@ -139,6 +144,7 @@ namespace GameCursachProject
             Texture2D CPAllied, Texture2D CPEnemy, Texture2D CPNeutral, Texture2D EnemyTurn,
             SpriteFont Font,
             SpriteFont ResFont,
+            SpriteFont NewTurn,
             GraphicsDevice Gr, 
             GameState Parent,
             string PlayerName, string OpponentName, string PlayerPoints, string PlayerPoints_Inc, 
@@ -189,6 +195,8 @@ namespace GameCursachProject
 
             EnemyTurnSprite = new BasicSprite(this.UI_BottomLeft.Position, EnemyTurn, this.UI_BottomLeft.Layer + 0.0005f);
             EnemyTurnText = new BasicText(new Vector2(this.UI_BottomLeft.Position.X + (EnemyTurn.Width - Font.MeasureString("Ход противника").X) / 2, this.UI_BottomLeft.Position.Y + 5), "Ход противника", Font, Color.Black, this.UI_BottomLeft.Layer + 0.0003f);
+            NewTurnText = new ScalingText((CurrentScreenRes - NewTurn.MeasureString("")) / 2, "", NewTurn, Color.White, 20, 0f);
+            NewTurnText.Visible = false;
 
             Br = new ScreenBr(CurrentScreenRes, 60, 220, Gr, 0.1f);
             this.Vs = new BasicSprite(CurrentScreenRes / 2 - new Vector2(Vs.Width, Vs.Height) / 2, Vs, 0.09f);
@@ -215,9 +223,9 @@ namespace GameCursachProject
         {
             EnemyTurnMoveProcess();
         	Br.UpdateAnims();
-            Cardchoose.Update();
             if (_IsVs)
             {
+                Cardchoose.Update();
                 if(ChooseConfirm.Update() == ButtonStates.CLICKED)
                 {
                     ChooseConfirm.Visible = false;
@@ -285,13 +293,52 @@ namespace GameCursachProject
                         else
                         {
                             _IsVs = false;
+                            //Test
+                            SetPlayerTurn(1);
+
                             ChooseText.Visible = false;
+                            ChooseText.Text = "Выберите карту";
+                            ChooseText.Position = new Vector2((CurrentScreenRes.X - ChooseText.Font.MeasureString(ChooseText.Text).X) / 2, CurrentScreenRes.Y / 2 - 250);
                             hand.AddCards(20, Cardchoose.GetCards(true).ToArray());
                             Cardchoose.ClearCardList();
                             Br.ScreenBrUp();
                         }
                     }
                     iteration++;
+                }
+            }
+            else
+            if (IsPlayerTurnSturted)
+            {
+                if(iteration < 100)
+                {
+                    NewTurnText.Update();
+                    if(iteration == 79)
+                    {
+                        NewTurnText.Disappear();
+                    }
+                    iteration++;
+                }
+                else
+                {
+                    if (!IsPlayerTurnCardShown)
+                    {
+                        IsPlayerTurnCardShown = true;
+                        ChooseText.Visible = true;
+                        Cardchoose.ShowCards(false,
+                            new Card(Vector2.One, GameContent.CardTexture, GameContent.Card_Decorations[0], new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f),
+                            new Card(Vector2.One, GameContent.CardTexture, GameContent.Card_Decorations[0], new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f),
+                            new Card(Vector2.One, GameContent.CardTexture, GameContent.Card_Decorations[0], new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, "Pz. VI H \"Tiger\"", "3", "1", "5", "5", "6", 141, 315, 4, 4, 37, true, MapZones.RIGHT, Layer: 0.001f));
+                    }
+                    var Upd = Cardchoose.Update();
+                    if (Upd != -1)
+                    {
+                        //Отправить на серв данные
+                        hand.AddCards(20, Cardchoose.GetCards(true).ToArray()[Upd]);
+                        ChooseText.Visible = false;
+                        Cardchoose.ClearCardList();
+                        IsPlayerTurnSturted = false;
+                    }
                 }
             }
             else
@@ -457,7 +504,7 @@ namespace GameCursachProject
                 if(EndTurnUpd == ButtonStates.CLICKED)
                 {
                     if(IsEnemyTurn)
-                        SetPlayerTurn();
+                        SetPlayerTurn(1);
                     else
                         SetEnemyTurn();
                 }
@@ -539,8 +586,16 @@ namespace GameCursachProject
             offset = new Vector2(0, EnemyTurnSprite.Texture.Height / 10);
         }
 
-        public void SetPlayerTurn()
+        public void SetPlayerTurn(int Turn_Number)
         {
+            IsPlayerTurnSturted = true;
+            IsPlayerTurnCardShown = false;
+            iteration = 0;
+
+            NewTurnText.Appear();
+            NewTurnText.Text = "ХОД " + Turn_Number.ToString();
+            NewTurnText.Position = (CurrentScreenRes - NewTurnText.Font.MeasureString(NewTurnText.Text)) / 2;
+
             Parent.SetPlayerTurn();
             IsEnemyTurn = false;
             IsEnTurnMove = false;
@@ -581,6 +636,7 @@ namespace GameCursachProject
 
             EnemyTurnSprite.Draw(Target);
             EnemyTurnText.Draw(Target);
+            NewTurnText.Draw(Target);
 
             PlayerIcon.Draw(Target);
             OpponentIcon.Draw(Target);
