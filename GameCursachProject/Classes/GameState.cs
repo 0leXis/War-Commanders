@@ -12,7 +12,7 @@ namespace GameCursachProject
 {
     class GameState
     {
-        static public NetworkInterface NI;
+        public NetworkInterface NI;
         public const string ServerIP = "25.47.239.150:9080";
 
         public const float LAYER_MAP = 0.5f;
@@ -24,16 +24,16 @@ namespace GameCursachProject
 
         Map Map;
         Hand Hand;
-        MainUI UI;
+        public MainUI UI;
         public Camera cam;
 
         public Stopwatch watch; //Дыбуг
 
-        static public Script UnitAttEngine;
+        public Script UnitAttEngine;
 
-        static public bool IsPlayerTurn;
+        public bool IsPlayerTurn;
 
-        static private GraphicsDevice gr_Dev;
+        private GraphicsDevice gr_Dev;
 
         public GameState(int ScreenWidth, int ScreenHeight, GraphicsDevice gr_Device)
         {
@@ -162,9 +162,6 @@ namespace GameCursachProject
         public void Update()
         {
 
-            MouseControl.Update();
-            KeyBindings.Update();
-
             UpdateGameObjects();
 
             //Window.Title = Convert.ToString(Hand.Cards[0].Layer) + " " + Convert.ToString(Hand.Cards[1].Layer) + " " + Convert.ToString(Hand.Cards[2].Layer);
@@ -205,6 +202,7 @@ namespace GameCursachProject
 
             foreach (var msg in NI.GetMsgs())
                 Log.SendMessage(string.Format("Server (from {0}): {1}", NI.IP_Port, msg));
+
         }
 
         private void UpdateCamera()

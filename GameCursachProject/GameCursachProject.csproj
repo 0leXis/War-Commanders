@@ -147,10 +147,13 @@
     <Compile Include="Classes%28Otlazeno%29\Button.cs" />
     <Compile Include="Classes\CapturePointInfo.cs" />
     <Compile Include="Classes\CardChoose.cs" />
+    <Compile Include="Classes\CommandParser.cs" />
+    <Compile Include="Classes\Config.cs" />
     <Compile Include="Classes\ContentLoader.cs" />
     <Compile Include="Classes\FlyingText.cs" />
     <Compile Include="Classes\FlyingTextProcessor.cs" />
     <Compile Include="Classes\GameContent.cs" />
+    <Compile Include="Classes\GameMenu.cs" />
     <Compile Include="Classes\GameState.cs" />
     <Compile Include="Classes\InfoBox.cs" />
     <Compile Include="Classes\Camera.cs" />
@@ -160,6 +163,8 @@
     <Compile Include="Classes\Hand.cs" />
     <Compile Include="Classes%28Otlazeno%29\Log.cs" />
     <Compile Include="Classes\KeyBindings.cs" />
+    <Compile Include="Classes\ListBox.cs" />
+    <Compile Include="Classes\LoadingState.cs" />
     <Compile Include="Classes\MainUI.cs" />
     <Compile Include="Classes\Map\MapAttack.cs" />
     <Compile Include="Classes\Map\MapMain.cs" />

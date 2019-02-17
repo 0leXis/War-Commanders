@@ -21,12 +21,13 @@ namespace GameCursachProject
         int ScreenHeight, ScreenWidth;
 
         GameState gameState;
+        GameMenu Menu;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            this.Window.AllowUserResizing = true;//TODO: Онли в меню настройки
+            this.Window.AllowUserResizing = false;//DONE: Онли в меню настройки
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             ContentLoader.Init(Content);
@@ -63,6 +64,10 @@ namespace GameCursachProject
             GameContent.LoadGameContent();
 
             gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
+
+            KeyBindings.RegisterKeyBind("KEY_MENU", Keys.Escape);
+            Menu = new GameMenu(new Vector2(ScreenWidth, ScreenHeight), this, GameContent.UI_GameMenu_MainBack, GameContent.UI_GameMenu_OptionsBack, GameContent.UI_GameMenu_Button, GameContent.UI_GameMenu_ListBoxBtn, GameContent.UI_GameMenu_ListBoxChoosed, GameContent.UI_GameMenu_ListBoxOpenBtn, GameContent.UI_InfoFont, Color.Black, 0.1f);
+            Menu.Hide(gameState.UI, gameState);
         }
 
         /// <summary>
@@ -78,6 +83,20 @@ namespace GameCursachProject
             //Log.EnableFileLog = false;
         }
 
+        public void ApplyChanges()
+        {
+            if (graphics.IsFullScreen)
+            {
+                graphics.IsFullScreen = false;
+                graphics.ApplyChanges();
+            }
+            graphics.PreferredBackBufferWidth = Config.Resolutions[Config.CurrResolution].X;
+            graphics.PreferredBackBufferHeight = Config.Resolutions[Config.CurrResolution].Y;
+            graphics.ApplyChanges();
+            graphics.IsFullScreen = Config.FullScreen;
+            graphics.ApplyChanges();
+        }
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -91,11 +110,15 @@ namespace GameCursachProject
                 ScreenHeight = Window.ClientBounds.Height;
                 gameState.Resize(ScreenWidth, ScreenHeight);
             }
+
+            MouseControl.Update();
+            KeyBindings.Update();
+
+            Menu.Update(gameState.UI, gameState);
             gameState.Update();
+
             Window.Title = gameState.watch.Elapsed.ToString() + "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y) + "|ZOOM|" + gameState.cam.Zoom.ToString() + "|POS|" + gameState.cam.Position.ToString();
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
             base.Update(gameTime);
         }
         
@@ -106,6 +129,11 @@ namespace GameCursachProject
         protected override void Draw(GameTime gameTime)
         {
             gameState.Draw(spriteBatch);
+
+            spriteBatch.Begin(SpriteSortMode.BackToFront);
+                Menu.Draw(spriteBatch);
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

@@ -219,6 +219,32 @@ namespace GameCursachProject
             IsEnemyTurn = false;
         }
 
+        public void DisableUI()
+        {
+            Btn_Move.Enabled = false;
+            Btn_Attack.Enabled = false;
+            Btn_GameMenu.Enabled = false;
+            Btn_Chat.Enabled = false;
+            Btn_EndTurn.Enabled = false;
+            Btn_Stats.Enabled = false;
+
+            ChooseConfirm.Enabled = false;
+            Cardchoose.Enabled = false;
+        }
+
+        public void EnableUI()
+        {
+            Btn_Move.Enabled = true;
+            Btn_Attack.Enabled = true;
+            Btn_GameMenu.Enabled = true;
+            Btn_Chat.Enabled = true;
+            Btn_EndTurn.Enabled = true;
+            Btn_Stats.Enabled = true;
+
+            ChooseConfirm.Enabled = true;
+            Cardchoose.Enabled = true;
+        }
+
         public void Update(ref bool IsMouseHandled, Map map, Hand hand, Camera cam)
         {
             EnemyTurnMoveProcess();

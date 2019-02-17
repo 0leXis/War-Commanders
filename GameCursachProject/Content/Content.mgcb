@@ -365,6 +365,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/UI_Allied.png
 
+#begin Textures/UI_BtnOpen.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_BtnOpen.png
+
 #begin Textures/UI_Enemy.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -413,6 +425,30 @@
 /processorParam:TextureFormat=Color
 /build:Textures/UI_Flag_Player.png
 
+#begin Textures/UI_GameMenu_Back.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_GameMenu_Back.png
+
+#begin Textures/UI_GameMenu_OptionsBack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_GameMenu_OptionsBack.png
+
 #begin Textures/UI_HourGlass.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -424,6 +460,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/UI_HourGlass.png
+
+#begin Textures/UI_Lst_Choosed.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_Lst_Choosed.png
+
+#begin Textures/UI_Lst_Variant.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_Lst_Variant.png
 
 #begin Textures/UI_Main_Bottom.png
 /importer:TextureImporter

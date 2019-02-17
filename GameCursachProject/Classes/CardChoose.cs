@@ -30,8 +30,11 @@ namespace GameCursachProject
         private bool WithReplace;
         private Texture2D ReplaceTexture;
 
+        public bool Enabled { get; set; }
+
         public CardChoose(Vector2 ScreenRes, Texture2D ReplaceTexture)
         {
+            Enabled = true;
             this.ReplaceTexture = ReplaceTexture;
             this.ScreenRes = ScreenRes;
             Cards = new List<Card>();
@@ -126,7 +129,7 @@ namespace GameCursachProject
             {
                 Cards[i].MoveUpdate();
                 Cards[i].UpdateAnims();
-                if (Cards[i].Update() == ButtonStates.CLICKED)
+                if (Enabled && Cards[i].Update() == ButtonStates.CLICKED)
                 {
                     if (WithReplace)
                     {

@@ -40,6 +40,13 @@ namespace GameCursachProject
         static public Texture2D UI_CardReplace;
         static public Texture2D UI_EnemyTurn;
 
+        static public Texture2D UI_GameMenu_MainBack;
+        static public Texture2D UI_GameMenu_OptionsBack;
+        static public Texture2D UI_GameMenu_Button;
+        static public Texture2D UI_GameMenu_ListBoxBtn;
+        static public Texture2D UI_GameMenu_ListBoxChoosed;
+        static public Texture2D UI_GameMenu_ListBoxOpenBtn;
+
         static public SpriteFont UI_ButtonFont;
         static public SpriteFont UI_MiniFont;
         static public SpriteFont UI_InfoFont;
@@ -89,6 +96,13 @@ namespace GameCursachProject
             UI_NeutralPoint = ContentLoader.LoadTexture(@"Textures\UI_Neutral");
             UI_CardReplace = ContentLoader.LoadTexture(@"Textures\Card_Replace");
             UI_EnemyTurn = ContentLoader.LoadTexture(@"Textures\UI_EnemyTurn");
+
+            UI_GameMenu_MainBack = ContentLoader.LoadTexture(@"Textures\UI_GameMenu_Back");
+            UI_GameMenu_OptionsBack = ContentLoader.LoadTexture(@"Textures\UI_GameMenu_OptionsBack");
+            UI_GameMenu_Button = ContentLoader.LoadTexture(@"Textures\BtnNewTurn");
+            UI_GameMenu_ListBoxChoosed = ContentLoader.LoadTexture(@"Textures\UI_Lst_Choosed");
+            UI_GameMenu_ListBoxBtn = ContentLoader.LoadTexture(@"Textures\UI_Lst_Variant");
+            UI_GameMenu_ListBoxOpenBtn = ContentLoader.LoadTexture(@"Textures\UI_BtnOpen");
 
             UI_ButtonFont = ContentLoader.LoadFont(@"Fonts\ButtonFont");
             UI_MiniFont = ContentLoader.LoadFont(@"Fonts\UI_MiniFont");
