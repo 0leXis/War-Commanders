@@ -312,7 +312,6 @@ namespace GameCursachProject
         {
             //UpdThread.Wait();
             watch.Start();
-            gr_Dev.Clear(Color.CornflowerBlue);
             // TODO: Add your drawing code here
             Target.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform(Target.GraphicsDevice));
                 Map.Draw(Target, cam);

@@ -33,7 +33,7 @@ namespace GameCursachProject
                 if(value != _Choosed && value < Variants.Count)
                 {
                     _Choosed = value;
-                    Text.Text = Variants[value].Text.Text;
+                    Text.Text = Variants[value].Text;
                     OnChange(this);
                 }
             }

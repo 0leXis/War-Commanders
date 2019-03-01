@@ -73,9 +73,9 @@ namespace GameCursachProject
             ScreenMode.Visible = false;
 
             if(Config.FullScreen)
-                ScreenMode.Text.Text = "Полноэкранный";
+                ScreenMode.Text = "Полноэкранный";
             else
-                ScreenMode.Text.Text = "Оконный";
+                ScreenMode.Text = "Оконный";
 
             Resolutions.Choosed = Config.CurrResolution;
             Resolutions.OnChange += ResolutionChanged;
@@ -91,8 +91,10 @@ namespace GameCursachProject
             Options.Visible = true;
             Quit.Visible = true;
 
-            UI.DisableUI();
-            State.SetEnemyTurn();
+            if(UI != null)
+                UI.DisableUI();
+            if (State != null)
+                State.SetEnemyTurn();
         }
 
         public void Hide(MainUI UI, GameState State)
@@ -105,8 +107,10 @@ namespace GameCursachProject
             Options.Visible = false;
             Quit.Visible = false;
 
-            UI.EnableUI();
-            State.SetPlayerTurn();
+            if (UI != null)
+                UI.EnableUI();
+            if (State != null)
+                State.SetPlayerTurn();
         }
 
         private void ChangeOptionsState()
@@ -176,12 +180,12 @@ namespace GameCursachProject
                             if (Config.FullScreen)
                             {
                                 Config.FullScreen = false;
-                                ScreenMode.Text.Text = "Оконный";
+                                ScreenMode.Text = "Оконный";
                             }
                             else
                             {
                                 Config.FullScreen = true;
-                                ScreenMode.Text.Text = "Полноэкранный";
+                                ScreenMode.Text = "Полноэкранный";
                             }
                             Parent.ApplyChanges();
                         }

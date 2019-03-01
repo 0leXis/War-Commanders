@@ -47,6 +47,15 @@ namespace GameCursachProject
         static public Texture2D UI_GameMenu_ListBoxChoosed;
         static public Texture2D UI_GameMenu_ListBoxOpenBtn;
 
+        static public Texture2D UI_MainMenu_LogIn_Button;
+        static public Texture2D UI_MainMenu_LogIn_EditBox;
+        static public Texture2D UI_MainMenu_LogIn_BackGround;
+        static public Texture2D UI_MainMenu_LogIn_ConnIcon;
+        static public Texture2D UI_MainMenu_BackGround;
+        static public Texture2D UI_MainMenu_HomeButton;
+        static public Texture2D UI_MainMenu_Button;
+        static public Texture2D UI_MainMenu_MenuBar;
+
         static public SpriteFont UI_ButtonFont;
         static public SpriteFont UI_MiniFont;
         static public SpriteFont UI_InfoFont;
@@ -103,6 +112,15 @@ namespace GameCursachProject
             UI_GameMenu_ListBoxChoosed = ContentLoader.LoadTexture(@"Textures\UI_Lst_Choosed");
             UI_GameMenu_ListBoxBtn = ContentLoader.LoadTexture(@"Textures\UI_Lst_Variant");
             UI_GameMenu_ListBoxOpenBtn = ContentLoader.LoadTexture(@"Textures\UI_BtnOpen");
+
+            UI_MainMenu_LogIn_Button = ContentLoader.LoadTexture(@"Textures\BtnNewTurn");
+            UI_MainMenu_LogIn_EditBox = ContentLoader.LoadTexture(@"Textures\UI_EditBox");
+            UI_MainMenu_LogIn_BackGround = ContentLoader.LoadTexture(@"Textures\UI_Login_Back");
+            UI_MainMenu_LogIn_ConnIcon = ContentLoader.LoadTexture(@"Textures\Connecting_Icon");
+            //UI_MainMenu_BackGround = ContentLoader.LoadTexture(@"Textures\UI_BtnOpen");
+            UI_MainMenu_HomeButton = ContentLoader.LoadTexture(@"Textures\UI_MainMenu_HomeButton");
+            UI_MainMenu_Button = ContentLoader.LoadTexture(@"Textures\UI_MainMenu_Button");
+            UI_MainMenu_MenuBar = ContentLoader.LoadTexture(@"Textures\UI_MainMenu_MenuBar");
 
             UI_ButtonFont = ContentLoader.LoadFont(@"Fonts\ButtonFont");
             UI_MiniFont = ContentLoader.LoadFont(@"Fonts\UI_MiniFont");

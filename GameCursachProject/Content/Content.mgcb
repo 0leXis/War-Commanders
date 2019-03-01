@@ -221,6 +221,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Card_Replace.png
 
+#begin Textures/Connecting_Icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Connecting_Icon.png
+
 #begin Textures/Enemy.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -377,6 +389,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/UI_BtnOpen.png
 
+#begin Textures/UI_EditBox.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_EditBox.png
+
 #begin Textures/UI_Enemy.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -461,6 +485,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/UI_HourGlass.png
 
+#begin Textures/UI_Login_Back.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_Login_Back.png
+
 #begin Textures/UI_Lst_Choosed.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -544,6 +580,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/UI_Main_Up_Right.png
+
+#begin Textures/UI_MainMenu_Button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_MainMenu_Button.png
+
+#begin Textures/UI_MainMenu_HomeButton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_MainMenu_HomeButton.png
+
+#begin Textures/UI_MainMenu_MenuBar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/UI_MainMenu_MenuBar.png
 
 #begin Textures/UI_Money.png
 /importer:TextureImporter

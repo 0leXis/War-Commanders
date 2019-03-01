@@ -38,6 +38,13 @@ namespace GameCursachProject
             return false;
         }
 
+        static public bool CheckKeyPressed(Keys Key)
+        {
+            if (State.IsKeyDown(Key))
+               return true;
+            return false;
+        }
+
         static public bool CheckKeyReleased(string KeyFunction)
         {
             Keys Key;
@@ -47,6 +54,13 @@ namespace GameCursachProject
                 if (State.IsKeyUp(Key) && LastState.IsKeyDown(Key))
                     return true;
             }
+            return false;
+        }
+
+        static public bool CheckKeyReleased(Keys Key)
+        {
+            if (State.IsKeyUp(Key) && LastState.IsKeyDown(Key))
+               return true;
             return false;
         }
 

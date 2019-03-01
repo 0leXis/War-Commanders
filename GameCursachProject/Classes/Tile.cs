@@ -31,7 +31,7 @@ namespace GameCursachProject
             {
                 _Position = new Vector2(value.X, value.Y);
                 if (Text != null)
-                    Text.Position = new Vector2(_Position.X + _FrameSize.X * _Scale.X / 2 - Text.Font.MeasureString(Text.Text).X * _Scale.X / 2, _Position.Y + _FrameSize.Y * _Scale.Y / 2 - Text.Font.MeasureString(Text.Text).Y * _Scale.Y / 2);
+                    _Text.Position = new Vector2(_Position.X + _FrameSize.X * _Scale.X / 2 - _Text.Font.MeasureString(_Text.Text).X * _Scale.X / 2, _Position.Y + _FrameSize.Y * _Scale.Y / 2 - _Text.Font.MeasureString(_Text.Text).Y * _Scale.Y / 2);
                 Intersector.GetPointsFromOffsets
                 (
                     new Vector2(_Position.X, _Position.Y + _FrameSize.Y * _Scale.Y / 2), 
@@ -57,8 +57,8 @@ namespace GameCursachProject
                 _Scale = value;
                 if (Text != null)
                 {
-                    Text.Position = new Vector2(_Position.X + _FrameSize.X * _Scale.X / 2 - Text.Font.MeasureString(Text.Text).X * _Scale.X / 2, _Position.Y + _FrameSize.Y * _Scale.Y / 2 - Text.Font.MeasureString(Text.Text).Y * _Scale.Y / 2);
-                    Text.Scale = value;
+                    _Text.Position = new Vector2(_Position.X + _FrameSize.X * _Scale.X / 2 - _Text.Font.MeasureString(_Text.Text).X * _Scale.X / 2, _Position.Y + _FrameSize.Y * _Scale.Y / 2 - _Text.Font.MeasureString(_Text.Text).Y * _Scale.Y / 2);
+                    _Text.Scale = value;
                 }
                 Intersector.GetPointsFromOffsets
                 (

@@ -21,7 +21,7 @@ namespace GameCursachProject
     class Button : AnimatedSprite, IDrawable
     {
         //Текст
-        public BasicText Text { get; set; }
+        protected BasicText _Text;
         //Определение пересечений с мышкой
         public Intersector Intersector { get; set; }
         //Кадр, когда кнопка не выбрана
@@ -49,8 +49,8 @@ namespace GameCursachProject
             {
                 //Изменить позицию кнопки, текста и координаты многоугольника пересечений
                 base.Position = new Vector2(value.X, value.Y);
-                if (Text != null)
-                    Text.Position = new Vector2(Position.X + FrameSize.X * Scale.X / 2 - Text.Font.MeasureString(Text.Text).X * Scale.X / 2, Position.Y + FrameSize.Y * Scale.Y / 2 - Text.Font.MeasureString(Text.Text).Y * Scale.Y / 2);
+                if (_Text != null)
+                    _Text.Position = new Vector2(Position.X + (FrameSize.X - _Text.Font.MeasureString(_Text.Text).X) * Scale.X / 2, Position.Y + (FrameSize.Y - _Text.Font.MeasureString(_Text.Text).Y) * Scale.Y / 2);
                 Intersector.GetPointsFromOffsets
                     (
                     Position, 
@@ -83,10 +83,10 @@ namespace GameCursachProject
             {
                 //Изменить размер кнопки, текста и координаты многоугольника пересечений
                 base.Scale = value;
-                if (Text != null)
+                if (_Text != null)
                 {
-                    Text.Position = new Vector2(Position.X + FrameSize.X * Scale.X / 2 - Text.Font.MeasureString(Text.Text).X * Scale.X / 2, Position.Y + FrameSize.Y * Scale.Y / 2 - Text.Font.MeasureString(Text.Text).Y * Scale.Y / 2);
-                    Text.Scale = value;
+                    _Text.Position = new Vector2(Position.X + (FrameSize.X - _Text.Font.MeasureString(_Text.Text).X) * Scale.X / 2, Position.Y + (FrameSize.Y - _Text.Font.MeasureString(_Text.Text).Y) * Scale.Y / 2);
+                    _Text.Scale = value;
                 }
                 Intersector.GetPointsFromOffsets
                     (
@@ -109,6 +109,21 @@ namespace GameCursachProject
                 base.Scale = value;
             }
         }
+
+        //Текст
+        public string Text
+        {
+            get
+            {
+                return _Text.Text;
+            }
+            set
+            {
+                _Text.Text = value;
+                _Text.Position = new Vector2(Position.X + (FrameSize.X - _Text.Font.MeasureString(_Text.Text).X) * Scale.X / 2, Position.Y + (FrameSize.Y - _Text.Font.MeasureString(_Text.Text).Y) * Scale.Y / 2);
+            }
+        }
+
         //Слой
         new public float Layer
         {
@@ -118,12 +133,12 @@ namespace GameCursachProject
             }
             set
             {
-                if (Text == null)
+                if (_Text == null)
                     base.Layer = value;
                 else
                 {
                     base.Layer = value + 0.0001f;
-                    Text.Layer = value;
+                    _Text.Layer = value;
                 }
             }
         }
@@ -149,7 +164,7 @@ namespace GameCursachProject
             this.ClickedFrame = ClickedFrame;
             this.DisabledFrame = DisabledFrame;
             Intersector = new Intersector(Position, new Vector2(Position.X + FrameSize.X, Position.Y), new Vector2(Position.X + FrameSize.X, Position.Y + FrameSize.Y), new Vector2(Position.X, Position.Y + FrameSize.Y));
-            this.Text = new BasicText(new Vector2(Position.X + FrameSize.X / 2 - Font.MeasureString(Text).X / 2, Position.Y + FrameSize.Y / 2 - Font.MeasureString(Text).Y / 2), Text, Font, color, Layer);
+            _Text = new BasicText(new Vector2(Position.X + (FrameSize.X - Font.MeasureString(Text).X) / 2, Position.Y + (FrameSize.Y - Font.MeasureString(Text).Y) / 2), Text, Font, color, Layer);
             Enabled = true;
         }
         /// <summary>
@@ -170,7 +185,7 @@ namespace GameCursachProject
             this.ClickedFrame = ClickedFrame;
             this.DisabledFrame = DisabledFrame;
             Intersector = new Intersector(Position, new Vector2(Position.X + FrameSize.X, Position.Y), new Vector2(Position.X + FrameSize.X, Position.Y + FrameSize.Y), new Vector2(Position.X, Position.Y + FrameSize.Y));
-            this.Text = null;
+            _Text = null;
             Enabled = true;
         }
 
@@ -245,8 +260,8 @@ namespace GameCursachProject
             if (Visible)
             {
                 Target.Draw(Texture, Position, null, new Rectangle(Convert.ToInt32(CurrentFrame * FrameSize.X), 0, Convert.ToInt32(FrameSize.X), Convert.ToInt32(FrameSize.Y)), RotationPoint, 0, Scale, Color.White, SpriteEffects.None, Layer);
-                if (Text != null)
-                    Text.Draw(Target);
+                if (_Text != null)
+                    _Text.Draw(Target);
             }
         }
     }

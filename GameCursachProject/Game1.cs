@@ -21,6 +21,7 @@ namespace GameCursachProject
         int ScreenHeight, ScreenWidth;
 
         GameState gameState;
+        MainMenu mainMenu;
         GameMenu Menu;
 
         public Game1()
@@ -63,11 +64,12 @@ namespace GameCursachProject
 
             GameContent.LoadGameContent();
 
-            gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
+            mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, 0.1f);
+            //gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
 
             KeyBindings.RegisterKeyBind("KEY_MENU", Keys.Escape);
             Menu = new GameMenu(new Vector2(ScreenWidth, ScreenHeight), this, GameContent.UI_GameMenu_MainBack, GameContent.UI_GameMenu_OptionsBack, GameContent.UI_GameMenu_Button, GameContent.UI_GameMenu_ListBoxBtn, GameContent.UI_GameMenu_ListBoxChoosed, GameContent.UI_GameMenu_ListBoxOpenBtn, GameContent.UI_InfoFont, Color.Black, 0.1f);
-            Menu.Hide(gameState.UI, gameState);
+            Menu.Hide(null, gameState);
         }
 
         /// <summary>
@@ -77,7 +79,8 @@ namespace GameCursachProject
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            gameState.Close();
+            if (gameState != null)
+                gameState.Close();
 
             Log.EnableConsoleLog = false;
             //Log.EnableFileLog = false;
@@ -108,16 +111,26 @@ namespace GameCursachProject
             {
                 ScreenWidth = Window.ClientBounds.Width; // TODO: ON RESIZE
                 ScreenHeight = Window.ClientBounds.Height;
-                gameState.Resize(ScreenWidth, ScreenHeight);
+                if (gameState != null)
+                    gameState.Resize(ScreenWidth, ScreenHeight);
             }
 
             MouseControl.Update();
             KeyBindings.Update();
+            if (mainMenu != null)
+                mainMenu.Update();
+            if (gameState != null)
+            {
+                Menu.Update(gameState.UI, gameState);
+                gameState.Update();
+            }
+            else
+            {
+                Menu.Update(null, gameState);
+            }
 
-            Menu.Update(gameState.UI, gameState);
-            gameState.Update();
-
-            Window.Title = gameState.watch.Elapsed.ToString() + "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y) + "|ZOOM|" + gameState.cam.Zoom.ToString() + "|POS|" + gameState.cam.Position.ToString();
+            //Window.Title = gameState.watch.Elapsed.ToString() + "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y) + "|ZOOM|" + gameState.cam.Zoom.ToString() + "|POS|" + gameState.cam.Position.ToString();
+            Window.Title = "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y);
 
             base.Update(gameTime);
         }
@@ -128,8 +141,11 @@ namespace GameCursachProject
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            gameState.Draw(spriteBatch);
-
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            if(mainMenu != null)
+                mainMenu.Draw(spriteBatch);
+            if (gameState != null)
+                gameState.Draw(spriteBatch);
             spriteBatch.Begin(SpriteSortMode.BackToFront);
                 Menu.Draw(spriteBatch);
             spriteBatch.End();
