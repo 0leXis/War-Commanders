@@ -69,18 +69,36 @@ namespace GameCursachProject
 
         public string[] GetMsgs()
         {
-            string[] data;
-            lock (LockObject)
+            if (MsgReadList.Count > 0)
             {
-                data = new string[MsgReadList.Count];
-                var i = 0;
-                while (MsgReadList.Count > 0)
+                string[] data;
+                lock (LockObject)
                 {
-                    data[i] = MsgReadList.Dequeue();
-                    i++;
+                    data = new string[MsgReadList.Count];
+                    var i = 0;
+                    while (MsgReadList.Count > 0)
+                    {
+                        data[i] = MsgReadList.Dequeue();
+                        i++;
+                    }
                 }
+                return data;
             }
-            return data;
+            return null;
+        }
+
+        public string GetNextMsg()
+        {
+            if (MsgReadList.Count > 0)
+            {
+                string data;
+                lock (LockObject)
+                {
+                    data = MsgReadList.Dequeue();
+                }
+                return data;
+            }
+            return null;
         }
 
         public void SendMsg(string Msg)

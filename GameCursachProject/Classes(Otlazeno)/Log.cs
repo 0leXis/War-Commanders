@@ -18,7 +18,7 @@ namespace GameCursachProject
         /// Разрешает отправление отладочной
         /// информации в консоль
         /// </summary>
-        static public bool EnableConsoleLog { get; set; }
+        static public bool EnableConsoleLog { get; set; }// = true;
         /// <summary>
         /// Разрешает отправление отладочной
         /// информации в log.txt

@@ -13,7 +13,6 @@ namespace GameCursachProject
     class GameState
     {
         public NetworkInterface NI;
-        public const string ServerIP = "25.47.239.150:9080";
 
         public const float LAYER_MAP = 0.5f;
         public const float LAYER_UI_FAR = 0.4f;
@@ -32,6 +31,9 @@ namespace GameCursachProject
         public Script UnitAttEngine;
 
         public bool IsPlayerTurn;
+        public bool IsNotLockClick;
+
+        public MapZones PlayerSide = MapZones.RIGHT;
 
         private GraphicsDevice gr_Dev;
 
@@ -40,27 +42,54 @@ namespace GameCursachProject
             gr_Dev = gr_Device;
 
             NI = new NetworkInterface();
-            //while (!NI.IsConnected)
-            //{
-            //    NI.ConnectTo(ServerIP);
-            //}
-            //int[][] mass;
-            //while (true)
-            //{
-            //    var gg = NI.GetMsgs();
-            //    if (gg.Length > 0)
-            //    {
-            //        var str = "";
-            //        foreach (var g in gg)
-            //            str += g;
-            //        var jsonFormatter = new DataContractJsonSerializer(typeof(int[][]));
-            //        mass = (int[][])jsonFormatter.ReadObject(new MemoryStream(Encoding.UTF8.GetBytes(str)));
-            //        for (var i = 0; i < mass.Length; i++)
-            //            for (var j = 0; j < mass.Length; j++)
-            //                Log.SendMessage(mass[i][j].ToString());
-            //        break;
-            //    }
-            //}
+            while (!NI.IsConnected)
+            {
+                NI.ConnectTo(CommandParser.ServerIP);
+            }
+            Log.SendMessage("Подключено");
+            CommandParser.Init(NI);
+            int[][] mass = null;
+            while (true)
+            {
+                var msg = NI.GetNextMsg();
+                if (msg != null)
+                {
+                    var masss = (mass as object);
+                    Serialization.DeSerialize(msg, ref masss, typeof(int[][]));
+                    mass = masss as int[][];
+                    break;
+                }
+            }
+
+            Log.SendMessage("Ожидание команды начала игры");
+
+            var player1_name = "";
+            var player2_name = "";
+            var player_money = "";
+            string[] tmpmsg = null;
+            int[] Cards = null;
+            while (true)
+            {
+                var msg = NI.GetNextMsg();
+                if (msg != null)
+                {
+
+                    var masss = (tmpmsg as object);
+                    Serialization.DeSerialize(msg, ref masss, typeof(string[]));
+                    tmpmsg = masss as string[];
+
+                    player1_name = tmpmsg[0];
+                    player2_name = tmpmsg[1];
+                    player_money = tmpmsg[2];
+                    PlayerSide = (tmpmsg[3] == "RIGHT") ? MapZones.RIGHT : MapZones.LEFT;
+                    Cards = new int[tmpmsg.Length - 4];
+                    for (var i = 4; i < tmpmsg.Length; i++)
+                    {
+                        Cards[i - 4] = Convert.ToInt32(tmpmsg[i]);
+                    }
+                    break;
+                }
+            }
 
             watch = new Stopwatch();//ДЫБГ
             var MapArr = new Tile[8][];
@@ -71,7 +100,7 @@ namespace GameCursachProject
                 MapArr[i] = new Tile[15];
                 for (var j = 0; j < 15; j++)
                 {
-                    switch (1)//mass[i][j]
+                    switch (mass[i][j])
                     {
                         case 1:
                             TextDec = GameContent.Tile_Decorations[0];
@@ -92,6 +121,8 @@ namespace GameCursachProject
                         MapArr[i][j] = null;
                 }
             }
+
+
             Map = new Map(MapArr, 0, 1, new Animation(1, 1, true), GameContent.ArrowSegment, GameContent.ArrowEnd, GameContent.UI_TileInfo, GameContent.Tile_ControlPoint_Neutral, GameContent.Tile_ControlPoint_Allied, GameContent.Tile_ControlPoint_Enemy, GameContent.Unit_AttackRadius, GameContent.UI_InfoFont, Color.White, new Point[] { new Point(0, 7), new Point(3, 7), new Point(6, 7) });
             //foreach (var Til in Map)
             //    if (Til != null)
@@ -132,10 +163,11 @@ namespace GameCursachProject
                 GameContent.UI_MiniFont,
                 GameContent.UI_NewTurnFont,
                 gr_Device, this,
-                "Stalin", "Hitler",
+                player1_name, player2_name,
                 "0", "1", "0", "1", "100",
-                "10", "5",
+                player_money, "1",
                 "1:30", new string[] { "A", "B", "C" },
+                Cards, (Cards.Length == 3) ? true : false,
                 LAYER_UI_FAR);
             // TODO: use this.Content to load your game content here
             cam = new Camera(new Vector2(ScreenWidth, ScreenHeight));
@@ -154,15 +186,15 @@ namespace GameCursachProject
             UnitAttEngine = new Script("", "GameCursachProject", false);
 
             //TEST
-            Map.GetTile(4, 6).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitTextures[0], GameContent.UI_Info_Enemy, GameContent.UI_InfoFont, Color.White, 392, 20, 5, 3, 6, 1, 2, Side.OPPONENT, GameContent.UnitAttackScripts[0], UnitAttEngine, new Point(4, 6), new Animation(8, 17, false), 0.4f), MapZones.RIGHT, Map.UI_VisibleState);
+            //Map.GetTile(4, 6).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitTextures[0], GameContent.UI_Info_Enemy, GameContent.UI_InfoFont, Color.White, 392, 20, 5, 3, 6, 1, 2, Side.OPPONENT, GameContent.UnitAttackScripts[0], UnitAttEngine, new Point(4, 6), new Animation(8, 17, false), 0.4f), MapZones.RIGHT, Map.UI_VisibleState);
             //TEST
             SetEnemyTurn();
         }
 
-        public void Update()
+        public void Update(GameMenu Menu)
         {
 
-            UpdateGameObjects();
+            UpdateGameObjects(Menu);
 
             //Window.Title = Convert.ToString(Hand.Cards[0].Layer) + " " + Convert.ToString(Hand.Cards[1].Layer) + " " + Convert.ToString(Hand.Cards[2].Layer);
 
@@ -200,9 +232,71 @@ namespace GameCursachProject
             //cam.Zoom = 0.25f;
             //cam.Rotation -= 0.01f;
 
-            foreach (var msg in NI.GetMsgs())
-                Log.SendMessage(string.Format("Server (from {0}): {1}", NI.IP_Port, msg));
-
+            string[] CN;
+            CommandParser.Update(out CN);
+            if (CN != null)
+            {
+                if (CN[0] == "REPLACE")
+                {
+                    if(CN.Length == 1)
+                    {
+                        UI.ReplaceCards(null);
+                    }
+                    else
+                    {
+                        var CardsToReplace = new int[CN.Length - 1];
+                        for (var i = 1; i < CN.Length; i++)
+                        {
+                            CardsToReplace[i - 1] = Convert.ToInt32(CN[i]);
+                        }
+                        UI.ReplaceCards(CardsToReplace);
+                    }
+                }
+                if (CN[0] == "START")
+                {
+                    UI.IterationReset();
+                }
+                if (CN[0] == "TURN")
+                {
+                    if(CN[1] == "ENEMY")
+                    {
+                        UI.SetEnemyTurn();
+                        IsPlayerTurn = false;
+                    }
+                    else
+                    {
+                        var CardsToChoose = new int[CN.Length - 2];
+                        for (var i = 2; i < CN.Length; i++)
+                        {
+                            CardsToChoose[i - 2] = Convert.ToInt32(CN[i]);
+                        }
+                        UI.SetPlayerTurn(Convert.ToInt32(CN[1]), CardsToChoose);
+                        IsPlayerTurn = true;
+                    }
+                }
+                if (CN[0] == "CHOOSE")
+                {
+                    if(CN[1] == "OK")
+                    {
+                        UI.ChooseCards(Hand);
+                    }
+                }
+                if (CN[0] == "SPAWN")
+                {
+                    if(CN[1] == "ALLIED")
+                    {
+                        Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitTexture, GameContent.UI_Info_Allied, GameContent.UI_InfoFont, Color.White, 392, 20, GameContent.UnitCards[Convert.ToInt32(CN[2])].Speed, GameContent.UnitCards[Convert.ToInt32(CN[2])].Damage, GameContent.UnitCards[Convert.ToInt32(CN[2])].HP, GameContent.UnitCards[Convert.ToInt32(CN[2])].Armor, GameContent.UnitCards[Convert.ToInt32(CN[2])].AttackRadius, Side.PLAYER, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitAttackScript, UnitAttEngine, new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])), new Animation(8, 17, false), 0.4f), PlayerSide, Map.UI_VisibleState);
+                    }
+                    else
+                    {
+                        Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitTexture, GameContent.UI_Info_Enemy, GameContent.UI_InfoFont, Color.White, 392, 20, GameContent.UnitCards[Convert.ToInt32(CN[2])].Speed, GameContent.UnitCards[Convert.ToInt32(CN[2])].Damage, GameContent.UnitCards[Convert.ToInt32(CN[2])].HP, GameContent.UnitCards[Convert.ToInt32(CN[2])].Armor, GameContent.UnitCards[Convert.ToInt32(CN[2])].AttackRadius, Side.OPPONENT, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitAttackScript, UnitAttEngine, new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])), new Animation(8, 17, false), 0.4f), (PlayerSide == MapZones.RIGHT) ? MapZones.LEFT : MapZones.RIGHT, Map.UI_VisibleState);
+                    }
+                }
+                //if(CN[0] == "2")
+                //{
+                //	//Map.GetTile(Convert.ToInt32(CN[1]), Convert.ToInt32(CN[2])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitTextures[0], GameContent.UI_Info_Allied, GameContent.UI_InfoFont, Color.White, 392, 20, 5, 3, 6, 1, 2, Side.PLAYER, GameContent.UnitAttackScripts[0], UnitAttEngine, new Point(Convert.ToInt32(CN[1]), Convert.ToInt32(CN[2])), new Animation(8, 17, false), 0.4f), MapZones.RIGHT, Map.UI_VisibleState);
+                //}
+            }
         }
 
         private void UpdateCamera()
@@ -247,7 +341,7 @@ namespace GameCursachProject
                 cam.Position = new Vector2(cam.Position.X, LastVect.Y - cam.ScreenRes.Y / cam.Zoom);
         }
 
-        private void UpdateGameObjects()
+        private void UpdateGameObjects(GameMenu Menu)
         {
             var IsMouseHandled = false;
             if (UI.IsPlayerTurnSturted)
@@ -259,15 +353,15 @@ namespace GameCursachProject
             }
             if (UI.IsVs)
             {
-                UI.Update(ref IsMouseHandled, Map, Hand, cam);
-                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, GameContent.UnitAttackScripts[0], UnitAttEngine, IsPlayerTurn);
+                UI.Update(ref IsMouseHandled, Map, Hand, cam, Menu);
+                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, IsNotLockClick, PlayerSide);
             }
             else
             {
-                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, GameContent.UnitAttackScripts[0], UnitAttEngine, IsPlayerTurn);
-                UI.Update(ref IsMouseHandled, Map, Hand, cam);
+                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, IsNotLockClick, PlayerSide);
+                UI.Update(ref IsMouseHandled, Map, Hand, cam, Menu);
             }
-            Map.Update(ref IsMouseHandled, Hand, cam, IsPlayerTurn);
+            Map.Update(ref IsMouseHandled, Hand, cam, IsNotLockClick);
         }
 
         public void Resize(int ScreenWidth, int ScreenHeight)
@@ -279,12 +373,12 @@ namespace GameCursachProject
 
         public void SetPlayerTurn()
         {
-            IsPlayerTurn = true;
+            IsNotLockClick = true;
         }
 
         public void SetEnemyTurn()
         {
-            IsPlayerTurn = false;
+            IsNotLockClick = false;
             Hand.CalculateCardPosition(10, true);
             Map.DeSelectTile(Map.SelectedTile);
             if (Map.IsAttack)
@@ -305,6 +399,8 @@ namespace GameCursachProject
 
         public void Close()
         {
+        	//NI.SendMsg(Serialization.Serialize(new string[]{ "0" }));
+        	
             NI.Disconnect();
         }
 

@@ -5,14 +5,97 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Xml;
+using System.IO;
 
 namespace GameCursachProject
 {
+    public struct UnitCardInfo
+    {
+        public string Name;
+
+        public int Cost;
+        public int Armor;
+        public int AttackRadius;
+        public int Damage;
+        public int HP;
+        public int Speed;
+        public Texture2D UnitTexture;
+        public string UnitAttackScript;
+        public Texture2D Card_Decoration;
+
+        public UnitCardInfo(string Name, int Cost, int Armor, int AttackRadius, int Damage, int HP, int Speed, Texture2D UnitTexture,
+        string UnitAttackScript, Texture2D Card_Decoration)
+        {
+            this.Name = Name;
+            this.Cost = Cost;
+            this.Armor = Armor;
+            this.AttackRadius = AttackRadius;
+            this.Damage = Damage;
+            this.HP = HP;
+            this.Speed = Speed;
+            this.UnitTexture = UnitTexture;
+            this.UnitAttackScript = UnitAttackScript;
+            this.Card_Decoration = Card_Decoration;
+        }
+
+        public UnitCardInfo(string InfoPath)
+        {
+            Name = "";
+            Cost = 0;
+            Armor = 0;
+            AttackRadius = 0;
+            Damage = 0;
+            HP = 0;
+            Speed = 0;
+
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load(@"Content\" + InfoPath + @"\Info.xml");
+            XmlElement xRoot = xDoc.DocumentElement;
+            foreach (XmlNode xnode in xRoot)
+            {
+                if (xnode.Name == "Name")
+                {
+                    Name = xnode.InnerText;
+                }
+                if (xnode.Name == "Cost")
+                {
+                    Cost = Convert.ToInt32(xnode.InnerText);
+                }
+                if (xnode.Name == "Armor")
+                {
+                    Armor = Convert.ToInt32(xnode.InnerText);
+                }
+                if (xnode.Name == "AttackRadius")
+                {
+                    AttackRadius = Convert.ToInt32(xnode.InnerText);
+                }
+                if (xnode.Name == "Damage")
+                {
+                    Damage = Convert.ToInt32(xnode.InnerText);
+                }
+                if (xnode.Name == "HP")
+                {
+                    HP = Convert.ToInt32(xnode.InnerText);
+                }
+                if (xnode.Name == "Speed")
+                {
+                    Speed = Convert.ToInt32(xnode.InnerText);
+                }
+            }
+
+            UnitTexture = ContentLoader.LoadTexture(InfoPath + @"\Unit");
+            UnitAttackScript = ContentLoader.LoadScript(@"Content\" + InfoPath + @"\Attack.lua");
+            Card_Decoration = ContentLoader.LoadTexture(InfoPath + @"\Card");
+        }
+    }
+
     public static class GameContent
     {
+        public const string DefaultUnitCardsPath = @"Cards\Unit";
+
         static public Texture2D Unit_AttackRadius;
-        static public List<Texture2D> UnitTextures = new List<Texture2D>();
-        static public List<string> UnitAttackScripts = new List<string>();
+        static public List<UnitCardInfo> UnitCards = new List<UnitCardInfo>();
 
         static public Texture2D UI_Info_Allied;
         static public Texture2D UI_Info_Enemy;
@@ -73,7 +156,6 @@ namespace GameCursachProject
         static public Texture2D ArrowEnd;
 
         static public Texture2D CardTexture;
-        static public List<Texture2D> Card_Decorations = new List<Texture2D>();
 
         ///////////
         static public Texture2D Bullet;
@@ -149,13 +231,14 @@ namespace GameCursachProject
             Tile_Decorations.Add(ContentLoader.LoadTexture(@"Textures\Tile_Desert"));
             Tile_Decorations.Add(ContentLoader.LoadTexture(@"Textures\Tile_River"));
 
-            UnitTextures.Add(ContentLoader.LoadTexture(@"Textures\TankPrototype"));
-
             UI_Player_Icons.Add(ContentLoader.LoadTexture(@"Textures\Player_Icon"));
 
-            UnitAttackScripts.Add(ContentLoader.LoadScript(@"Content\Scripts\TestScript.lua"));
-
-            Card_Decorations.Add(ContentLoader.LoadTexture(@"Textures\Tiger"));
+            var i = 0;
+            while(Directory.Exists(@"Content\" + DefaultUnitCardsPath + @"\" + i.ToString()))
+            {
+                UnitCards.Add(new UnitCardInfo(DefaultUnitCardsPath + @"\" + i.ToString()));
+                i++;
+            }
         }
     }
 }

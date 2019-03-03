@@ -179,6 +179,7 @@
     <Compile Include="Classes\ScalingText.cs" />
     <Compile Include="Classes\ScreenBr.cs" />
     <Compile Include="Classes\Script.cs" />
+    <Compile Include="Classes\Serialization.cs" />
     <Compile Include="Classes\SimpleRectangle.cs" />
     <Compile Include="Classes\Tile.cs" />
     <Compile Include="Classes\UI_Resource_Info.cs" />
@@ -259,12 +260,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.manifest" />
-    <None Include="Content\Scripts\TestScript.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Content\Cards\Unit\0\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Cards\Unit\1\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Cards\Unit\0\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Cards\Unit\1\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ProfilingSessions\Session20181208_115135.sdps" />
     <Content Include="ProfilingSessions\Session20181208_115432.sdps" />
     <None Include="x64\lua52.dll">
@@ -281,6 +291,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <PropertyGroup>

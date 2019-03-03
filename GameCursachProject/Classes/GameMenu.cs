@@ -110,7 +110,8 @@ namespace GameCursachProject
             if (UI != null)
                 UI.EnableUI();
             if (State != null)
-                State.SetPlayerTurn();
+                if(State.IsPlayerTurn)
+                    State.SetPlayerTurn();
         }
 
         private void ChangeOptionsState()

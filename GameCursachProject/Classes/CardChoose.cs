@@ -30,7 +30,11 @@ namespace GameCursachProject
         private bool WithReplace;
         private Texture2D ReplaceTexture;
 
-        public bool Enabled { get; set; }
+        public bool Enabled
+        {
+            get;
+            set;
+        }
 
         public CardChoose(Vector2 ScreenRes, Texture2D ReplaceTexture)
         {

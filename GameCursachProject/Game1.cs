@@ -64,8 +64,8 @@ namespace GameCursachProject
 
             GameContent.LoadGameContent();
 
-            mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, 0.1f);
-            //gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
+            //mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, 0.1f);
+            gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
 
             KeyBindings.RegisterKeyBind("KEY_MENU", Keys.Escape);
             Menu = new GameMenu(new Vector2(ScreenWidth, ScreenHeight), this, GameContent.UI_GameMenu_MainBack, GameContent.UI_GameMenu_OptionsBack, GameContent.UI_GameMenu_Button, GameContent.UI_GameMenu_ListBoxBtn, GameContent.UI_GameMenu_ListBoxChoosed, GameContent.UI_GameMenu_ListBoxOpenBtn, GameContent.UI_InfoFont, Color.Black, 0.1f);
@@ -122,7 +122,7 @@ namespace GameCursachProject
             if (gameState != null)
             {
                 Menu.Update(gameState.UI, gameState);
-                gameState.Update();
+                gameState.Update(Menu);
             }
             else
             {
