@@ -215,6 +215,7 @@ namespace GameCursachProject
                                             //TEST: Юниты
                                             //TmpTile.SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitTextures[0], GameContent.UI_Info_Allied, GameContent.UI_InfoFont, Color.White, 392, 20, 5, 3, 6, 1, 2, Side.PLAYER, AttScript, ScrForUnit, new Point(Tmp[0], Tmp[1]), new Animation(8, 17, false), 0.4f), MapZones.RIGHT, TiledMap.UI_VisibleState);
                                             CommandParser.SendCommand(new string[]{ "SPAWN", _ChoosedCard.ToString(), Tmp[0].ToString(),Tmp[1].ToString()});
+                                            
                                             Cards.RemoveAt(_ChoosedCard);
                                         }
                                         else

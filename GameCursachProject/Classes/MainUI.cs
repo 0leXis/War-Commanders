@@ -263,7 +263,7 @@ namespace GameCursachProject
             Cardchoose.Enabled = true;
         }
 
-        public void Update(ref bool IsMouseHandled, Map map, Hand hand, Camera cam, GameMenu Menu)
+        public void Update(ref bool IsMouseHandled, Map map, Hand hand, Camera cam, GameMenu Menu, MapZones Opponent)
         {
             EnemyTurnMoveProcess();
         	Br.UpdateAnims();
@@ -453,7 +453,7 @@ namespace GameCursachProject
                         Btn_EndTurn.Enabled = false;
                         map.IsPathFinding = true;
                         map.ActionStartPoint = new Point(map.SelectedTile.X, map.SelectedTile.Y);
-                        map.HighLiteTilesWithPF();
+                        map.HighLiteTilesWithPF(Opponent);
                         map.UpdateAllTiles(cam);
                     }
                 }

@@ -18,7 +18,8 @@ namespace GameCursachProject
 
         NONE_OR_WITH_UNIT,
         NONE_OR_WITH_BUILDING,
-        WITH_BUILDING_OR_WITH_UNIT
+        WITH_BUILDING_OR_WITH_UNIT,
+        ALL
     }
 
     class Card : Button, IDrawable

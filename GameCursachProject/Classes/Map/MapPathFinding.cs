@@ -10,7 +10,7 @@ namespace GameCursachProject
 {
     partial class Map
     {
-        private List<Point> GetSmez(Point vers, bool isfirst)
+        private List<Point> GetSmez(Point vers, bool isfirst, MapZones Opponent)
         {
             var list = new List<Point>();
             if(!isfirst && Tiles[vers.X][vers.Y].UnitOnTile != null)
@@ -31,44 +31,56 @@ namespace GameCursachProject
             {
                 if (vers.Y + 1 < Tiles[0].Length)
                 {
-                    if (Tiles[vers.X][vers.Y + 1] != null)
-                        list.Add(new Point(vers.X, vers.Y + 1));
-                    if (vers.X - 1 >= 0)
-                        if (Tiles[vers.X - 1][vers.Y + 1] != null)
-                            list.Add(new Point(vers.X - 1, vers.Y + 1));
+                    if(!(Opponent == MapZones.RIGHT && vers.Y + 1 == Tiles[0].Length - 1))
+                    {
+                        if (Tiles[vers.X][vers.Y + 1] != null)
+                            list.Add(new Point(vers.X, vers.Y + 1));
+                        if (vers.X - 1 >= 0)
+                            if (Tiles[vers.X - 1][vers.Y + 1] != null)
+                                list.Add(new Point(vers.X - 1, vers.Y + 1));
+                    }
                 }
                 if (vers.Y - 1 >= 0)
                 {
-                    if (Tiles[vers.X][vers.Y - 1] != null)
-                        list.Add(new Point(vers.X, vers.Y - 1));
-                    if (vers.X - 1 >= 0)
-                        if (Tiles[vers.X - 1][vers.Y - 1] != null)
-                            list.Add(new Point(vers.X - 1, vers.Y - 1));
+                    if (!(Opponent == MapZones.LEFT && vers.Y - 1 == 0))
+                    {
+                        if (Tiles[vers.X][vers.Y - 1] != null)
+                            list.Add(new Point(vers.X, vers.Y - 1));
+                        if (vers.X - 1 >= 0)
+                            if (Tiles[vers.X - 1][vers.Y - 1] != null)
+                                list.Add(new Point(vers.X - 1, vers.Y - 1));
+                    }
                 }
             }
             else
             {
                 if (vers.Y + 1 < Tiles[0].Length)
                 {
-                    if (Tiles[vers.X][vers.Y + 1] != null)
-                        list.Add(new Point(vers.X, vers.Y + 1));
-                    if (vers.X + 1 < Tiles.Length)
-                        if (Tiles[vers.X + 1][vers.Y + 1] != null)
-                            list.Add(new Point(vers.X + 1, vers.Y + 1));
+                    if (!(Opponent == MapZones.RIGHT && vers.Y + 1 == Tiles[0].Length - 1))
+                    {
+                        if (Tiles[vers.X][vers.Y + 1] != null)
+                            list.Add(new Point(vers.X, vers.Y + 1));
+                        if (vers.X + 1 < Tiles.Length)
+                            if (Tiles[vers.X + 1][vers.Y + 1] != null)
+                                list.Add(new Point(vers.X + 1, vers.Y + 1));
+                    }
                 }
                 if (vers.Y - 1 >= 0)
                 {
-                    if (Tiles[vers.X][vers.Y - 1] != null)
-                        list.Add(new Point(vers.X, vers.Y - 1));
-                    if (vers.X + 1 < Tiles.Length)
-                        if (Tiles[vers.X + 1][vers.Y - 1] != null)
-                            list.Add(new Point(vers.X + 1, vers.Y - 1));
+                    if (!(Opponent == MapZones.LEFT && vers.Y - 1 == 0))
+                    {
+                        if (Tiles[vers.X][vers.Y - 1] != null)
+                            list.Add(new Point(vers.X, vers.Y - 1));
+                        if (vers.X + 1 < Tiles.Length)
+                            if (Tiles[vers.X + 1][vers.Y - 1] != null)
+                                list.Add(new Point(vers.X + 1, vers.Y - 1));
+                    }
                 }
             }
             return list;
         }
 
-        public List<Point> PathFinding(int starti, int startj, int stopi, int stopj, int MovePoints, out int PathLength, out List<Point> Marked)
+        public List<Point> PathFinding(int starti, int startj, int stopi, int stopj, int MovePoints, out int PathLength, out List<Point> Marked, MapZones Opponent)
         {
             var dlini = new double[Tiles.Length, Tiles[0].Length];
             var puti = new List<Point>[Tiles.Length, Tiles[0].Length];
@@ -103,7 +115,7 @@ namespace GameCursachProject
                     break;
                 used.Add(v);
                 needuse.Remove(v);
-                foreach (var rebro in GetSmez(v, first))
+                foreach (var rebro in GetSmez(v, first, Opponent))
                 {
                     if (!used.Contains(rebro))
                     {
@@ -146,11 +158,11 @@ namespace GameCursachProject
             }
         }
 
-        public void HighLiteTilesWithPF()
+        public void HighLiteTilesWithPF(MapZones Opponent)
         {
             int PL;
             List<Point> Marked;
-            PathFinding(ActionStartPoint.X, ActionStartPoint.Y, 0, 0, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked);
+            PathFinding(ActionStartPoint.X, ActionStartPoint.Y, 0, 0, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked, Opponent);
             foreach (var Til in Marked)
                 if (!ChangedAnimTiles.Contains(Til))
                     ChangedAnimTiles.Add(Til);

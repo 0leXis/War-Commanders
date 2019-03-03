@@ -90,12 +90,51 @@ namespace GameCursachProject
         }
     }
 
+    public struct TileTypeInfo
+    {
+        public int TileID;
+        public int Armor;
+        public int SpeedNeeded;
+        public string Name;
+        public Texture2D Tile_Decoration;
+
+        public TileTypeInfo(string InfoPath)
+        {
+            TileID = 0;
+            Armor = 0;
+            SpeedNeeded = 0;
+            Name = "";
+
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load(@"Content\" + InfoPath + @"\Info.xml");
+            XmlElement xRoot = xDoc.DocumentElement;
+            foreach (XmlNode xnode in xRoot)
+            {
+                if (xnode.Name == "Name")
+                {
+                    Name = xnode.InnerText;
+                }
+                if (xnode.Name == "Armor")
+                {
+                    Armor = Convert.ToInt32(xnode.InnerText);
+                }
+                if (xnode.Name == "SpeedNeeded")
+                {
+                    SpeedNeeded = Convert.ToInt32(xnode.InnerText);
+                }
+            }
+            Tile_Decoration = ContentLoader.LoadTexture(InfoPath + @"\Tile");
+        }
+    }
+
     public static class GameContent
     {
         public const string DefaultUnitCardsPath = @"Cards\Unit";
+        public const string DefaultTileTypesPath = @"Tiles";
 
         static public Texture2D Unit_AttackRadius;
         static public List<UnitCardInfo> UnitCards = new List<UnitCardInfo>();
+        static public List<TileTypeInfo> TileTypes = new List<TileTypeInfo>();
 
         static public Texture2D UI_Info_Allied;
         static public Texture2D UI_Info_Enemy;
@@ -150,7 +189,6 @@ namespace GameCursachProject
         static public Texture2D Tile_ControlPoint_Neutral;
         static public Texture2D Tile_ControlPoint_Allied;
         static public Texture2D Tile_ControlPoint_Enemy;
-        static public List<Texture2D> Tile_Decorations = new List<Texture2D>();
 
         static public Texture2D ArrowSegment;
         static public Texture2D ArrowEnd;
@@ -227,16 +265,19 @@ namespace GameCursachProject
 
             //////////////////////////////////////////////////////////////////////////
 
-            Tile_Decorations.Add(ContentLoader.LoadTexture(@"Textures\Tile_Forest"));
-            Tile_Decorations.Add(ContentLoader.LoadTexture(@"Textures\Tile_Desert"));
-            Tile_Decorations.Add(ContentLoader.LoadTexture(@"Textures\Tile_River"));
-
             UI_Player_Icons.Add(ContentLoader.LoadTexture(@"Textures\Player_Icon"));
 
             var i = 0;
             while(Directory.Exists(@"Content\" + DefaultUnitCardsPath + @"\" + i.ToString()))
             {
                 UnitCards.Add(new UnitCardInfo(DefaultUnitCardsPath + @"\" + i.ToString()));
+                i++;
+            }
+
+            i = 0;
+            while (Directory.Exists(@"Content\" + DefaultTileTypesPath + @"\" + i.ToString()))
+            {
+                TileTypes.Add(new TileTypeInfo(DefaultTileTypesPath + @"\" + i.ToString()));
                 i++;
             }
         }

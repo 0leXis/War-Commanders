@@ -34,6 +34,7 @@ namespace GameCursachProject
         public bool IsNotLockClick;
 
         public MapZones PlayerSide = MapZones.RIGHT;
+        public MapZones OpponentSide = MapZones.LEFT;
 
         private GraphicsDevice gr_Dev;
 
@@ -82,6 +83,7 @@ namespace GameCursachProject
                     player2_name = tmpmsg[1];
                     player_money = tmpmsg[2];
                     PlayerSide = (tmpmsg[3] == "RIGHT") ? MapZones.RIGHT : MapZones.LEFT;
+                    OpponentSide = (PlayerSide == MapZones.LEFT) ? MapZones.RIGHT : MapZones.LEFT;
                     Cards = new int[tmpmsg.Length - 4];
                     for (var i = 4; i < tmpmsg.Length; i++)
                     {
@@ -94,29 +96,16 @@ namespace GameCursachProject
             watch = new Stopwatch();//ДЫБГ
             var MapArr = new Tile[8][];
             var Rnd = new Random();
-            Texture2D TextDec;
             for (var i = 0; i < 8; i++)
             {
                 MapArr[i] = new Tile[15];
                 for (var j = 0; j < 15; j++)
                 {
-                    switch (mass[i][j])
-                    {
-                        case 1:
-                            TextDec = GameContent.Tile_Decorations[0];
-                            break;
-                        case 2:
-                            TextDec = GameContent.Tile_Decorations[1];
-                            break;
-                        default:
-                            TextDec = GameContent.Tile_Decorations[2];
-                            break;
-                    }
                     if (j % 2 == 0)
-                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), GameContent.TileBorder, GameContent.TileBorder_HL, TextDec, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), "ТОЛИК", LAYER_MAP);
+                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), GameContent.TileBorder, GameContent.TileBorder_HL, GameContent.TileTypes[mass[i][j]].Tile_Decoration, 392, 20, 0, new Animation(1, 1, true), 1, GameContent.TileTypes[mass[i][j]].SpeedNeeded, GameContent.TileTypes[mass[i][j]].Name, LAYER_MAP);
                     else
                         if (i != MapArr.GetLength(0) - 1)
-                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), GameContent.TileBorder, GameContent.TileBorder_HL, TextDec, 392, 20, 0, new Animation(1, 1, true), 1, Rnd.Next(1, 5), "Лес гномов", LAYER_MAP);
+                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), GameContent.TileBorder, GameContent.TileBorder_HL, GameContent.TileTypes[mass[i][j]].Tile_Decoration, 392, 20, 0, new Animation(1, 1, true), 1, GameContent.TileTypes[mass[i][j]].SpeedNeeded, GameContent.TileTypes[mass[i][j]].Name, LAYER_MAP);
                     else
                         MapArr[i][j] = null;
                 }
@@ -292,6 +281,12 @@ namespace GameCursachProject
                         Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitTexture, GameContent.UI_Info_Enemy, GameContent.UI_InfoFont, Color.White, 392, 20, GameContent.UnitCards[Convert.ToInt32(CN[2])].Speed, GameContent.UnitCards[Convert.ToInt32(CN[2])].Damage, GameContent.UnitCards[Convert.ToInt32(CN[2])].HP, GameContent.UnitCards[Convert.ToInt32(CN[2])].Armor, GameContent.UnitCards[Convert.ToInt32(CN[2])].AttackRadius, Side.OPPONENT, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitAttackScript, UnitAttEngine, new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])), new Animation(8, 17, false), 0.4f), (PlayerSide == MapZones.RIGHT) ? MapZones.LEFT : MapZones.RIGHT, Map.UI_VisibleState);
                     }
                 }
+                if (CN[0] == "MOVE")
+                {
+                    if (IsPlayerTurn)
+                        SetPlayerTurn();
+
+                }
                 //if(CN[0] == "2")
                 //{
                 //	//Map.GetTile(Convert.ToInt32(CN[1]), Convert.ToInt32(CN[2])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitTextures[0], GameContent.UI_Info_Allied, GameContent.UI_InfoFont, Color.White, 392, 20, 5, 3, 6, 1, 2, Side.PLAYER, GameContent.UnitAttackScripts[0], UnitAttEngine, new Point(Convert.ToInt32(CN[1]), Convert.ToInt32(CN[2])), new Animation(8, 17, false), 0.4f), MapZones.RIGHT, Map.UI_VisibleState);
@@ -353,15 +348,15 @@ namespace GameCursachProject
             }
             if (UI.IsVs)
             {
-                UI.Update(ref IsMouseHandled, Map, Hand, cam, Menu);
+                UI.Update(ref IsMouseHandled, Map, Hand, cam, Menu, OpponentSide);
                 Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, IsNotLockClick, PlayerSide);
             }
             else
             {
                 Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, IsNotLockClick, PlayerSide);
-                UI.Update(ref IsMouseHandled, Map, Hand, cam, Menu);
+                UI.Update(ref IsMouseHandled, Map, Hand, cam, Menu, OpponentSide);
             }
-            Map.Update(ref IsMouseHandled, Hand, cam, IsNotLockClick);
+            Map.Update(ref IsMouseHandled, Hand, cam, IsNotLockClick, OpponentSide, this);
         }
 
         public void Resize(int ScreenWidth, int ScreenHeight)

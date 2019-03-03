@@ -106,7 +106,7 @@ namespace GameCursachProject
                         Tiles[i][j].Update(cam: cam);
         }
 
-        public void Update(ref bool IsMouseHandled, Hand hand, Camera cam, bool IsPlayerTurn)
+        public void Update(ref bool IsMouseHandled, Hand hand, Camera cam, bool IsPlayerTurn, MapZones Opponent, GameState gameState)
         {
         	if(MouseControl.IsRightBtnClicked)
         	{
@@ -162,9 +162,18 @@ namespace GameCursachProject
                         		int PL;
                         		List<Point> Marked;
 
-                        		UnitMove(PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked));
+                                var Path = PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked, Opponent);
+                                var Command = new string[Path.Count + 1];
+                                Command[0] = "MOVE";
+                                for (var i = 1; i < Command.Length; i++)
+                                {
+                                    Command[i] = Path[i - 1].X.ToString() + " " + Path[i - 1].Y.ToString();
+                                }   
+                                CommandParser.SendCommand(Command);
+                                gameState.SetEnemyTurn();
+                                //UnitMove(PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked, Opponent));
 
-                        		SetDefault();
+                                SetDefault();
                                 UpdateAllTiles(cam);
                         		CreatePathArrows(null, cam);
                         		DeSelectTile(SelectedTile);
@@ -198,7 +207,7 @@ namespace GameCursachProject
                         {
                         	int PL;
                         	List<Point> Marked;
-                        	CreatePathArrows(PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked), cam);
+                        	CreatePathArrows(PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked, Opponent), cam);
                         	foreach(var Til in Marked)
                         		if(!ChangedAnimTiles.Contains(Til))
                         			ChangedAnimTiles.Add(Til);
