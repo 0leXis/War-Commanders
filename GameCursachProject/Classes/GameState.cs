@@ -62,6 +62,25 @@ namespace GameCursachProject
                 }
             }
 
+            var CP = new List<Point>();
+            while (true)
+            {
+                var msg = NI.GetNextMsg();
+                if (msg != null)
+                {
+                    string[] str;
+                    var masss = (mass as object);
+                    Serialization.DeSerialize(msg, ref masss, typeof(string[]));
+                    str = masss as string[];
+                    foreach(var point in str)
+                    {
+                        var split = point.Split(' ');
+                        CP.Add(new Point(Convert.ToInt32(split[0]), Convert.ToInt32(split[1])));
+                    }
+                    break;
+                }
+            }
+
             Log.SendMessage("Ожидание команды начала игры");
 
             var player1_name = "";
@@ -112,7 +131,7 @@ namespace GameCursachProject
             }
 
 
-            Map = new Map(MapArr, 0, 1, new Animation(1, 1, true), GameContent.ArrowSegment, GameContent.ArrowEnd, GameContent.UI_TileInfo, GameContent.Tile_ControlPoint_Neutral, GameContent.Tile_ControlPoint_Allied, GameContent.Tile_ControlPoint_Enemy, GameContent.Unit_AttackRadius, GameContent.UI_InfoFont, Color.White, new Point[] { new Point(0, 7), new Point(3, 7), new Point(6, 7) });
+            Map = new Map(MapArr, 0, 1, new Animation(1, 1, true), GameContent.ArrowSegment, GameContent.ArrowEnd, GameContent.UI_TileInfo, GameContent.Tile_ControlPoint_Neutral, GameContent.Tile_ControlPoint_Allied, GameContent.Tile_ControlPoint_Enemy, GameContent.Unit_AttackRadius, GameContent.UI_InfoFont, Color.White, CP.ToArray());
             //foreach (var Til in Map)
             //    if (Til != null)
             //    {
@@ -153,8 +172,8 @@ namespace GameCursachProject
                 GameContent.UI_NewTurnFont,
                 gr_Device, this,
                 player1_name, player2_name,
-                "0", "1", "0", "1", "100",
-                player_money, "1",
+                0, 1, 0, 1, 100,
+                Convert.ToInt32(player_money), 1,
                 "1:30", new string[] { "A", "B", "C" },
                 Cards, (Cards.Length == 3) ? true : false,
                 LAYER_UI_FAR);
@@ -247,17 +266,30 @@ namespace GameCursachProject
                 }
                 if (CN[0] == "TURN")
                 {
-                    if(CN[1] == "ENEMY")
+                    foreach (var Tiles in Map.GetMap())
+                        foreach (var Tile in Tiles)
+                            if (Tile != null)
+                                if (Tile.UnitOnTile != null)
+                                {
+                                    Tile.UnitOnTile.MovePointsLeft = Tile.UnitOnTile.Speed;
+                                    Tile.UnitOnTile.CanAttack = true;
+                                }
+                    if (CN[1] == "ENEMY")
                     {
                         UI.SetEnemyTurn();
+                        UI.Opponent_Points = Convert.ToInt32(CN[2]);
                         IsPlayerTurn = false;
                     }
                     else
                     {
-                        var CardsToChoose = new int[CN.Length - 2];
-                        for (var i = 2; i < CN.Length; i++)
+                        var CardsToChoose = new int[CN.Length - 4];
+                        UI.Player_Points = Convert.ToInt32(CN[2]);
+                        UI.Player_Money = Convert.ToInt32(CN[3]);
+                        if (UI.Player_Money_Inc < 10)
+                            UI.Player_Money_Inc += 1;
+                        for (var i = 4; i < CN.Length; i++)
                         {
-                            CardsToChoose[i - 2] = Convert.ToInt32(CN[i]);
+                            CardsToChoose[i - 4] = Convert.ToInt32(CN[i]);
                         }
                         UI.SetPlayerTurn(Convert.ToInt32(CN[1]), CardsToChoose);
                         IsPlayerTurn = true;
@@ -272,7 +304,13 @@ namespace GameCursachProject
                 }
                 if (CN[0] == "SPAWN")
                 {
-                    if(CN[1] == "ALLIED")
+                    if (IsPlayerTurn)
+                    {
+                        SetPlayerTurn();
+                        UI.Player_Money -= GameContent.UnitCards[Convert.ToInt32(CN[2])].Cost;
+                        Hand.CalculateCardPosition(20, true);
+                    }
+                    if (CN[1] == "ALLIED")
                     {
                         Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitTexture, GameContent.UI_Info_Allied, GameContent.UI_InfoFont, Color.White, 392, 20, GameContent.UnitCards[Convert.ToInt32(CN[2])].Speed, GameContent.UnitCards[Convert.ToInt32(CN[2])].Damage, GameContent.UnitCards[Convert.ToInt32(CN[2])].HP, GameContent.UnitCards[Convert.ToInt32(CN[2])].Armor, GameContent.UnitCards[Convert.ToInt32(CN[2])].AttackRadius, Side.PLAYER, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitAttackScript, UnitAttEngine, new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])), new Animation(8, 17, false), 0.4f), PlayerSide, Map.UI_VisibleState);
                     }
@@ -285,7 +323,87 @@ namespace GameCursachProject
                 {
                     if (IsPlayerTurn)
                         SetPlayerTurn();
+                    var first = CN[1].Split();
+                    var last = CN[2].Split();
+                    int PL;
+                    List<Point> Marked;
 
+                    var point = new Point(Convert.ToInt32(first[0]), Convert.ToInt32(first[1]));
+                    for (var i = 0; i < Map.CPTiles.Count(); i++)
+                    {
+                        if (Map.CPTiles[i] == point)
+                        {
+                            if (Map.GetTile(Convert.ToInt32(first[0]), Convert.ToInt32(first[1])).UnitOnTile.side == Side.PLAYER)
+                            {
+                                Map.SetCPState(i, CapturePointStates.NEUTRAL);
+                                UI.CPInfos[i].SetState(CapturePointStates.NEUTRAL);
+                                UI.Player_Points_Inc -= 1;
+                            }
+                            else
+                            {
+                                Map.SetCPState(i, CapturePointStates.NEUTRAL);
+                                UI.CPInfos[i].SetState(CapturePointStates.NEUTRAL);
+                                UI.Opponent_Points_Inc -= 1;
+                            }
+                        }
+                    }
+
+                    point = new Point(Convert.ToInt32(last[0]), Convert.ToInt32(last[1]));
+                    for (var i = 0; i < Map.CPTiles.Count(); i++)
+                    {
+                        if (Map.CPTiles[i] == point)
+                        {
+                            if(Map.GetTile(Convert.ToInt32(first[0]), Convert.ToInt32(first[1])).UnitOnTile.side == Side.PLAYER)
+                            {
+                                Map.SetCPState(i, CapturePointStates.ALLIED);
+                                UI.CPInfos[i].SetState(CapturePointStates.ALLIED);
+                                UI.Player_Points_Inc += 1;
+                            }
+                            else
+                            {
+                                Map.SetCPState(i, CapturePointStates.ENEMY);
+                                UI.CPInfos[i].SetState(CapturePointStates.ENEMY);
+                                UI.Opponent_Points_Inc += 1;
+                            }
+                            break;
+                        }
+                    }
+
+                    Map.UnitMove(Map.PathFinding(Convert.ToInt32(first[0]), Convert.ToInt32(first[1]), Convert.ToInt32(last[0]), Convert.ToInt32(last[1]), Map.GetTile(Convert.ToInt32(first[0]), Convert.ToInt32(first[1])).UnitOnTile.MovePointsLeft, out PL, out Marked, OpponentSide), Convert.ToInt32(CN[3]));
+
+                }
+                if (CN[0] == "ATTACK")
+                {
+                    if (IsPlayerTurn)
+                        SetPlayerTurn();
+
+                    bool IsPlayer = false;
+                    if (Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).UnitOnTile.side == Side.PLAYER)
+                        IsPlayer = true;
+
+                    Map.GetTile(Convert.ToInt32(CN[1]), Convert.ToInt32(CN[2])).UnitOnTile.Attack(Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).UnitOnTile, Convert.ToInt32(CN[5]));
+
+                    if (Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).UnitOnTile == null)
+                    {
+                        var point = new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4]));
+                        for (var i = 0; i < Map.CPTiles.Count(); i++)
+                        {
+                            if (Map.CPTiles[i] == point)
+                            {
+                                Map.SetCPState(i, CapturePointStates.NEUTRAL);
+                                UI.CPInfos[i].SetState(CapturePointStates.NEUTRAL);
+                                if (IsPlayer)
+                                {
+                                    UI.Player_Points_Inc -= 1;
+                                }
+                                else
+                                {
+                                    UI.Opponent_Points_Inc -= 1;
+                                }
+                                break;
+                            }
+                        }
+                    }
                 }
                 //if(CN[0] == "2")
                 //{
@@ -349,11 +467,11 @@ namespace GameCursachProject
             if (UI.IsVs)
             {
                 UI.Update(ref IsMouseHandled, Map, Hand, cam, Menu, OpponentSide);
-                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, IsNotLockClick, PlayerSide);
+                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, IsNotLockClick, PlayerSide, this, UI.Player_Money);
             }
             else
             {
-                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, IsNotLockClick, PlayerSide);
+                Hand.Update(ref IsMouseHandled, Map, cam, UI.UI_Bottom.Position.Y, IsNotLockClick, PlayerSide, this, UI.Player_Money);
                 UI.Update(ref IsMouseHandled, Map, Hand, cam, Menu, OpponentSide);
             }
             Map.Update(ref IsMouseHandled, Hand, cam, IsNotLockClick, OpponentSide, this);

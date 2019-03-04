@@ -48,9 +48,9 @@ namespace GameCursachProject
 
         public BasicText PlayerName { get; set; }
         public BasicText OpponentName { get; set; }
-        public UI_Resource_Info PlayerPoints { get; set; }
-        public UI_Resource_Info OpponentPoints { get; set; }
-        public UI_Resource_Info PlayerMoney { get; set; }
+        private UI_Resource_Info PlayerPoints { get; set; }
+        private UI_Resource_Info OpponentPoints { get; set; }
+        private UI_Resource_Info PlayerMoney { get; set; }
         public UI_Resource_Info RoundTime { get; set; }
 
         public Button Btn_Move { get; set; }
@@ -76,6 +76,71 @@ namespace GameCursachProject
         public Button ChooseConfirm { get; set; }
 
         public CapturePointInfo[] CPInfos { get; set; }
+
+
+        private int _PlayerPoints, _PlayerPoints_Inc,
+        _OpponentPoints, _OpponentPoints_Inc, _Points_Needed,
+        _PlayerMoney, _PlayerMoney_Inc;
+
+        public int Player_Points
+        {
+            get { return _PlayerPoints; }
+            set
+            {
+                _PlayerPoints = value;
+                PlayerPoints.MainText = _PlayerPoints + @"\" + _Points_Needed;
+            }
+        }
+
+        public int Player_Points_Inc
+        {
+            get { return _PlayerPoints_Inc; }
+            set
+            {
+                _PlayerPoints_Inc = value;
+                PlayerPoints.AdditionalText = " (+" + _PlayerPoints_Inc + ")";
+            }
+        }
+
+        public int Opponent_Points
+        {
+            get { return _OpponentPoints; }
+            set
+            {
+                _OpponentPoints = value;
+                OpponentPoints.MainText = _OpponentPoints + @"\" + _Points_Needed;
+            }
+        }
+
+        public int Opponent_Points_Inc
+        {
+            get { return _OpponentPoints_Inc; }
+            set
+            {
+                _OpponentPoints_Inc = value;
+                OpponentPoints.AdditionalText = " (+" + _OpponentPoints_Inc + ")";
+            }
+        }
+
+        public int Player_Money
+        {
+            get { return _PlayerMoney; }
+            set
+            {
+                _PlayerMoney = value;
+                PlayerMoney.MainText = _PlayerMoney.ToString();
+            }
+        }
+
+        public int Player_Money_Inc
+        {
+            get { return _PlayerMoney_Inc; }
+            set
+            {
+                _PlayerMoney_Inc = value;
+                PlayerMoney.AdditionalText = " (+" + _PlayerMoney_Inc + ")";
+            }
+        }
 
         public Vector2 CurrentScreenRes
         {
@@ -151,9 +216,9 @@ namespace GameCursachProject
             SpriteFont NewTurn,
             GraphicsDevice Gr, 
             GameState Parent,
-            string PlayerName, string OpponentName, string PlayerPoints, string PlayerPoints_Inc, 
-            string OpponentPoints, string OpponentPoints_Inc, string Points_Needed,
-            string PlayerMoney, string PlayerMoney_Inc,
+            string PlayerName, string OpponentName, int PlayerPoints, int PlayerPoints_Inc,
+            int OpponentPoints, int OpponentPoints_Inc, int Points_Needed,
+            int PlayerMoney, int PlayerMoney_Inc,
             string RoundTime,
             string[] CPNames,
             int[] StartingCards,
@@ -182,13 +247,22 @@ namespace GameCursachProject
             this.PlayerName = new BasicText(this.PlayerIcon.Position + new Vector2(PlayerIcon.Width * this.PlayerIcon.Scale.X + 10, 0), PlayerName, Font, Color.White, 0.09f);
             this.OpponentName = new BasicText(this.OpponentIcon.Position - new Vector2(Font.MeasureString(OpponentName).X + 10, 0), OpponentName, Font, Color.White, 0.09f);
 
-            this.PlayerPoints = new UI_Resource_Info(new Vector2(this.PlayerName.Position.X, this.PlayerName.Position.Y + Font.MeasureString(PlayerName).Y), Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, PlayerPointsIcon, Color.White, Color.LightGreen, PlayerPoints + @"\" + Points_Needed, " (+" + PlayerPoints_Inc + ")", Gr, Layer - 0.0005f);
-            this.OpponentPoints = new UI_Resource_Info(this.PlayerName.Position, Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, OpponentPointsIcon, Color.White, Color.LightGreen, OpponentPoints + @"\" + Points_Needed, " (+" + OpponentPoints_Inc + ")", Gr, Layer - 0.0005f);
+            this.PlayerPoints = new UI_Resource_Info(new Vector2(this.PlayerName.Position.X, this.PlayerName.Position.Y + Font.MeasureString(PlayerName).Y), Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, PlayerPointsIcon, Color.White, Color.LightGreen, "----------", "----------", Gr, Layer - 0.0005f);
+            this.OpponentPoints = new UI_Resource_Info(this.PlayerName.Position, Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, OpponentPointsIcon, Color.White, Color.LightGreen, "----------", "----------", Gr, Layer - 0.0005f);
             this.OpponentPoints.Position = new Vector2(this.OpponentName.Position.X + Font.MeasureString(OpponentName).X - this.OpponentPoints.WidthHeight.X, this.OpponentName.Position.Y + Font.MeasureString(OpponentName).Y);
 
-            this.PlayerMoney = new UI_Resource_Info(new Vector2(this.PlayerName.Position.X, this.PlayerPoints.Position.Y + this.PlayerPoints.WidthHeight.Y + 5), Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, PlayerMoneyIcon, Color.White, Color.LightGreen, PlayerMoney, " (+" + PlayerMoney_Inc + ")", Gr, Layer - 0.0005f);
+            this.PlayerMoney = new UI_Resource_Info(new Vector2(this.PlayerName.Position.X, this.PlayerPoints.Position.Y + this.PlayerPoints.WidthHeight.Y + 5), Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, PlayerMoneyIcon, Color.White, Color.LightGreen, "----------", "----------", Gr, Layer - 0.0005f);
             this.RoundTime = new UI_Resource_Info(this.PlayerName.Position, Color.Black, Color.FromNonPremultiplied(0, 0, 0, 130), ResFont, RoundTimeIcon, Color.White, Color.Red, RoundTime, "", Gr, Layer - 0.0005f);
             this.RoundTime.Position = new Vector2(this.OpponentPoints.Position.X, this.OpponentPoints.Position.Y + this.OpponentPoints.WidthHeight.Y + 5);
+
+            _Points_Needed = Points_Needed;
+            Player_Points = PlayerPoints;
+            Player_Points_Inc = PlayerPoints_Inc;
+            Opponent_Points = OpponentPoints;
+            Opponent_Points_Inc = OpponentPoints_Inc;
+            Player_Money = PlayerMoney;
+            Player_Money_Inc = PlayerMoney_Inc;
+
             //Нижний UI
             TileName = new BasicText(new Vector2(this.UI_BottomLeft.Position.X, this.UI_BottomLeft.Position.Y + 5), "", Font, Color.Black, Layer - 0.0005f);
             
@@ -475,7 +549,7 @@ namespace GameCursachProject
                         map.CreatePathArrows(null, cam);
                     }
                     else
-                    if ((map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING) && map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).UnitOnTile.side == Side.PLAYER)
+                    if ((map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT || map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).TileContains == MapTiles.WITH_UNIT_AND_BUILDING) && map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).UnitOnTile.side == Side.PLAYER && map.GetTile(map.SelectedTile.X, map.SelectedTile.Y).UnitOnTile.CanAttack)
                     {
                         Btn_EndTurn.Enabled = false;
                         Btn_Move.Enabled = false;

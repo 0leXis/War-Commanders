@@ -58,6 +58,9 @@ namespace GameCursachProject
         private int _Damage;
         private int _HP;
         public int AttackDistance { get; set; }
+        public bool CanAttack { get; set; }
+
+        private int AttackDamage;
 
         public int MovePointsLeft
         {
@@ -155,6 +158,7 @@ namespace GameCursachProject
             AttScr_StartAttack = ScrEngine.GetFunc("Init");
             AttScr_Update = ScrEngine.GetFunc("Update");
             AttScr_Draw = ScrEngine.GetFunc("Draw");
+            CanAttack = false;
 
             AddAnimation("Destroy", DestroyAnim);
         }
@@ -187,6 +191,7 @@ namespace GameCursachProject
 
             FLFont = OldUnit.FLFont;
             this.ParentTile = ParentTile;
+            CanAttack = OldUnit.CanAttack;
 
             AddAnimation("Destroy", OldUnit.GetAnimation("Destroy"));
         }
@@ -204,10 +209,13 @@ namespace GameCursachProject
             }
         }
 
-        public void Attack(Unit EnemyUnit)
+        public void Attack(Unit EnemyUnit, int Damage)
         {
             if (!IsAttacking)
             {
+                MovePointsLeft = 0;
+                AttackDamage = Damage;
+                CanAttack = false;
                 IsAttacking = true;
                 EnemyDamageFLPos = new Vector2(EnemyUnit.Position.X + EnemyUnit.FrameSize.X / 2, EnemyUnit.Position.Y + EnemyUnit.FrameSize.Y / 2);
                 AttackedUnit = EnemyUnit;
@@ -305,8 +313,8 @@ namespace GameCursachProject
                         IsAttacking = (bool)tmp[1];
                         if (!IsAttacking)
                         {
-                            FlyingTextProcessor.CreateText(EnemyDamageFLPos, EnemyDamageFLPos - new Vector2(0, 300), 160, "-" + Damage.ToString(), FLFont, Color.Red, new Vector2(4), 0.1f);
-                            AttackedUnit.HP -= Damage;
+                            FlyingTextProcessor.CreateText(EnemyDamageFLPos, EnemyDamageFLPos - new Vector2(0, 300), 160, "-" + AttackDamage.ToString(), FLFont, Color.Red, new Vector2(4), 0.1f);
+                            AttackedUnit.HP -= AttackDamage;
                             if (AttackedUnit.HP <= 0)
                                 AttackedUnit.Destroy();
                         }

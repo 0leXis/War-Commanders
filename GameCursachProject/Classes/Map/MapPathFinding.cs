@@ -119,7 +119,7 @@ namespace GameCursachProject
                 {
                     if (!used.Contains(rebro))
                     {
-                        if (Tiles[rebro.X][rebro.Y].UnitOnTile != null && Tiles[rebro.X][rebro.Y].UnitOnTile.side == Side.PLAYER)
+                        if (Tiles[rebro.X][rebro.Y].UnitOnTile != null) //&& Tiles[rebro.X][rebro.Y].UnitOnTile.side == Side.PLAYER)
                         {
                             continue;
                         }

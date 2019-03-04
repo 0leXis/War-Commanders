@@ -46,7 +46,7 @@ namespace GameCursachProject
             return Directions.DOWN;
         }
 
-        public void UnitMove(List<Point> Path)
+        public void UnitMove(List<Point> Path, int MovePointsUsed)
         {
             if (Path != null && (Path[0].X != Path[Path.Count - 1].X || Path[0].Y != Path[Path.Count - 1].Y))
             {
@@ -56,6 +56,7 @@ namespace GameCursachProject
                 else
                     Tiles[Path[Path.Count - 1].X][Path[Path.Count - 1].Y].TileContains = MapTiles.WITH_UNIT;
                 Tiles[Path[Path.Count - 1].X][Path[Path.Count - 1].Y].UnitOnTile = new Unit(Tiles[Path[0].X][Path[0].Y].UnitOnTile, new Point(Path[Path.Count - 1].X, Path[Path.Count - 1].Y));
+                Tiles[Path[Path.Count - 1].X][Path[Path.Count - 1].Y].UnitOnTile.MovePointsLeft -= MovePointsUsed;
                 RemoveUnit(Tiles[Path[0].X][Path[0].Y].UnitOnTile);
                 for (var i = 0; i < Path.Count - 1; i++)
                 {

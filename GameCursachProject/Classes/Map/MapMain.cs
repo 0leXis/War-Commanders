@@ -48,6 +48,7 @@ namespace GameCursachProject
         public bool UI_VisibleState { get { return _UI_VisibleState;} }
 
         private BasicSprite[] ControlPoints;
+        public Point[] CPTiles;
 
         public bool IsAnimsChanged
         {
@@ -92,6 +93,7 @@ namespace GameCursachProject
             this.CPAllied = CPAllied;
             this.CPEnemy = CPEnemy;
             ControlPoints = new BasicSprite[CPTiles.Length];
+            this.CPTiles = CPTiles;
             for(var i = 0; i < CPTiles.Length; i++)
             {
                 ControlPoints[i] = new BasicSprite(Tiles[CPTiles[i].X][CPTiles[i].Y].Position, CPNeutral, Tiles[0][0].Layer + 0.001f);
@@ -104,6 +106,21 @@ namespace GameCursachProject
                 for (var j = 0; j < Tiles[0].Length; j++)
                     if (!(i == _ChoosedTileI && j == _ChoosedTileJ) && Tiles[i][j] != null)
                         Tiles[i][j].Update(cam: cam);
+        }
+
+        public void SetCPState(int CPNumber, CapturePointStates State)
+        {
+            if (State == CapturePointStates.ALLIED)
+                ControlPoints[CPNumber].Texture = CPAllied;
+            else
+            if (State == CapturePointStates.ENEMY)
+            {
+                ControlPoints[CPNumber].Texture = CPEnemy;
+            }
+            else
+            {
+                ControlPoints[CPNumber].Texture = CPNeutral;
+            }
         }
 
         public void Update(ref bool IsMouseHandled, Hand hand, Camera cam, bool IsPlayerTurn, MapZones Opponent, GameState gameState)
@@ -163,14 +180,17 @@ namespace GameCursachProject
                         		List<Point> Marked;
 
                                 var Path = PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked, Opponent);
-                                var Command = new string[Path.Count + 1];
-                                Command[0] = "MOVE";
-                                for (var i = 1; i < Command.Length; i++)
+                                if(Path != null)
                                 {
-                                    Command[i] = Path[i - 1].X.ToString() + " " + Path[i - 1].Y.ToString();
-                                }   
-                                CommandParser.SendCommand(Command);
-                                gameState.SetEnemyTurn();
+                                    var Command = new string[Path.Count + 1];
+                                    Command[0] = "MOVE";
+                                    for (var i = 1; i < Command.Length; i++)
+                                    {
+                                        Command[i] = Path[i - 1].X.ToString() + " " + Path[i - 1].Y.ToString();
+                                    }
+                                    CommandParser.SendCommand(Command);
+                                    gameState.SetEnemyTurn();
+                                }
                                 //UnitMove(PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked, Opponent));
 
                                 SetDefault();
@@ -186,7 +206,11 @@ namespace GameCursachProject
                                 IsAttack = false;
 
                                 if(EnemyFinding(ActionStartPoint.X, ActionStartPoint.Y, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.AttackDistance).Contains(new Point(_ChoosedTileI, _ChoosedTileJ)))
-                                    Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.Attack(Tiles[_ChoosedTileI][_ChoosedTileJ].UnitOnTile);
+                                {
+                                    //Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.Attack(Tiles[_ChoosedTileI][_ChoosedTileJ].UnitOnTile);
+                                    CommandParser.SendCommand(new string[] { "ATTACK", ActionStartPoint.X.ToString(), ActionStartPoint.Y.ToString(), _ChoosedTileI.ToString(), _ChoosedTileJ.ToString()});
+                                    gameState.SetEnemyTurn();
+                                }
 
                                 SetDefault();
                                 UpdateAllTiles(cam);
@@ -261,7 +285,7 @@ namespace GameCursachProject
             Info.Update();
             FlyingTextProcessor.Update();
         }
-        
+
         public void Draw(SpriteBatch Target, Camera cam)//TODO: Dobavit param dla begin
         {
 

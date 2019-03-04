@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <tile>
   <Name>Река</Name>
-  <Speed>3</Speed>
+  <SpeedNeeded>3</SpeedNeeded>
   <Armor>0</Armor>
 </tile>

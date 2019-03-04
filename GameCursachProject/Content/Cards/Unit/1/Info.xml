@@ -2,7 +2,7 @@
 <cardinfo>
 	<Name>T-34-76</Name>
   <Cost>5</Cost>
-  <Armor>2</Armor>
+  <Armor>1</Armor>
   <AttackRadius>3</AttackRadius>
   <Damage>2</Damage>
   <HP>4</HP>
