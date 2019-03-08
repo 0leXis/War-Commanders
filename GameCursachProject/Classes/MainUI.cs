@@ -595,7 +595,7 @@ namespace GameCursachProject
 
                 if (GameMenuUpd == ButtonStates.CLICKED)
                 {
-                    Menu.Show(this, Parent);
+                    Menu.Show(this, Parent, null);
                 }
                 else
                 if (GameMenuUpd == ButtonStates.ENTERED)

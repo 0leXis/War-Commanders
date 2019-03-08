@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<unit>
+  <Name>Pz. VI "Tiger"</Name>
+  <Cost>15</Cost>
+  <Armor>2</Armor>
+  <AttackRadius>3</AttackRadius>
+  <Damage>4</Damage>
+  <HP>10</HP>
+  <Speed>3</Speed>
+</unit>

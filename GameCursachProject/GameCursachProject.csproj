@@ -147,6 +147,8 @@
     <Compile Include="Classes%28Otlazeno%29\Button.cs" />
     <Compile Include="Classes\CapturePointInfo.cs" />
     <Compile Include="Classes\CardChoose.cs" />
+    <Compile Include="Classes\MainMenu\CardOpen.cs" />
+    <Compile Include="Classes\MainMenu\Collection.cs" />
     <Compile Include="Classes\CommandParser.cs" />
     <Compile Include="Classes\Config.cs" />
     <Compile Include="Classes\ContentLoader.cs" />
@@ -166,7 +168,7 @@
     <Compile Include="Classes\KeyBindings.cs" />
     <Compile Include="Classes\ListBox.cs" />
     <Compile Include="Classes\LogInForm.cs" />
-    <Compile Include="Classes\MainMenu.cs" />
+    <Compile Include="Classes\MainMenu\MainMenu.cs" />
     <Compile Include="Classes\MainUI.cs" />
     <Compile Include="Classes\Map\MapAttack.cs" />
     <Compile Include="Classes\Map\MapMain.cs" />
@@ -176,6 +178,8 @@
     <Compile Include="Classes\Map\MapPathFinding.cs" />
     <Compile Include="Classes\Map\MapUnits.cs" />
     <Compile Include="Classes\NetworkInterface.cs" />
+    <Compile Include="Classes\MainMenu\Play.cs" />
+    <Compile Include="Classes\MainMenu\RollBack.cs" />
     <Compile Include="Classes\ScalingText.cs" />
     <Compile Include="Classes\ScreenBr.cs" />
     <Compile Include="Classes\Script.cs" />
@@ -260,19 +264,67 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.manifest" />
-    <None Include="Content\Cards\Unit\0\Attack.lua">
+    <None Include="Content\Cards\Unit\Germany\0\Attack.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Content\Cards\Unit\1\Attack.lua">
+    <None Include="Content\Cards\Unit\Germany\1\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Cards\Unit\Germany\2\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Cards\Unit\Germany\3\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Cards\Unit\Germany\4\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Cards\Unit\Soviet\0\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Cards\Unit\Soviet\1\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Cards\Unit\Soviet\2\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Cards\Unit\Soviet\3\Attack.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Cards\Unit\Soviet\4\Attack.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Cards\Unit\0\Info.xml">
+    <Content Include="Content\Cards\Unit\Germany\0\Info.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Cards\Unit\1\Info.xml">
+    <Content Include="Content\Cards\Unit\Germany\1\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Cards\Unit\Germany\2\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Cards\Unit\Germany\3\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Cards\Unit\Germany\4\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Cards\Unit\Soviet\0\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Cards\Unit\Soviet\1\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Cards\Unit\Soviet\2\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Cards\Unit\Soviet\3\Info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Cards\Unit\Soviet\4\Info.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Tiles\0\Info.xml">

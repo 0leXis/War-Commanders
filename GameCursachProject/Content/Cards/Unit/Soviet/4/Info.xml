@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<unit>
+  <Name>ИС-2</Name>
+  <Cost>25</Cost>
+  <Armor>3</Armor>
+  <AttackRadius>4</AttackRadius>
+  <Damage>7</Damage>
+  <HP>10</HP>
+  <Speed>3</Speed>
+</unit>

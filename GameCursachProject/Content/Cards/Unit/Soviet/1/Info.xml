@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<unit>
+  <Name>БТ-7</Name>
+  <Cost>7</Cost>
+  <Armor>0</Armor>
+  <AttackRadius>3</AttackRadius>
+  <Damage>2</Damage>
+  <HP>5</HP>
+  <Speed>5</Speed>
+</unit>

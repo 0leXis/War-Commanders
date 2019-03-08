@@ -39,6 +39,14 @@ namespace GameCursachProject
         bool IsRegistration;
         bool IsRequestSended;
 
+        public string PlayerName
+        {
+            get
+            {
+                return NameEdit.Text;
+            }
+        }
+
         public Vector2 Position
         {
             get
@@ -82,7 +90,7 @@ namespace GameCursachProject
             Br = new ScreenBr(Config.Resolutions[Config.CurrResolution].ToVector2(), 3, 180, gr, Layer + 0.0005f);
         }
 
-        public void Hide()
+        public void Hide(bool WithBr)
         {
             Connecting_Icon.Visible = false;
             Connecting_Text.Visible = false;
@@ -97,7 +105,19 @@ namespace GameCursachProject
             Register.Visible = false;
 
             BackGround.Visible = false;
-            Br.Visible = false;
+            if (WithBr)
+                Br.Visible = false;
+        }
+
+        public void Show(bool WithBr)
+        {
+            if (IsConnectingState)
+                ShowConnectingState();
+            else
+                ShowNormalState();
+            BackGround.Visible = true;
+            if(WithBr)
+                Br.Visible = true;
         }
 
         public void ShowConnectingState()
@@ -199,7 +219,7 @@ namespace GameCursachProject
                                 else
                                 {
                                     ShowNormalState();
-                                    Hide();
+                                    Hide(true);
                                     return 1;
                                 }
                             }

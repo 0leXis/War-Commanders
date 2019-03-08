@@ -72,12 +72,12 @@ namespace GameCursachProject
 
             GameContent.LoadGameContent();
 
-            mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, 0.1f);
-            //gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
+            //mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_MainMenu_MoneyBack, GameContent.UI_MainMenu_RollBack, GameContent.UI_MainMenu_NameBack, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, 0.1f);
+            gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
 
             KeyBindings.RegisterKeyBind("KEY_MENU", Keys.Escape);
             Menu = new GameMenu(new Vector2(ScreenWidth, ScreenHeight), this, GameContent.UI_GameMenu_MainBack, GameContent.UI_GameMenu_OptionsBack, GameContent.UI_GameMenu_Button, GameContent.UI_GameMenu_ListBoxBtn, GameContent.UI_GameMenu_ListBoxChoosed, GameContent.UI_GameMenu_ListBoxOpenBtn, GameContent.UI_InfoFont, Color.Black, 0.1f);
-            Menu.Hide(null, gameState);
+            Menu.Hide(null, gameState, null);
         }
 
         /// <summary>
@@ -126,15 +126,15 @@ namespace GameCursachProject
             MouseControl.Update();
             KeyBindings.Update();
             if (mainMenu != null)
-                mainMenu.Update();
+                mainMenu.Update(Menu);
             if (gameState != null)
             {
-                Menu.Update(gameState.UI, gameState);
+                Menu.Update(gameState.UI, gameState, mainMenu);
                 gameState.Update(Menu);
             }
             else
             {
-                Menu.Update(null, gameState);
+                Menu.Update(null, gameState, mainMenu);
             }
 
             //Window.Title = gameState.watch.Elapsed.ToString() + "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y) + "|ZOOM|" + gameState.cam.Zoom.ToString() + "|POS|" + gameState.cam.Position.ToString();

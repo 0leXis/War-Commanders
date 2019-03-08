@@ -129,11 +129,14 @@ namespace GameCursachProject
 
     public static class GameContent
     {
-        public const string DefaultUnitCardsPath = @"Cards\Unit";
+        public const string DefaultSovietUnitCardsPath = @"Cards\Unit\Soviet";
+        public const string DefaultGermanyUnitCardsPath = @"Cards\Unit\Germany";
         public const string DefaultTileTypesPath = @"Tiles";
 
         static public Texture2D Unit_AttackRadius;
         static public List<UnitCardInfo> UnitCards = new List<UnitCardInfo>();
+        static public List<UnitCardInfo> SovietUnitCards = new List<UnitCardInfo>();
+        static public List<UnitCardInfo> GermanyUnitCards = new List<UnitCardInfo>();
         static public List<TileTypeInfo> TileTypes = new List<TileTypeInfo>();
 
         static public Texture2D UI_Info_Allied;
@@ -177,6 +180,9 @@ namespace GameCursachProject
         static public Texture2D UI_MainMenu_HomeButton;
         static public Texture2D UI_MainMenu_Button;
         static public Texture2D UI_MainMenu_MenuBar;
+        static public Texture2D UI_MainMenu_MoneyBack;
+        static public Texture2D UI_MainMenu_NameBack;
+        static public Texture2D UI_MainMenu_RollBack;
 
         static public SpriteFont UI_ButtonFont;
         static public SpriteFont UI_MiniFont;
@@ -241,6 +247,9 @@ namespace GameCursachProject
             UI_MainMenu_HomeButton = ContentLoader.LoadTexture(@"Textures\UI_MainMenu_HomeButton");
             UI_MainMenu_Button = ContentLoader.LoadTexture(@"Textures\UI_MainMenu_Button");
             UI_MainMenu_MenuBar = ContentLoader.LoadTexture(@"Textures\UI_MainMenu_MenuBar");
+            UI_MainMenu_MoneyBack = ContentLoader.LoadTexture(@"Textures\UI_MoneyBack");
+            UI_MainMenu_NameBack = ContentLoader.LoadTexture(@"Textures\UI_NameBack");
+            UI_MainMenu_RollBack = ContentLoader.LoadTexture(@"Textures\UI_RollBack");
 
             UI_ButtonFont = ContentLoader.LoadFont(@"Fonts\ButtonFont");
             UI_MiniFont = ContentLoader.LoadFont(@"Fonts\UI_MiniFont");
@@ -268,9 +277,18 @@ namespace GameCursachProject
             UI_Player_Icons.Add(ContentLoader.LoadTexture(@"Textures\Player_Icon"));
 
             var i = 0;
-            while(Directory.Exists(@"Content\" + DefaultUnitCardsPath + @"\" + i.ToString()))
+            while(Directory.Exists(@"Content\" + DefaultSovietUnitCardsPath + @"\" + i.ToString()))
             {
-                UnitCards.Add(new UnitCardInfo(DefaultUnitCardsPath + @"\" + i.ToString()));
+                SovietUnitCards.Add(new UnitCardInfo(DefaultSovietUnitCardsPath + @"\" + i.ToString()));
+                UnitCards.Add(new UnitCardInfo(DefaultSovietUnitCardsPath + @"\" + i.ToString()));
+                i++;
+            }
+
+            i = 0;
+            while (Directory.Exists(@"Content\" + DefaultGermanyUnitCardsPath + @"\" + i.ToString()))
+            {
+                GermanyUnitCards.Add(new UnitCardInfo(DefaultGermanyUnitCardsPath + @"\" + i.ToString()));
+                UnitCards.Add(new UnitCardInfo(DefaultGermanyUnitCardsPath + @"\" + i.ToString()));
                 i++;
             }
 

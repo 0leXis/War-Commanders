@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<unit>
+  <Name>Pz. II "Luchs"</Name>
+  <Cost>8</Cost>
+  <Armor>0</Armor>
+  <AttackRadius>2</AttackRadius>
+  <Damage>3</Damage>
+  <HP>6</HP>
+  <Speed>7</Speed>
+</unit>

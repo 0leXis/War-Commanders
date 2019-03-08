@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <unit>
   <Name>T-34-76</Name>
-  <Cost>5</Cost>
+  <Cost>10</Cost>
   <Armor>1</Armor>
-  <AttackRadius>2</AttackRadius>
+  <AttackRadius>3</AttackRadius>
   <Damage>3</Damage>
-  <HP>5</HP>
-  <Speed>5</Speed>
+  <HP>6</HP>
+  <Speed>4</Speed>
 </unit>

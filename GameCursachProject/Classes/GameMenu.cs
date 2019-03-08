@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using System.Windows.Forms;
 
 namespace GameCursachProject
 {
@@ -81,7 +82,7 @@ namespace GameCursachProject
             Resolutions.OnChange += ResolutionChanged;
         }
 
-        public void Show(MainUI UI, GameState State)
+        public void Show(MainUI UI, GameState State, MainMenu menu)
         {
             _IsShown = true;
             MenuCaption.Visible = true;
@@ -95,9 +96,11 @@ namespace GameCursachProject
                 UI.DisableUI();
             if (State != null)
                 State.SetEnemyTurn();
+            if (menu != null)
+                menu.LockClicking();
         }
 
-        public void Hide(MainUI UI, GameState State)
+        public void Hide(MainUI UI, GameState State, MainMenu menu)
         {
             _IsShown = false;
             MenuCaption.Visible = false;
@@ -112,6 +115,8 @@ namespace GameCursachProject
             if (State != null)
                 if(State.IsPlayerTurn)
                     State.SetPlayerTurn();
+            if (menu != null)
+                menu.UnlockClicking();
             MouseControl.Reset();
         }
 
@@ -155,7 +160,7 @@ namespace GameCursachProject
             Parent.ApplyChanges();
         }
 
-        public void Update(MainUI UI, GameState State)
+        public void Update(MainUI UI, GameState State, MainMenu menu)
         {
             if (KeyBindings.CheckKeyReleased("KEY_MENU"))
             {
@@ -166,9 +171,9 @@ namespace GameCursachProject
                 else
                 {
                     if (_IsShown)
-                        Hide(UI, State);
+                        Hide(UI, State, menu);
                     else
-                        Show(UI, State);
+                        Show(UI, State, menu);
                 }
             }
 
@@ -196,7 +201,7 @@ namespace GameCursachProject
                 {
                     if (Continue.Update() == ButtonStates.CLICKED)
                     {
-                        Hide(UI, State);
+                        Hide(UI, State, menu);
                     }
                     else
                     if (Surrender.Update() == ButtonStates.CLICKED)
@@ -211,6 +216,14 @@ namespace GameCursachProject
                     else
                     if (Quit.Update() == ButtonStates.CLICKED)
                     {
+                        if(CommandParser.GameServerInterface != null)
+                        {
+                            CommandParser.GameServerInterface.Disconnect();
+                        }
+                        if (CommandParser.MasterServerInterface != null)
+                        {
+                            CommandParser.MasterServerInterface.Disconnect();
+                        }
                         Parent.Exit();
                     }
                 }
