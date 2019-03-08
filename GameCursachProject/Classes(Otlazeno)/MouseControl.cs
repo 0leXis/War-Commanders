@@ -79,6 +79,15 @@ namespace GameCursachProject
         	return CoordsConvert.WindowToWorldCoords(new Vector2(X, Y), camera);
         }
 
+        static public void Reset()
+        {
+            _IsLeftBtnClicked = false;
+            _IsRightBtnClicked = false;
+
+            _LeftBtn = MouseButtonStates.NONE;
+            _RightBtn = MouseButtonStates.NONE;
+        }
+
         /// <summary>
         /// Обновление данных
         /// </summary>

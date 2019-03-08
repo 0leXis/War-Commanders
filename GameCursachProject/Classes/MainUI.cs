@@ -359,7 +359,7 @@ namespace GameCursachProject
                     }
                     if (command.Count == 0)
                         command.Add("NONE");
-                    CommandParser.SendCommand(command.ToArray());
+                    CommandParser.SendCommandToGameServer(command.ToArray());
                 }
                 IsMouseHandled = true;
                 if(iteration < 120)
@@ -408,7 +408,7 @@ namespace GameCursachProject
                             var Cards = new Card[ShowingCards.Length];
                             for(var i = 0; i < ShowingCards.Length; i++)
                             {
-                                Cards[i] = new Card(Vector2.One, GameContent.CardTexture, GameContent.UnitCards[ShowingCards[i]].Card_Decoration, new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, GameContent.UnitCards[ShowingCards[i]].Name, GameContent.UnitCards[ShowingCards[i]].Damage.ToString(), GameContent.UnitCards[ShowingCards[i]].Armor.ToString(), GameContent.UnitCards[ShowingCards[i]].Cost.ToString(), GameContent.UnitCards[ShowingCards[i]].Speed.ToString(), GameContent.UnitCards[ShowingCards[i]].HP.ToString(), 141, 315, 4, 4, 37, true, Parent.PlayerSide, Layer: 0.001f);
+                                Cards[i] = new Card(Vector2.One, GameContent.CardTexture, GameContent.UnitCards[ShowingCards[i]].Card_Decoration, new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, GameContent.UnitCards[ShowingCards[i]].Name, GameContent.UnitCards[ShowingCards[i]].Damage.ToString(), GameContent.UnitCards[ShowingCards[i]].Armor.ToString(), GameContent.UnitCards[ShowingCards[i]].AttackRadius.ToString(), GameContent.UnitCards[ShowingCards[i]].Speed.ToString(), GameContent.UnitCards[ShowingCards[i]].HP.ToString(), GameContent.UnitCards[ShowingCards[i]].Cost.ToString(), 141, 315, 4, 4, 37, true, Parent.PlayerSide, Layer: 0.001f);
                             }
                             Cardchoose.ShowCards(true,
                                 Cards);
@@ -451,7 +451,7 @@ namespace GameCursachProject
                         var Cards = new Card[ShowingCards.Length];
                         for (var i = 0; i < ShowingCards.Length; i++)
                         {
-                            Cards[i] = new Card(Vector2.One, GameContent.CardTexture, GameContent.UnitCards[ShowingCards[i]].Card_Decoration, new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, GameContent.UnitCards[ShowingCards[i]].Name, GameContent.UnitCards[ShowingCards[i]].Damage.ToString(), GameContent.UnitCards[ShowingCards[i]].Armor.ToString(), GameContent.UnitCards[ShowingCards[i]].Cost.ToString(), GameContent.UnitCards[ShowingCards[i]].Speed.ToString(), GameContent.UnitCards[ShowingCards[i]].HP.ToString(), 141, 315, 4, 4, 37, true, Parent.PlayerSide, Layer: 0.001f);
+                            Cards[i] = new Card(Vector2.One, GameContent.CardTexture, GameContent.UnitCards[ShowingCards[i]].Card_Decoration, new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, GameContent.UnitCards[ShowingCards[i]].Name, GameContent.UnitCards[ShowingCards[i]].Damage.ToString(), GameContent.UnitCards[ShowingCards[i]].Armor.ToString(), GameContent.UnitCards[ShowingCards[i]].AttackRadius.ToString(), GameContent.UnitCards[ShowingCards[i]].Speed.ToString(), GameContent.UnitCards[ShowingCards[i]].HP.ToString(), GameContent.UnitCards[ShowingCards[i]].Cost.ToString(), 141, 315, 4, 4, 37, true, Parent.PlayerSide, Layer: 0.001f);
                         }
                         Cardchoose.ShowCards(false, Cards);
                     }
@@ -460,7 +460,7 @@ namespace GameCursachProject
                     {
                         Cardchoose.Enabled = false;
                         //Отправить на серв данные
-                        CommandParser.SendCommand(new string[] { "CHOOSE", Upd.ToString() });
+                        CommandParser.SendCommandToGameServer(new string[] { "CHOOSE", Upd.ToString() });
                     }
                 }
             }
@@ -638,7 +638,7 @@ namespace GameCursachProject
                     //else
                     //    SetEnemyTurn();
                     Parent.SetEnemyTurn();
-                    CommandParser.SendCommand(new string[] { "NEXTTURN" });
+                    CommandParser.SendCommandToGameServer(new string[] { "NEXTTURN" });
                     //TODO: Отправить на сервер команду смены хода
                 }
                 //*TEST
@@ -660,7 +660,7 @@ namespace GameCursachProject
 
         public void ChooseCards(Hand hand)
         {
-            hand.AddCards(20, Cardchoose.GetCards(true).ToArray()[Convert.ToInt32(CommandParser.LastCommand[1])]);
+            hand.AddCards(20, Cardchoose.GetCards(true).ToArray()[Convert.ToInt32(CommandParser.GameServerLastCommand[1])]);
             ChooseText.Visible = false;
             Cardchoose.ClearCardList();
             IsPlayerTurnSturted = false;
@@ -674,7 +674,7 @@ namespace GameCursachProject
                 var CardsArr = new Card[CardsToReplace.Length];
                 for (var i = 0; i < CardsToReplace.Length; i++)
                 {
-                    CardsArr[i] = new Card(Vector2.One, GameContent.CardTexture, GameContent.UnitCards[CardsToReplace[i]].Card_Decoration, new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, GameContent.UnitCards[CardsToReplace[i]].Name, GameContent.UnitCards[CardsToReplace[i]].Damage.ToString(), GameContent.UnitCards[CardsToReplace[i]].Armor.ToString(), GameContent.UnitCards[CardsToReplace[i]].Cost.ToString(), GameContent.UnitCards[CardsToReplace[i]].Speed.ToString(), GameContent.UnitCards[CardsToReplace[i]].HP.ToString(), 141, 315, 4, 4, 37, true, Parent.PlayerSide, Layer: 0.001f);
+                    CardsArr[i] = new Card(Vector2.One, GameContent.CardTexture, GameContent.UnitCards[CardsToReplace[i]].Card_Decoration, new Vector2(16, 9), 200, 10, 0, 13, new Animation(14, 16, true), new Animation(2, 6, false), new Animation(7, 12, false), new Animation(1, 1, true), 0, GameContent.UI_InfoFont, Color.White, GameContent.UnitCards[CardsToReplace[i]].Name, GameContent.UnitCards[CardsToReplace[i]].Damage.ToString(), GameContent.UnitCards[CardsToReplace[i]].Armor.ToString(), GameContent.UnitCards[CardsToReplace[i]].AttackRadius.ToString(), GameContent.UnitCards[CardsToReplace[i]].Speed.ToString(), GameContent.UnitCards[CardsToReplace[i]].HP.ToString(), GameContent.UnitCards[CardsToReplace[i]].Cost.ToString(), 141, 315, 4, 4, 37, true, Parent.PlayerSide, Layer: 0.001f);
                 }
                 Cardchoose.ReplaceCards(CardsArr);
             }

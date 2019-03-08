@@ -31,6 +31,7 @@ namespace GameCursachProject
             this.Window.AllowUserResizing = false;//DONE: Онли в меню настройки
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+            graphics.SynchronizeWithVerticalRetrace = true;
             ContentLoader.Init(Content);
         }
         
@@ -55,6 +56,13 @@ namespace GameCursachProject
         protected override void LoadContent()
         {
             Log.EnableConsoleLog = true;
+            Log.SendMessage("CLR: " + Environment.Version);
+            Log.SendMessage("Machine Name: " + Environment.MachineName);
+            Log.SendMessage("RAM for process (bytes): " + Environment.WorkingSet);
+            Log.SendMessage("Number of processors: " + Environment.ProcessorCount);
+            Log.SendMessage("OS x64: " + Environment.Is64BitOperatingSystem);
+            Log.SendMessage("Process x64: " + Environment.Is64BitProcess);
+            Log.SendMessage("OS: " + Environment.OSVersion.VersionString);
             //Log.EnableFileLog = true;
 
             ScreenWidth = Window.ClientBounds.Width;
@@ -64,8 +72,8 @@ namespace GameCursachProject
 
             GameContent.LoadGameContent();
 
-            //mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, 0.1f);
-            gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
+            mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, 0.1f);
+            //gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
 
             KeyBindings.RegisterKeyBind("KEY_MENU", Keys.Escape);
             Menu = new GameMenu(new Vector2(ScreenWidth, ScreenHeight), this, GameContent.UI_GameMenu_MainBack, GameContent.UI_GameMenu_OptionsBack, GameContent.UI_GameMenu_Button, GameContent.UI_GameMenu_ListBoxBtn, GameContent.UI_GameMenu_ListBoxChoosed, GameContent.UI_GameMenu_ListBoxOpenBtn, GameContent.UI_InfoFont, Color.Black, 0.1f);

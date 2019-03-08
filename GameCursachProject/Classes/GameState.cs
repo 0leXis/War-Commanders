@@ -48,7 +48,7 @@ namespace GameCursachProject
                 NI.ConnectTo(CommandParser.ServerIP);
             }
             Log.SendMessage("Подключено");
-            CommandParser.Init(NI);
+            CommandParser.InitGameServer(NI);
             int[][] mass = null;
             while (true)
             {
@@ -121,10 +121,10 @@ namespace GameCursachProject
                 for (var j = 0; j < 15; j++)
                 {
                     if (j % 2 == 0)
-                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), GameContent.TileBorder, GameContent.TileBorder_HL, GameContent.TileTypes[mass[i][j]].Tile_Decoration, 392, 20, 0, new Animation(1, 1, true), 1, GameContent.TileTypes[mass[i][j]].SpeedNeeded, GameContent.TileTypes[mass[i][j]].Name, LAYER_MAP);
+                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339), GameContent.TileBorder, GameContent.TileBorder_HL, GameContent.TileTypes[mass[i][j]].Tile_Decoration, 392, 20, 0, new Animation(1, 1, true), 1, GameContent.TileTypes[mass[i][j]].SpeedNeeded, GameContent.TileTypes[mass[i][j]].Armor, GameContent.TileTypes[mass[i][j]].Name, LAYER_MAP);
                     else
                         if (i != MapArr.GetLength(0) - 1)
-                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), GameContent.TileBorder, GameContent.TileBorder_HL, GameContent.TileTypes[mass[i][j]].Tile_Decoration, 392, 20, 0, new Animation(1, 1, true), 1, GameContent.TileTypes[mass[i][j]].SpeedNeeded, GameContent.TileTypes[mass[i][j]].Name, LAYER_MAP);
+                        MapArr[i][j] = new Tile(new Vector2(j * 294, i * 339 + 169.5f), GameContent.TileBorder, GameContent.TileBorder_HL, GameContent.TileTypes[mass[i][j]].Tile_Decoration, 392, 20, 0, new Animation(1, 1, true), 1, GameContent.TileTypes[mass[i][j]].SpeedNeeded, GameContent.TileTypes[mass[i][j]].Armor, GameContent.TileTypes[mass[i][j]].Name, LAYER_MAP);
                     else
                         MapArr[i][j] = null;
                 }
@@ -241,7 +241,7 @@ namespace GameCursachProject
             //cam.Rotation -= 0.01f;
 
             string[] CN;
-            CommandParser.Update(out CN);
+            CommandParser.UpdateGameServer(out CN);
             if (CN != null)
             {
                 if (CN[0] == "REPLACE")

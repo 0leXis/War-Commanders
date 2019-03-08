@@ -125,7 +125,7 @@ namespace GameCursachProject
                         }
                         if (RealText.Length > 0)
                         {
-                            RealText = RealText.Remove(base.Text.Length - 1);
+                            RealText = RealText.Remove(RealText.Length - 1);
                         }
                         base.Text += "|";
                     }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<cardinfo>
-	<Name>T-34-76</Name>
+<unit>
+  <Name>T-34-76</Name>
   <Cost>5</Cost>
   <Armor>1</Armor>
-  <AttackRadius>3</AttackRadius>
-  <Damage>2</Damage>
-  <HP>4</HP>
-  <Speed>4</Speed>
-</cardinfo>
+  <AttackRadius>2</AttackRadius>
+  <Damage>3</Damage>
+  <HP>5</HP>
+  <Speed>5</Speed>
+</unit>

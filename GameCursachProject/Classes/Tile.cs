@@ -19,6 +19,7 @@ namespace GameCursachProject
 		
     	public MapTiles TileContains { get; set; }
         public int MovingPointsNeeded { get; set; }
+        public int GiveArmor { get; set; }
         public Unit UnitOnTile { get; set; }
         
         new public Vector2 Position
@@ -88,11 +89,12 @@ namespace GameCursachProject
 
         public string TileName { get; set; }
         
-        public Tile(Vector2 Position, Texture2D Texture, Texture2D HighLitedTexture, Texture2D DecorationTexture, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, int MovingPointsNeeded, string TileName, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, NotSelectedFrame, Layer)
+        public Tile(Vector2 Position, Texture2D Texture, Texture2D HighLitedTexture, Texture2D DecorationTexture, int FrameSizeX, int FPS, int NotSelectedFrame, Animation Selected, int ClickedFrame, int MovingPointsNeeded, int GiveArmor, string TileName, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, NotSelectedFrame, Selected, ClickedFrame, NotSelectedFrame, Layer)
         {
         	this.TileName = TileName;
         	TileContains = MapTiles.NONE;
             this.MovingPointsNeeded = MovingPointsNeeded;
+            this.GiveArmor = GiveArmor;
             this.HighLitedTexture = HighLitedTexture;
             MainTexture = Texture;
             Decoration = new BasicSprite(Position, DecorationTexture, Layer + 0.003f);

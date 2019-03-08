@@ -188,7 +188,7 @@ namespace GameCursachProject
                                     {
                                         Command[i] = Path[i - 1].X.ToString() + " " + Path[i - 1].Y.ToString();
                                     }
-                                    CommandParser.SendCommand(Command);
+                                    CommandParser.SendCommandToGameServer(Command);
                                     gameState.SetEnemyTurn();
                                 }
                                 //UnitMove(PathFinding(ActionStartPoint.X, ActionStartPoint.Y, _ChoosedTileI, _ChoosedTileJ, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.MovePointsLeft, out PL, out Marked, Opponent));
@@ -208,7 +208,7 @@ namespace GameCursachProject
                                 if(EnemyFinding(ActionStartPoint.X, ActionStartPoint.Y, Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.AttackDistance).Contains(new Point(_ChoosedTileI, _ChoosedTileJ)))
                                 {
                                     //Tiles[ActionStartPoint.X][ActionStartPoint.Y].UnitOnTile.Attack(Tiles[_ChoosedTileI][_ChoosedTileJ].UnitOnTile);
-                                    CommandParser.SendCommand(new string[] { "ATTACK", ActionStartPoint.X.ToString(), ActionStartPoint.Y.ToString(), _ChoosedTileI.ToString(), _ChoosedTileJ.ToString()});
+                                    CommandParser.SendCommandToGameServer(new string[] { "ATTACK", ActionStartPoint.X.ToString(), ActionStartPoint.Y.ToString(), _ChoosedTileI.ToString(), _ChoosedTileJ.ToString()});
                                     gameState.SetEnemyTurn();
                                 }
 
@@ -266,6 +266,7 @@ namespace GameCursachProject
                             Info.Appear();
                             Info.Position = new Vector2(MouseControl.X - Info.Texture.Width / 2, MouseControl.Y + 20);
                             Info.NeedMovePointsText = Tiles[_ChoosedTileI][_ChoosedTileJ].MovingPointsNeeded.ToString();
+                            Info.DefenseText = Tiles[_ChoosedTileI][_ChoosedTileJ].GiveArmor.ToString();
                         }
                     }
                     else

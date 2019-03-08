@@ -12,6 +12,9 @@ namespace GameCursachProject
         private TcpClient Client;
         private Thread DGThread;
         private bool ExitCommand;
+        private bool _IsError = false;
+
+        public string splitter = "<||>";
 
         public Queue<string> MsgReadList { get; set; }
         public Queue<string> MsgWriteList { get; set; }
@@ -40,6 +43,14 @@ namespace GameCursachProject
             }
         }
 
+        public bool IsError
+        {
+            get
+            {
+                return _IsError;
+            }
+        }
+
         public NetworkInterface()
         {
             MsgReadList = new Queue<string>();
@@ -50,6 +61,7 @@ namespace GameCursachProject
         {
             if (DGThread == null || !DGThread.IsAlive)
             {
+                _IsError = false;
                 Log.SendMessage("[WCNetwork]: Подключение к " + IP_Port);
                 _IP_Port = IP_Port;
                 Client = new TcpClient();
@@ -129,13 +141,19 @@ namespace GameCursachProject
                         	ReadStr += Encoding.UTF8.GetString(readdata, 0, bytes);
                     	}
 
-                    	lock (LockObject)
+                        lock (LockObject)
                     	{
                         	if (ReadStr != "")
-                            	MsgReadList.Enqueue(ReadStr);
+                            {
+                                ReadStr.Remove(ReadStr.Length - splitter.Length);
+                                var strarr = ReadStr.Split(new string[] { splitter }, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach(var str in strarr)
+                                    MsgReadList.Enqueue(str);
+                            }
                         	while (MsgWriteList.Count > 0)
                         	{
-                            	var data = Encoding.UTF8.GetBytes(MsgWriteList.Dequeue());
+                            	var data = Encoding.UTF8.GetBytes(MsgWriteList.Dequeue() + splitter);
                             	TCPStream.Write(data, 0, data.Length);
                         	}
                         	if (ExitCommand)
@@ -153,7 +171,8 @@ namespace GameCursachProject
         	}
             catch (Exception e)
             {
-                    	Log.SendError("[WCNetwork]: " + e.Message);
+                Log.SendError("[WCNetwork]: " + e.Message);
+                _IsError = true;
             }
         }
     }

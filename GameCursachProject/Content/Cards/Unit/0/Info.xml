@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<cardinfo>
-	<Name>Pz. VI H "Tiger"</Name>
-  <Cost>10</Cost>
+<unit>
+  <Name>Pz. VI H "Tiger"</Name>
+  <Cost>15</Cost>
   <Armor>2</Armor>
   <AttackRadius>3</AttackRadius>
-  <Damage>3</Damage>
-  <HP>7</HP>
-  <Speed>2</Speed>
-</cardinfo>
+  <Damage>4</Damage>
+  <HP>9</HP>
+  <Speed>3</Speed>
+</unit>

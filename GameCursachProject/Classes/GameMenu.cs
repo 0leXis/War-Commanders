@@ -112,6 +112,7 @@ namespace GameCursachProject
             if (State != null)
                 if(State.IsPlayerTurn)
                     State.SetPlayerTurn();
+            MouseControl.Reset();
         }
 
         private void ChangeOptionsState()
