@@ -187,9 +187,9 @@
     <Compile Include="Classes\SimpleRectangle.cs" />
     <Compile Include="Classes\Tile.cs" />
     <Compile Include="Classes\UI_Resource_Info.cs" />
+    <Compile Include="Classes\Unit.cs" />
     <Compile Include="Classes\UnitInfo.cs" />
     <Compile Include="Classes\TileInfo.cs" />
-    <Compile Include="Classes\Unit.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Program.cs" />

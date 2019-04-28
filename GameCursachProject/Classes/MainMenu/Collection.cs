@@ -13,11 +13,16 @@ namespace GameCursachProject
     class Collection : IDrawable
     {
         private Card[] Cards;
+        private Button Prev;
+        private Button Next;
+        private BasicText PageText;
+
         private CollectionState State;
 
         public bool[] IsCardInCollection;
         public int CardTextureWidth { get; set; }
         public int CardTextureHeight { get; set; }
+
         private int Pages;
         private int SovietPages;
         private int GermanyPages;
@@ -41,7 +46,7 @@ namespace GameCursachProject
 
         public Collection(Vector2 ScreenRes, bool[] IsSovietCardInCollection, bool[] IsGermanCardInCollection, int CardTextureWidth, float Layer = BasicSprite.DefaultLayer)
         {
-            Cards = new Card[4];
+            Cards = new Card[3];
             this.CardTextureWidth = CardTextureWidth;
             CardTextureHeight = GameContent.CardTexture.Height;
             this.Layer = Layer;

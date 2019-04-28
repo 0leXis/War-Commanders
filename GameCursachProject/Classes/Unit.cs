@@ -52,6 +52,7 @@ namespace GameCursachProject
 
         public Point ParentTile { get; set; }
 
+        public string Name { get; set; }
         public int Speed { get; set; }
         private int _MovePointsLeft;
         private int _Armor;
@@ -138,8 +139,9 @@ namespace GameCursachProject
         	}
         }
 
-        public Unit(Vector2 Position, Texture2D Texture, Texture2D UInfoTexture, SpriteFont UInfoFont, Color UInfoColor, int FrameSizeX, int FPS, int Speed, int Damage, int HP, int Armor, int AttackDistance, Side side, string AttackScript, Script ScrEngine, Point ParentTile, Animation DestroyAnim, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer)
+        public Unit(Vector2 Position, Texture2D Texture, Texture2D UInfoTexture, SpriteFont UInfoFont, Color UInfoColor, int FrameSizeX, int FPS, string Name, int Speed, int Damage, int HP, int Armor, int AttackDistance, Side side, string AttackScript, Script ScrEngine, Point ParentTile, Animation DestroyAnim, float Layer = DefaultLayer) : base(Position, Texture, FrameSizeX, FPS, Layer)
         {
+            this.Name = Name;
             this.ParentTile = ParentTile;
             this.side = side;
         	MoveList = new Queue<MoveInfo>();
@@ -188,11 +190,12 @@ namespace GameCursachProject
             AttScr_Update = OldUnit.AttScr_Update;
             AttScr_Draw = OldUnit.AttScr_Draw;
             side = OldUnit.side;
+            Name = OldUnit.Name;
 
             FLFont = OldUnit.FLFont;
             this.ParentTile = ParentTile;
             CanAttack = OldUnit.CanAttack;
-
+            
             AddAnimation("Destroy", OldUnit.GetAnimation("Destroy"));
         }
 

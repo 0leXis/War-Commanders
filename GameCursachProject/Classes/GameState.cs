@@ -312,11 +312,11 @@ namespace GameCursachProject
                     }
                     if (CN[1] == "ALLIED")
                     {
-                        Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitTexture, GameContent.UI_Info_Allied, GameContent.UI_InfoFont, Color.White, 392, 20, GameContent.UnitCards[Convert.ToInt32(CN[2])].Speed, GameContent.UnitCards[Convert.ToInt32(CN[2])].Damage, GameContent.UnitCards[Convert.ToInt32(CN[2])].HP, GameContent.UnitCards[Convert.ToInt32(CN[2])].Armor, GameContent.UnitCards[Convert.ToInt32(CN[2])].AttackRadius, Side.PLAYER, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitAttackScript, UnitAttEngine, new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])), new Animation(8, 17, false), 0.4f), PlayerSide, Map.UI_VisibleState);
+                        Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitTexture, GameContent.UI_Info_Allied, GameContent.UI_InfoFont, Color.White, 392, 20, GameContent.UnitCards[Convert.ToInt32(CN[2])].Name, GameContent.UnitCards[Convert.ToInt32(CN[2])].Speed, GameContent.UnitCards[Convert.ToInt32(CN[2])].Damage, GameContent.UnitCards[Convert.ToInt32(CN[2])].HP, GameContent.UnitCards[Convert.ToInt32(CN[2])].Armor, GameContent.UnitCards[Convert.ToInt32(CN[2])].AttackRadius, Side.PLAYER, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitAttackScript, UnitAttEngine, new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])), new Animation(8, 17, false), 0.4f), PlayerSide, Map.UI_VisibleState);
                     }
                     else
                     {
-                        Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitTexture, GameContent.UI_Info_Enemy, GameContent.UI_InfoFont, Color.White, 392, 20, GameContent.UnitCards[Convert.ToInt32(CN[2])].Speed, GameContent.UnitCards[Convert.ToInt32(CN[2])].Damage, GameContent.UnitCards[Convert.ToInt32(CN[2])].HP, GameContent.UnitCards[Convert.ToInt32(CN[2])].Armor, GameContent.UnitCards[Convert.ToInt32(CN[2])].AttackRadius, Side.OPPONENT, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitAttackScript, UnitAttEngine, new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])), new Animation(8, 17, false), 0.4f), (PlayerSide == MapZones.RIGHT) ? MapZones.LEFT : MapZones.RIGHT, Map.UI_VisibleState);
+                        Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitTexture, GameContent.UI_Info_Enemy, GameContent.UI_InfoFont, Color.White, 392, 20, GameContent.UnitCards[Convert.ToInt32(CN[2])].Name, GameContent.UnitCards[Convert.ToInt32(CN[2])].Speed, GameContent.UnitCards[Convert.ToInt32(CN[2])].Damage, GameContent.UnitCards[Convert.ToInt32(CN[2])].HP, GameContent.UnitCards[Convert.ToInt32(CN[2])].Armor, GameContent.UnitCards[Convert.ToInt32(CN[2])].AttackRadius, Side.OPPONENT, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitAttackScript, UnitAttEngine, new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])), new Animation(8, 17, false), 0.4f), (PlayerSide == MapZones.RIGHT) ? MapZones.LEFT : MapZones.RIGHT, Map.UI_VisibleState);
                     }
                 }
                 if (CN[0] == "MOVE")
@@ -383,7 +383,7 @@ namespace GameCursachProject
 
                     Map.GetTile(Convert.ToInt32(CN[1]), Convert.ToInt32(CN[2])).UnitOnTile.Attack(Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).UnitOnTile, Convert.ToInt32(CN[5]));
 
-                    if (Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).UnitOnTile == null)
+                    if (Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).UnitOnTile.HP <= Convert.ToInt32(CN[5]))
                     {
                         var point = new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4]));
                         for (var i = 0; i < Map.CPTiles.Count(); i++)

@@ -652,8 +652,12 @@ namespace GameCursachProject
                 Inf.Update();
                 if(map.ChoosedTileI != -1)
                 {
-                	TileName.Text = map.GetTile(map.ChoosedTileI, map.ChoosedTileJ).TileName;
-                	TileName.Position = new Vector2(UI_BottomLeft.Position.X + UI_BottomLeft.Texture.Width / 2 - TileName.Font.MeasureString(TileName.Text).X / 2, UI_BottomLeft.Position.Y + 5);
+                    var tmptile = map.GetTile(map.ChoosedTileI, map.ChoosedTileJ);
+                    if (tmptile.UnitOnTile != null)
+                	    TileName.Text = tmptile.TileName + ", " + tmptile.UnitOnTile.Name;
+                    else
+                        TileName.Text = map.GetTile(map.ChoosedTileI, map.ChoosedTileJ).TileName;
+                    TileName.Position = new Vector2(UI_BottomLeft.Position.X + UI_BottomLeft.Texture.Width / 2 - TileName.Font.MeasureString(TileName.Text).X / 2, UI_BottomLeft.Position.Y + 5);
                 }
             }
         }
