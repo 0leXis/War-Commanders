@@ -8,10 +8,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameCursachProject
 {
-    public enum MenuState { HOME, PLAY, COLLECTION, PACK_OPEN }
+    public enum MenuState { HOME, PLAY, COLLECTION, PACK_OPEN, CONNECTING }
 
     class MainMenu : IDrawable
     {
+        Game1 Parent;
+
         MenuState State;
 
         Collection collection;
@@ -38,15 +40,20 @@ namespace GameCursachProject
 
         NetworkInterface MasterNI;
 
+        NetworkInterface GameNI;
+        string GameIP;
+
         public MainMenu
             (Vector2 ScreenRes, 
             Texture2D LogInBackGroundTexture, Texture2D LogInButtonTexture, 
             Texture2D LogInEditTexture, Texture2D ConnectingIconTexture,
             Texture2D MenuBarTexture, Texture2D ButtonTexture, Texture2D HomeButtonTexture, Texture2D MoneyBackTexture,
             Texture2D RollingBackTexture, Texture2D NameBackTexture,
-            SpriteFont Font, Color TextColor, GraphicsDevice Graphicsdevice, float Layer = BasicSprite.DefaultLayer
+            SpriteFont Font, Color TextColor, GraphicsDevice Graphicsdevice, Game1 Parent, float Layer = BasicSprite.DefaultLayer
             )
         {
+            this.Parent = Parent;
+
             LogIn = new LogInForm((ScreenRes - new Vector2(LogInBackGroundTexture.Width, LogInBackGroundTexture.Height)) / 2, LogInBackGroundTexture, LogInButtonTexture, LogInEditTexture, ConnectingIconTexture, Font, TextColor, Graphicsdevice, Layer - 0.001f);
 
             MenuBar = new BasicSprite(new Vector2(0, 50), MenuBarTexture, Layer + 0.0005f);
@@ -71,7 +78,7 @@ namespace GameCursachProject
             State = MenuState.HOME;
 
             collection = new Collection(ScreenRes, Color.Black, new bool[] { }, new bool[] { }, 200, Layer - 0.0005f);
-            play = new Play();
+            play = new Play(ScreenRes, RollingBack.UpPosition.Y, this, Layer - 0.0005f);
         }
 
         public void LockClicking()
@@ -98,6 +105,9 @@ namespace GameCursachProject
 
         public void Update(GameMenu menu)
         {
+            //TODO: Esc bug меню
+            if (menu.IsShown)
+                return;
             if (IsLoginState)
             {
                 if (LogIn.Update(MasterNI) == 1)
@@ -131,7 +141,6 @@ namespace GameCursachProject
                         RollingBack.SetUp();
                         if (State == MenuState.COLLECTION)
                             collection.Hide();
-                        play.Show();
                         State = MenuState.PLAY;
                     }
                 }
@@ -166,10 +175,46 @@ namespace GameCursachProject
                     if (!RollingBack.IsMoving && !collection.IsShown)
                         collection.Show(1, true);
                 }
+                if (State == MenuState.PLAY)
+                {
+                    if (!RollingBack.IsMoving && !play.IsShown)
+                        play.Show();
+                }
             }
             RollingBack.Update();
             collection.Update();
             play.Update();
+
+            if(State == MenuState.CONNECTING)
+            {
+                play.Update();
+                if (!GameNI.IsConnected)
+                {
+                    GameNI.ConnectTo(GameIP);
+                }
+                if (GameNI.IsConnected)
+                {
+                    Log.SendMessage("Подключено");
+                    CommandParser.InitGameServer(GameNI);
+                    State = MenuState.HOME;
+                    play.IsSearchState = false;
+                    play.ShowCancelButton();
+                    Parent.CreateGame(GameNI);
+                }
+            }
+
+            string[] CN;
+            CommandParser.UpdateMasterServer(out CN);
+            if (CN != null)
+            {
+                if(CN[0] == "CONNECT")
+                {
+                    GameNI = new NetworkInterface();
+                    State = MenuState.CONNECTING;
+                    GameIP = CN[1];
+                    play.HideCancelButton();
+                }
+            }
         }
 
         public void Draw(SpriteBatch Target)
@@ -192,6 +237,7 @@ namespace GameCursachProject
                 RollingBack.Draw(Target);
 
                 collection.Draw(Target);
+                play.Draw(Target);
             Target.End();
         }
     }

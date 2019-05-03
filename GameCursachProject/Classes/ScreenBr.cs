@@ -29,8 +29,12 @@ namespace GameCursachProject
 		{
 			PlayAnimation("ScreenBr+");
 		}
-		
-		public override void Draw(SpriteBatch Target)
+
+        public void ScreenBrDown()
+        {
+            PlayAnimation("ScreenBr+", true);
+        }
+        public override void Draw(SpriteBatch Target)
 		{
 			if (Visible)
 				Target.Draw(Texture, null, new Rectangle(Position.ToPoint(), ScreenRes.ToPoint()), new Rectangle(Convert.ToInt32(CurrentFrame*_FrameSize.X), 0, 1, 1), null, 0f, Vector2.Zero, null, SpriteEffects.None, Layer);

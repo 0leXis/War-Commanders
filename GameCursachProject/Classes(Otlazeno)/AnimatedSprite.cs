@@ -43,9 +43,12 @@ namespace GameCursachProject
         /// <summary>
         /// Устанавливает первый кадр
         /// </summary>
-        public void ResetAnim()
+        public void ResetAnim(bool IsReverse)
         {
-            CurrentFrame = FirstFrame;
+            if(IsReverse)
+                CurrentFrame = LastFrame;
+            else
+                CurrentFrame = FirstFrame;
         }
         /// <summary>
         /// Устанавливает следующий кадр
@@ -259,7 +262,7 @@ namespace GameCursachProject
                 StopAnimation();
                 CurrAnimName = Name;
                 Anims.TryGetValue(Name,out CurrAnim);
-                CurrAnim.ResetAnim();
+                CurrAnim.ResetAnim(IsReverse);
                 Reverse = IsReverse;
                 if(Reverse)
                     CurrentFrame = CurrAnim.LastFrame;

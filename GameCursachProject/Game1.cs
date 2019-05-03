@@ -10,11 +10,15 @@ using System.Text;
 
 namespace GameCursachProject
 {
+    public enum GlobalGameState { MainMenu, Game }
+
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class Game1 : Game
     {
+        GlobalGameState GlobalState;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -24,6 +28,10 @@ namespace GameCursachProject
         MainMenu mainMenu;
         GameMenu Menu;
 
+        ScreenBr LoadingBr;
+        int LoadingIterations;
+        bool IsLoadToGame;
+        bool IsLoadToMenu;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -67,12 +75,16 @@ namespace GameCursachProject
 
             ScreenWidth = Window.ClientBounds.Width;
             ScreenHeight = Window.ClientBounds.Height;
+
+            LoadingBr = new ScreenBr(new Vector2(ScreenWidth, ScreenHeight), 60, 255, GraphicsDevice, 0.001f);
+            LoadingBr.CurrentFrame = 59;
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             GameContent.LoadGameContent();
-
-            mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_MainMenu_MoneyBack, GameContent.UI_MainMenu_RollBack, GameContent.UI_MainMenu_NameBack, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, 0.1f);
+            GlobalState = GlobalGameState.MainMenu;
+            mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_MainMenu_MoneyBack, GameContent.UI_MainMenu_RollBack, GameContent.UI_MainMenu_NameBack, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, this, 0.1f);
             //gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
 
             KeyBindings.RegisterKeyBind("KEY_MENU", Keys.Escape);
@@ -125,9 +137,12 @@ namespace GameCursachProject
 
             MouseControl.Update();
             KeyBindings.Update();
-            if (mainMenu != null)
+            if (mainMenu != null && GlobalState == GlobalGameState.MainMenu)
+            {
+                Menu.Update(null, null, mainMenu);
                 mainMenu.Update(Menu);
-            if (gameState != null)
+            }
+            if (gameState != null && GlobalState == GlobalGameState.Game)
             {
                 Menu.Update(gameState.UI, gameState, mainMenu);
                 gameState.Update(Menu);
@@ -140,9 +155,29 @@ namespace GameCursachProject
             //Window.Title = gameState.watch.Elapsed.ToString() + "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y) + "|ZOOM|" + gameState.cam.Zoom.ToString() + "|POS|" + gameState.cam.Position.ToString();
             Window.Title = "|--|" + Convert.ToString(Mouse.GetState().X) + "||" + Convert.ToString(Mouse.GetState().Y);
 
+            LoadingBr.UpdateAnims();
+            if (IsLoadToGame)
+            {
+                LoadingIterations++;
+                if(LoadingIterations == 60)
+                {
+                    GlobalState = GlobalGameState.Game;
+                    LoadingBr.ScreenBrUp();
+                }
+                if (LoadingIterations == 120)
+                    IsLoadToGame = false;
+            }
             base.Update(gameTime);
         }
         
+        public void CreateGame(NetworkInterface NI)
+        {
+            gameState = new GameState(NI, ScreenWidth, ScreenHeight, GraphicsDevice);
+            LoadingIterations = 0;
+            IsLoadToGame = true;
+            LoadingBr.ScreenBrDown();
+        }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -150,12 +185,13 @@ namespace GameCursachProject
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            if(mainMenu != null)
+            if(mainMenu != null && GlobalState == GlobalGameState.MainMenu)
                 mainMenu.Draw(spriteBatch);
-            if (gameState != null)
+            if (gameState != null && GlobalState == GlobalGameState.Game)
                 gameState.Draw(spriteBatch);
             spriteBatch.Begin(SpriteSortMode.BackToFront);
                 Menu.Draw(spriteBatch);
+                LoadingBr.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

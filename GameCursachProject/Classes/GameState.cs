@@ -38,17 +38,12 @@ namespace GameCursachProject
 
         private GraphicsDevice gr_Dev;
 
-        public GameState(int ScreenWidth, int ScreenHeight, GraphicsDevice gr_Device)
+        public GameState(NetworkInterface NI, int ScreenWidth, int ScreenHeight, GraphicsDevice gr_Device)
         {
+            this.NI = NI;
+
             gr_Dev = gr_Device;
 
-            NI = new NetworkInterface();
-            while (!NI.IsConnected)
-            {
-                NI.ConnectTo(CommandParser.ServerIP);
-            }
-            Log.SendMessage("Подключено");
-            CommandParser.InitGameServer(NI);
             int[][] mass = null;
             while (true)
             {

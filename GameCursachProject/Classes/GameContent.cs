@@ -194,6 +194,8 @@ namespace GameCursachProject
 
         static public SpriteFont UI_MainMenu_Collection_PageTextFont;
 
+        static public Texture2D UI_MainMenu_Play_StartButton;
+
         static public SpriteFont UI_ButtonFont;
         static public SpriteFont UI_MiniFont;
         static public SpriteFont UI_InfoFont;
@@ -269,6 +271,8 @@ namespace GameCursachProject
             UI_MainMenu_Collection_PageTextFont = ContentLoader.LoadFont(@"Fonts\PageTextFont");
             UI_MainMenu_Collection_Bottom = ContentLoader.LoadTexture(@"Textures\UI_Collection_Bottom");
             UI_MainMenu_Collection_Right = ContentLoader.LoadTexture(@"Textures\UI_Collection_DeckList");
+
+            UI_MainMenu_Play_StartButton = ContentLoader.LoadTexture(@"Textures\UI_StartButton");
 
             UI_ButtonFont = ContentLoader.LoadFont(@"Fonts\ButtonFont");
             UI_MiniFont = ContentLoader.LoadFont(@"Fonts\UI_MiniFont");
