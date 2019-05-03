@@ -10,5 +10,25 @@ namespace GameCursachProject
 {
     class Play
     {
+
+        public Play()
+        {
+
+        }
+
+        public void Hide()
+        {
+
+        }
+
+        public void Show()
+        {
+
+        }
+
+        public void Update()
+        {
+
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace GameCursachProject
         MenuState State;
 
         Collection collection;
+        Play play;
 
         BasicSprite BackGround;
         public LogInForm LogIn { get; set; }
@@ -69,7 +70,8 @@ namespace GameCursachProject
 
             State = MenuState.HOME;
 
-            collection = new Collection(ScreenRes, new bool[] { }, new bool[] { }, 200, Layer - 0.0005f);
+            collection = new Collection(ScreenRes, Color.Black, new bool[] { }, new bool[] { }, 200, Layer - 0.0005f);
+            play = new Play();
         }
 
         public void LockClicking()
@@ -116,43 +118,58 @@ namespace GameCursachProject
                         }
                         if (State == MenuState.COLLECTION)
                             collection.Hide();
+                        else
+                        if (State == MenuState.PLAY)
+                            play.Hide();
                         State = MenuState.HOME;
                      }
                 }
                 if (Play.Update() == ButtonStates.CLICKED)
                 {
-                    RollingBack.SetUp();
-                    if (State == MenuState.COLLECTION)
-                        collection.Hide();
+                    if (State != MenuState.PLAY)
+                    {
+                        RollingBack.SetUp();
+                        if (State == MenuState.COLLECTION)
+                            collection.Hide();
+                        play.Show();
+                        State = MenuState.PLAY;
+                    }
                 }
                 if (Collection.Update() == ButtonStates.CLICKED)
                 {
                     if(State != MenuState.COLLECTION)
                     {
+                        if (State == MenuState.PLAY)
+                            play.Hide();
                         RollingBack.SetUp();
                         State = MenuState.COLLECTION;
                     }
                 }
                 if (OpenCardPack.Update() == ButtonStates.CLICKED)
                 {
-                    RollingBack.SetUp();
-                    if (State == MenuState.COLLECTION)
-                        collection.Hide();
+                //    RollingBack.SetUp();
+                //    if (State == MenuState.COLLECTION)
+                //        collection.Hide();
                 }
                 if (Options.Update() == ButtonStates.CLICKED)
                 {
                     menu.Show(null, null, this);
                     if (State == MenuState.COLLECTION)
                         collection.Hide();
+                    else
+                        if (State == MenuState.PLAY)
+                            play.Hide();
                 }
 
                 if(State == MenuState.COLLECTION)
                 {
                     if (!RollingBack.IsMoving && !collection.IsShown)
-                        collection.Show();
+                        collection.Show(1, true);
                 }
             }
             RollingBack.Update();
+            collection.Update();
+            play.Update();
         }
 
         public void Draw(SpriteBatch Target)

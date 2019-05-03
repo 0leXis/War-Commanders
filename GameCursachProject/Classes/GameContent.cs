@@ -184,6 +184,16 @@ namespace GameCursachProject
         static public Texture2D UI_MainMenu_NameBack;
         static public Texture2D UI_MainMenu_RollBack;
 
+        static public Texture2D UI_MainMenu_SovietDeck;
+        static public Texture2D UI_MainMenu_GermanDeck;
+
+        static public Texture2D UI_MainMenu_Collection_Prev;
+        static public Texture2D UI_MainMenu_Collection_Next;
+        static public Texture2D UI_MainMenu_Collection_Bottom;
+        static public Texture2D UI_MainMenu_Collection_Right;
+
+        static public SpriteFont UI_MainMenu_Collection_PageTextFont;
+
         static public SpriteFont UI_ButtonFont;
         static public SpriteFont UI_MiniFont;
         static public SpriteFont UI_InfoFont;
@@ -250,6 +260,15 @@ namespace GameCursachProject
             UI_MainMenu_MoneyBack = ContentLoader.LoadTexture(@"Textures\UI_MoneyBack");
             UI_MainMenu_NameBack = ContentLoader.LoadTexture(@"Textures\UI_NameBack");
             UI_MainMenu_RollBack = ContentLoader.LoadTexture(@"Textures\UI_RollBack");
+
+            UI_MainMenu_SovietDeck = ContentLoader.LoadTexture(@"Textures\UI_SovietDeck");
+            UI_MainMenu_GermanDeck = ContentLoader.LoadTexture(@"Textures\UI_GermanDeck");
+
+            UI_MainMenu_Collection_Prev = ContentLoader.LoadTexture(@"Textures\Pred");
+            UI_MainMenu_Collection_Next = ContentLoader.LoadTexture(@"Textures\Next");
+            UI_MainMenu_Collection_PageTextFont = ContentLoader.LoadFont(@"Fonts\PageTextFont");
+            UI_MainMenu_Collection_Bottom = ContentLoader.LoadTexture(@"Textures\UI_Collection_Bottom");
+            UI_MainMenu_Collection_Right = ContentLoader.LoadTexture(@"Textures\UI_Collection_DeckList");
 
             UI_ButtonFont = ContentLoader.LoadFont(@"Fonts\ButtonFont");
             UI_MiniFont = ContentLoader.LoadFont(@"Fonts\UI_MiniFont");
