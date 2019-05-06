@@ -39,11 +39,22 @@ namespace GameCursachProject
         bool IsRegistration;
         bool IsRequestSended;
 
+        int _PlayerMoney = 0;
+        string _PlayerName = "";
+
         public string PlayerName
         {
             get
             {
-                return NameEdit.Text;
+                return _PlayerName;
+            }
+        }
+
+        public int PlayerMoney
+        {
+            get
+            {
+                return _PlayerMoney;
             }
         }
 
@@ -219,6 +230,8 @@ namespace GameCursachProject
                                 else
                                 {
                                     ShowNormalState();
+                                    _PlayerName = command[1];
+                                    _PlayerMoney = Convert.ToInt32(command[2]);
                                     Hide(true);
                                     return 1;
                                 }

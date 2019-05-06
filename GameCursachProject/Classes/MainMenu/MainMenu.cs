@@ -114,6 +114,7 @@ namespace GameCursachProject
                 {
                     IsLoginState = false;
                     PlayerName.Text = LogIn.PlayerName;
+                    PlayerMoney.Text = LogIn.PlayerMoney.ToString();
                 }
             }
             else
@@ -215,6 +216,11 @@ namespace GameCursachProject
                     play.HideCancelButton();
                 }
             }
+        }
+
+        public void ReturnFromGame()
+        {
+            play.SearchStateHide();
         }
 
         public void Draw(SpriteBatch Target)

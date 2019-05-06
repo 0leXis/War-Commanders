@@ -26,7 +26,7 @@ namespace GameCursachProject
 
         private bool IsEnemyTurn;
         private bool IsPlayerTurnCardShown;
-        public bool IsPlayerTurnSturted { get; set; }
+        public bool IsPlayerTurnStarted { get; set; }
         private bool IsEnTurnMove;
         private Vector2 offset;
         private int ETiteration;
@@ -34,6 +34,11 @@ namespace GameCursachProject
         private int[] ShowingCards;
 
         private GameState Parent;
+
+        private BasicSprite EndGame;
+        private Texture2D WinTexture;
+        private Texture2D LoseTexture;
+        private bool _IsEndGame;
 
         private bool _IsVs;
         public bool IsVs { get { return _IsVs; } }
@@ -211,6 +216,7 @@ namespace GameCursachProject
             Texture2D OpponentIcon, Texture2D PlayerPointsIcon, Texture2D OpponentPointsIcon,
             Texture2D PlayerMoneyIcon, Texture2D RoundTimeIcon, Texture2D Vs, 
             Texture2D CPAllied, Texture2D CPEnemy, Texture2D CPNeutral, Texture2D EnemyTurn,
+            Texture2D WinTexture, Texture2D LoseTexture,
             SpriteFont Font,
             SpriteFont ResFont,
             SpriteFont NewTurn,
@@ -229,6 +235,11 @@ namespace GameCursachProject
             this.Parent = Parent;
 
             this.ShowingCards = StartingCards;
+
+            this.WinTexture = WinTexture;
+            this.LoseTexture = LoseTexture;
+            EndGame = new BasicSprite(CurrentScreenRes / 2, WinTexture, new Vector2(WinTexture.Width / 2, WinTexture.Height / 2), 0f, 0.01f);
+            EndGame.Visible = false;
 
             Inf = new InfoBox(Vector2.One, Color.Black, Color.LightBlue, Font, Color.Black, " ", Gr, 0.01f);
             Inf.Visible = false;
@@ -309,6 +320,7 @@ namespace GameCursachProject
             StartVS();
 
             IsEnemyTurn = false;
+            _IsEndGame = false;
         }
 
         public void DisableUI()
@@ -341,6 +353,27 @@ namespace GameCursachProject
         {
             EnemyTurnMoveProcess();
         	Br.UpdateAnims();
+            if (_IsEndGame)
+            {
+                if(iteration < 300)
+                {
+                    iteration++;
+                    if(iteration >= 60 && iteration < 90)
+                    {
+                        EndGame.Visible = true;
+                        EndGame.Scale -= new Vector2(0.0333f);
+                    }
+                }
+                else
+                {
+                    if(iteration == 300)
+                    {
+                        Parent.EndGame();
+                        iteration++;
+                    }
+                }
+            }
+            else
             if (_IsVs)
             {
                 Cardchoose.Update();
@@ -430,7 +463,7 @@ namespace GameCursachProject
                 }
             }
             else
-            if (IsPlayerTurnSturted)
+            if (IsPlayerTurnStarted)
             {
                 if(iteration < 100)
                 {
@@ -639,7 +672,7 @@ namespace GameCursachProject
                     //    SetEnemyTurn();
                     Parent.SetEnemyTurn();
                     CommandParser.SendCommandToGameServer(new string[] { "NEXTTURN" });
-                    //TODO: Отправить на сервер команду смены хода
+                    //DONE: Отправить на сервер команду смены хода
                 }
                 //*TEST
 
@@ -662,12 +695,29 @@ namespace GameCursachProject
             }
         }
 
+        public void SetEndGame(bool IsWin)
+        {
+            _IsEndGame = true;
+            if (IsWin)
+                EndGame.Texture = WinTexture;
+            else
+                EndGame.Texture = LoseTexture;
+            EndGame.Scale = new Vector2(2);
+            iteration = 0;
+            Br.ScreenBrDown();
+            NewTurnText.Visible = false;
+            Cardchoose.ClearCardList();
+            ChooseConfirm.Visible = false;
+            ChooseText.Visible = false;
+            ChooseOrderText.Visible = false;
+        }
+
         public void ChooseCards(Hand hand)
         {
             hand.AddCards(20, Cardchoose.GetCards(true).ToArray()[Convert.ToInt32(CommandParser.GameServerLastCommand[1])]);
             ChooseText.Visible = false;
             Cardchoose.ClearCardList();
-            IsPlayerTurnSturted = false;
+            IsPlayerTurnStarted = false;
             Cardchoose.Enabled = true;
         }
 
@@ -766,7 +816,7 @@ namespace GameCursachProject
             ShowingCards = CardsToChoose;
 
             Btn_EndTurn.Enabled = true;
-            IsPlayerTurnSturted = true;
+            IsPlayerTurnStarted = true;
             IsPlayerTurnCardShown = false;
             Cardchoose.Enabled = true;
             iteration = 0;
@@ -784,7 +834,7 @@ namespace GameCursachProject
 
         public void SetPlayerTurnAnimation(int Turn_Number)
         {
-            IsPlayerTurnSturted = true;
+            IsPlayerTurnStarted = true;
             IsPlayerTurnCardShown = false;
             Cardchoose.Enabled = true;
             iteration = 0;
@@ -855,6 +905,8 @@ namespace GameCursachProject
             Btn_GameMenu.Draw(Target);
             Btn_Chat.Draw(Target);
             Inf.Draw(Target);
+
+            EndGame.Draw(Target);
         }
     }
 }

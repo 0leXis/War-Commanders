@@ -206,7 +206,10 @@ namespace GameCursachProject
                     else
                     if (Surrender.Update() == ButtonStates.CLICKED)
                     {
-                        //TODO: Surrender
+                        //DONE: Surrender
+                        if (Parent.GlobalState == GlobalGameState.Game)
+                            State.Surrender();
+                        Hide(UI, State, menu);
                     }
                     else
                     if (Options.Update() == ButtonStates.CLICKED)

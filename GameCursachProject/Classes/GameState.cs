@@ -12,6 +12,8 @@ namespace GameCursachProject
 {
     class GameState
     {
+        Game1 Parent;
+
         public NetworkInterface NI;
 
         public const float LAYER_MAP = 0.5f;
@@ -38,8 +40,9 @@ namespace GameCursachProject
 
         private GraphicsDevice gr_Dev;
 
-        public GameState(NetworkInterface NI, int ScreenWidth, int ScreenHeight, GraphicsDevice gr_Device)
+        public GameState(NetworkInterface NI, Game1 Parent, int ScreenWidth, int ScreenHeight, GraphicsDevice gr_Device)
         {
+            this.Parent = Parent;
             this.NI = NI;
 
             gr_Dev = gr_Device;
@@ -162,12 +165,13 @@ namespace GameCursachProject
                 GameContent.UI_Money, GameContent.UI_HourGlass,
                 GameContent.UI_Vs, GameContent.UI_AlliedPoint,
                 GameContent.UI_EnemyPoint, GameContent.UI_NeutralPoint, GameContent.UI_EnemyTurn,
+                GameContent.UI_VictoryImage, GameContent.UI_LoseImage,
                 GameContent.UI_ButtonFont,
                 GameContent.UI_MiniFont,
                 GameContent.UI_NewTurnFont,
                 gr_Device, this,
                 player1_name, player2_name,
-                0, 1, 0, 1, 100,
+                0, 1, 0, 1, 50,
                 Convert.ToInt32(player_money), 1,
                 "1:30", new string[] { "A", "B", "C" },
                 Cards, (Cards.Length == 3) ? true : false,
@@ -239,9 +243,21 @@ namespace GameCursachProject
             CommandParser.UpdateGameServer(out CN);
             if (CN != null)
             {
+                if (CN[0] == "WIN")
+                {
+                    IsPlayerTurn = false;
+                    UI.SetEndGame(true);
+                }
+                else
+                if (CN[0] == "LOSE" || CN[0] == "DRAW")
+                {
+                    IsPlayerTurn = false;
+                    UI.SetEndGame(false);
+                }
+                else
                 if (CN[0] == "REPLACE")
                 {
-                    if(CN.Length == 1)
+                    if (CN.Length == 1)
                     {
                         UI.ReplaceCards(null);
                     }
@@ -255,10 +271,12 @@ namespace GameCursachProject
                         UI.ReplaceCards(CardsToReplace);
                     }
                 }
+                else
                 if (CN[0] == "START")
                 {
                     UI.IterationReset();
                 }
+                else
                 if (CN[0] == "TURN")
                 {
                     foreach (var Tiles in Map.GetMap())
@@ -290,13 +308,15 @@ namespace GameCursachProject
                         IsPlayerTurn = true;
                     }
                 }
+                else
                 if (CN[0] == "CHOOSE")
                 {
-                    if(CN[1] == "OK")
+                    if (CN[1] == "OK")
                     {
                         UI.ChooseCards(Hand);
                     }
                 }
+                else
                 if (CN[0] == "SPAWN")
                 {
                     if (IsPlayerTurn)
@@ -314,6 +334,7 @@ namespace GameCursachProject
                         Map.GetTile(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitTexture, GameContent.UI_Info_Enemy, GameContent.UI_InfoFont, Color.White, 392, 20, GameContent.UnitCards[Convert.ToInt32(CN[2])].Name, GameContent.UnitCards[Convert.ToInt32(CN[2])].Speed, GameContent.UnitCards[Convert.ToInt32(CN[2])].Damage, GameContent.UnitCards[Convert.ToInt32(CN[2])].HP, GameContent.UnitCards[Convert.ToInt32(CN[2])].Armor, GameContent.UnitCards[Convert.ToInt32(CN[2])].AttackRadius, Side.OPPONENT, GameContent.UnitCards[Convert.ToInt32(CN[2])].UnitAttackScript, UnitAttEngine, new Point(Convert.ToInt32(CN[3]), Convert.ToInt32(CN[4])), new Animation(8, 17, false), 0.4f), (PlayerSide == MapZones.RIGHT) ? MapZones.LEFT : MapZones.RIGHT, Map.UI_VisibleState);
                     }
                 }
+                else
                 if (CN[0] == "MOVE")
                 {
                     if (IsPlayerTurn)
@@ -348,7 +369,7 @@ namespace GameCursachProject
                     {
                         if (Map.CPTiles[i] == point)
                         {
-                            if(Map.GetTile(Convert.ToInt32(first[0]), Convert.ToInt32(first[1])).UnitOnTile.side == Side.PLAYER)
+                            if (Map.GetTile(Convert.ToInt32(first[0]), Convert.ToInt32(first[1])).UnitOnTile.side == Side.PLAYER)
                             {
                                 Map.SetCPState(i, CapturePointStates.ALLIED);
                                 UI.CPInfos[i].SetState(CapturePointStates.ALLIED);
@@ -367,6 +388,7 @@ namespace GameCursachProject
                     Map.UnitMove(Map.PathFinding(Convert.ToInt32(first[0]), Convert.ToInt32(first[1]), Convert.ToInt32(last[0]), Convert.ToInt32(last[1]), Map.GetTile(Convert.ToInt32(first[0]), Convert.ToInt32(first[1])).UnitOnTile.MovePointsLeft, out PL, out Marked, OpponentSide), Convert.ToInt32(CN[3]));
 
                 }
+                else
                 if (CN[0] == "ATTACK")
                 {
                     if (IsPlayerTurn)
@@ -405,6 +427,18 @@ namespace GameCursachProject
                 //	//Map.GetTile(Convert.ToInt32(CN[1]), Convert.ToInt32(CN[2])).SpawnUnit(new Unit(Vector2.Zero, GameContent.UnitTextures[0], GameContent.UI_Info_Allied, GameContent.UI_InfoFont, Color.White, 392, 20, 5, 3, 6, 1, 2, Side.PLAYER, GameContent.UnitAttackScripts[0], UnitAttEngine, new Point(Convert.ToInt32(CN[1]), Convert.ToInt32(CN[2])), new Animation(8, 17, false), 0.4f), MapZones.RIGHT, Map.UI_VisibleState);
                 //}
             }
+        }
+
+        public void Surrender()
+        {
+            if(NI.IsConnected)
+                CommandParser.SendCommandToGameServer(new string[] { "SURRENDER" });
+        }
+
+        public void EndGame()
+        {
+            NI.Disconnect();
+            Parent.EndGame();
         }
 
         private void UpdateCamera()
@@ -452,7 +486,7 @@ namespace GameCursachProject
         private void UpdateGameObjects(GameMenu Menu)
         {
             var IsMouseHandled = false;
-            if (UI.IsPlayerTurnSturted)
+            if (UI.IsPlayerTurnStarted)
             {
                 for (var i = 0; i < Hand.CardsCount; i++)
                 {

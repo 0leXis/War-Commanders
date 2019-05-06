@@ -17,7 +17,14 @@ namespace GameCursachProject
     /// </summary>
     public class Game1 : Game
     {
-        GlobalGameState GlobalState;
+        GlobalGameState _GlobalState;
+        public GlobalGameState GlobalState
+        {
+            get
+            {
+                return _GlobalState;
+            }
+        }
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -83,7 +90,7 @@ namespace GameCursachProject
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             GameContent.LoadGameContent();
-            GlobalState = GlobalGameState.MainMenu;
+            _GlobalState = GlobalGameState.MainMenu;
             mainMenu = new MainMenu(new Vector2(ScreenWidth, ScreenHeight), GameContent.UI_MainMenu_LogIn_BackGround, GameContent.UI_MainMenu_LogIn_Button, GameContent.UI_MainMenu_LogIn_EditBox, GameContent.UI_MainMenu_LogIn_ConnIcon, GameContent.UI_MainMenu_MenuBar, GameContent.UI_MainMenu_Button, GameContent.UI_MainMenu_HomeButton, GameContent.UI_MainMenu_MoneyBack, GameContent.UI_MainMenu_RollBack, GameContent.UI_MainMenu_NameBack, GameContent.UI_InfoFont, Color.Black, GraphicsDevice, this, 0.1f);
             //gameState = new GameState(ScreenWidth, ScreenHeight, GraphicsDevice);
 
@@ -137,12 +144,12 @@ namespace GameCursachProject
 
             MouseControl.Update();
             KeyBindings.Update();
-            if (mainMenu != null && GlobalState == GlobalGameState.MainMenu)
+            if (mainMenu != null && _GlobalState == GlobalGameState.MainMenu)
             {
                 Menu.Update(null, null, mainMenu);
                 mainMenu.Update(Menu);
             }
-            if (gameState != null && GlobalState == GlobalGameState.Game)
+            if (gameState != null && _GlobalState == GlobalGameState.Game)
             {
                 Menu.Update(gameState.UI, gameState, mainMenu);
                 gameState.Update(Menu);
@@ -161,20 +168,40 @@ namespace GameCursachProject
                 LoadingIterations++;
                 if(LoadingIterations == 60)
                 {
-                    GlobalState = GlobalGameState.Game;
+                    _GlobalState = GlobalGameState.Game;
                     LoadingBr.ScreenBrUp();
                 }
                 if (LoadingIterations == 120)
                     IsLoadToGame = false;
+            }
+            if (IsLoadToMenu)
+            {
+                LoadingIterations++;
+                if (LoadingIterations == 60)
+                {
+                    _GlobalState = GlobalGameState.MainMenu;
+                    mainMenu.ReturnFromGame();
+                    gameState = null;
+                    LoadingBr.ScreenBrUp();
+                }
+                if (LoadingIterations == 120)
+                    IsLoadToMenu = false;
             }
             base.Update(gameTime);
         }
         
         public void CreateGame(NetworkInterface NI)
         {
-            gameState = new GameState(NI, ScreenWidth, ScreenHeight, GraphicsDevice);
+            gameState = new GameState(NI, this, ScreenWidth, ScreenHeight, GraphicsDevice);
             LoadingIterations = 0;
             IsLoadToGame = true;
+            LoadingBr.ScreenBrDown();
+        }
+
+        public void EndGame()
+        {
+            LoadingIterations = 0;
+            IsLoadToMenu = true;
             LoadingBr.ScreenBrDown();
         }
 
@@ -185,9 +212,9 @@ namespace GameCursachProject
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            if(mainMenu != null && GlobalState == GlobalGameState.MainMenu)
+            if(mainMenu != null && _GlobalState == GlobalGameState.MainMenu)
                 mainMenu.Draw(spriteBatch);
-            if (gameState != null && GlobalState == GlobalGameState.Game)
+            if (gameState != null && _GlobalState == GlobalGameState.Game)
                 gameState.Draw(spriteBatch);
             spriteBatch.Begin(SpriteSortMode.BackToFront);
                 Menu.Draw(spriteBatch);

@@ -84,12 +84,7 @@ namespace GameCursachProject
                 Search_Icon.RotateOn(0.01f);
                 if(CancelSearch.Update() == ButtonStates.CLICKED)
                 {
-                    BackGround.Visible = false;
-                    Search_Icon.Visible = false;
-                    CancelSearch.Visible = false;
-                    SearchDescription.Visible = false;
-                    IsSearchState = false;
-                    Parent.UnlockClicking();
+                    SearchStateHide();
                     CommandParser.SendCommandToMasterServer(new string[] { "STOPSEARCH" });
                 }
             }
@@ -100,16 +95,31 @@ namespace GameCursachProject
                         ChoosedDeck = i;
                 if (StartEnemySearch.Update() == ButtonStates.CLICKED)
                 {
-                    IsSearchState = true;
-                    Parent.LockClicking();
-                    BackGround.Visible = true;
-                    Search_Icon.Visible = true;
-                    CancelSearch.Visible = true;
-                    SearchDescription.Visible = true;
-                    CommandParser.SendCommandToMasterServer(new string[] { "SEARCH" });
+                    SearchStateShow();
+                    CommandParser.SendCommandToMasterServer(new string[] { "SEARCH", ChoosedDeck.ToString() });
                 }
                 DeckButtons[ChoosedDeck].PlayAnimation("Selected");
             }
+        }
+
+        public void SearchStateShow()
+        {
+            IsSearchState = true;
+            Parent.LockClicking();
+            BackGround.Visible = true;
+            Search_Icon.Visible = true;
+            CancelSearch.Visible = true;
+            SearchDescription.Visible = true;
+        }
+
+        public void SearchStateHide()
+        {
+            BackGround.Visible = false;
+            Search_Icon.Visible = false;
+            CancelSearch.Visible = false;
+            SearchDescription.Visible = false;
+            IsSearchState = false;
+            Parent.UnlockClicking();
         }
 
         public void Draw(SpriteBatch Target)

@@ -23,7 +23,8 @@ namespace GameCursachProject
 
         static public void RegisterKeyBind(string KeyFunction, Keys Key)
         {
-            BindedKeys.Add(KeyFunction, Key);
+            if(!BindedKeys.ContainsKey(KeyFunction))
+                BindedKeys.Add(KeyFunction, Key);
         }
 
         static public bool CheckKeyPressed(string KeyFunction)
