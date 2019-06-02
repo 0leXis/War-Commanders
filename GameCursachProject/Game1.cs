@@ -80,6 +80,8 @@ namespace GameCursachProject
             Log.SendMessage("OS: " + Environment.OSVersion.VersionString);
             //Log.EnableFileLog = true;
 
+            Config.LoadConfigFile();
+
             ScreenWidth = Window.ClientBounds.Width;
             ScreenHeight = Window.ClientBounds.Height;
 

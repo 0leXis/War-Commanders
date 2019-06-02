@@ -312,7 +312,7 @@ namespace GameCursachProject
             }
             Target.End();
 
-            Target.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform(Target.GraphicsDevice));
+            Target.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform());
                 foreach (var Tile in Tiles)
                     foreach (var Til in Tile)
                         if (Til != null)
@@ -329,7 +329,7 @@ namespace GameCursachProject
                         	Til.UnitOnTile.DrawUI(Target, cam);
             Target.End();
 
-            Target.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform(Target.GraphicsDevice));
+            Target.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform());
         }
     }
 }

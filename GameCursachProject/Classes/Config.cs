@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Xml;
 
 namespace GameCursachProject
 {
@@ -16,9 +17,23 @@ namespace GameCursachProject
         static public byte CurrResolution = 0;
         static public bool FullScreen = false;
 
+        static public string ServerIP = "127.0.0.1:9080";
+        public const string SettingsPath = "Config.xml";
         static public void LoadConfigFile()
         {
-
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load(SettingsPath);
+            XmlElement xRoot = xDoc.DocumentElement;
+            var IP = "";
+            foreach (XmlNode xnode in xRoot)
+            {
+                if (xnode.Name == "IP")
+                {
+                    IP = xnode.InnerText;
+                }
+            }
+            if (IP != "")
+                ServerIP = IP;
         }
 
         static public void SaveConfigFile()

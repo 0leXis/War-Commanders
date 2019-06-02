@@ -8,18 +8,25 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameCursachProject
 {
+    //Класс камеры
     class Camera
     {
+        //Максимальное и минимальное приближение камеры
         public float MAX_ZOOM = 0.25f;
         public float MIN_ZOOM = 2f;
-
+        //Приближение камеры
         private float _zoom;
+        //Центр приближения
         private Vector2 _zoomoffset;
 
+        //Позиция камеры
         public Vector2 Position { get; set; }
+        //Поворот камеры
         public float Rotation { get; set; }
+        //Разрешение окна
         public Vector2 ScreenRes { get; set; }
 
+        //Центр приближения
         public Vector2 ZoomOffset
         {
             get
@@ -27,7 +34,7 @@ namespace GameCursachProject
                 return _zoomoffset;
             }
         }
-
+        //Приближение камеры
         public float Zoom //TODO: Плавный зум и перемещение
         {
         	get 
@@ -51,7 +58,7 @@ namespace GameCursachProject
                 _zoomoffset += (lastpos - ScreenRes / _zoom) / 2;
             }
         }
-
+        //Конструктор
         public Camera(Vector2 ScreenRes)
         {
             _zoom = 1.0f;
@@ -60,8 +67,8 @@ namespace GameCursachProject
             Position = Vector2.Zero;
             this.ScreenRes = ScreenRes;
         }
-
-        public Matrix GetTransform(GraphicsDevice device)
+        //Получение матрицы камеры
+        public Matrix GetTransform()
         {
             var _transform = Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0)) *
                              Matrix.CreateRotationZ(Rotation) *

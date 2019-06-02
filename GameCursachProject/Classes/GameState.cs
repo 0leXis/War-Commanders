@@ -84,6 +84,8 @@ namespace GameCursachProject
             var player1_name = "";
             var player2_name = "";
             var player_money = "";
+            var player1_icon = 0;
+            var player2_icon = 0;
             string[] tmpmsg = null;
             int[] Cards = null;
             while (true)
@@ -101,10 +103,12 @@ namespace GameCursachProject
                     player_money = tmpmsg[2];
                     PlayerSide = (tmpmsg[3] == "RIGHT") ? MapZones.RIGHT : MapZones.LEFT;
                     OpponentSide = (PlayerSide == MapZones.LEFT) ? MapZones.RIGHT : MapZones.LEFT;
-                    Cards = new int[tmpmsg.Length - 4];
-                    for (var i = 4; i < tmpmsg.Length; i++)
+                    player1_icon = Convert.ToInt32(tmpmsg[4]);
+                    player2_icon = Convert.ToInt32(tmpmsg[5]);
+                    Cards = new int[tmpmsg.Length - 6];
+                    for (var i = 6; i < tmpmsg.Length; i++)
                     {
-                        Cards[i - 4] = Convert.ToInt32(tmpmsg[i]);
+                        Cards[i - 6] = Convert.ToInt32(tmpmsg[i]);
                     }
                     break;
                 }
@@ -160,7 +164,7 @@ namespace GameCursachProject
                 GameContent.UI_Btn_NewTurn, GameContent.UI_Btn_Move,
                 GameContent.UI_Btn_Attack, GameContent.UI_Btn_Menu,
                 GameContent.UI_Btn_Chat, GameContent.UI_Btn_Stats,
-                GameContent.UI_Player_Icons[0], GameContent.UI_Player_Icons[0],
+                GameContent.UI_Player_Icons[player1_icon], GameContent.UI_Player_Icons[player2_icon],
                 GameContent.UI_Flag_Player, GameContent.UI_Flag_Enemy,
                 GameContent.UI_Money, GameContent.UI_HourGlass,
                 GameContent.UI_Vs, GameContent.UI_AlliedPoint,
@@ -551,7 +555,7 @@ namespace GameCursachProject
             //UpdThread.Wait();
             watch.Start();
             // TODO: Add your drawing code here
-            Target.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform(Target.GraphicsDevice));
+            Target.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform());
                 Map.Draw(Target, cam);
             Target.End();
             Target.Begin(SpriteSortMode.BackToFront);

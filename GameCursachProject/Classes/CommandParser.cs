@@ -9,7 +9,7 @@ namespace GameCursachProject
     static class CommandParser
     {
     	//public const string ServerIP = "192.168.0.1:9080";
-        public const string ServerIP = "127.0.0.1:9080";
+        //public const string ServerIP = "127.0.0.1:9080";
 
         static public NetworkInterface GameServerInterface;
         static public NetworkInterface MasterServerInterface;

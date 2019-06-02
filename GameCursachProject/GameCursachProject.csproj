@@ -140,11 +140,11 @@
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Classes%28Otlazeno%29\AnimatedSprite.cs" />
-    <Compile Include="Classes%28Otlazeno%29\Arrow.cs" />
-    <Compile Include="Classes%28Otlazeno%29\BasicSprite.cs" />
-    <Compile Include="Classes%28Otlazeno%29\BasicText.cs" />
-    <Compile Include="Classes%28Otlazeno%29\Button.cs" />
+    <Compile Include="Classes%28Otlazeno%29\Engine\AnimatedSprite.cs" />
+    <Compile Include="Classes%28Otlazeno%29\Engine\Arrow.cs" />
+    <Compile Include="Classes%28Otlazeno%29\Engine\BasicSprite.cs" />
+    <Compile Include="Classes%28Otlazeno%29\Engine\BasicText.cs" />
+    <Compile Include="Classes%28Otlazeno%29\Engine\Button.cs" />
     <Compile Include="Classes\CapturePointInfo.cs" />
     <Compile Include="Classes\CardChoose.cs" />
     <Compile Include="Classes\MainMenu\CardOpen.cs" />
@@ -155,16 +155,16 @@
     <Compile Include="Classes\EditBox.cs" />
     <Compile Include="Classes\FlyingText.cs" />
     <Compile Include="Classes\FlyingTextProcessor.cs" />
-    <Compile Include="Classes\GameContent.cs" />
+    <Compile Include="Classes%28Otlazeno%29\GameContent.cs" />
     <Compile Include="Classes\GameMenu.cs" />
     <Compile Include="Classes\GameState.cs" />
     <Compile Include="Classes\InfoBox.cs" />
-    <Compile Include="Classes\Camera.cs" />
+    <Compile Include="Classes%28Otlazeno%29\Engine\Camera.cs" />
     <Compile Include="Classes\Card.cs" />
-    <Compile Include="Classes%28Otlazeno%29\Intersector.cs" />
+    <Compile Include="Classes%28Otlazeno%29\Engine\Intersector.cs" />
     <Compile Include="Classes\CoordsConvert.cs" />
     <Compile Include="Classes\Hand.cs" />
-    <Compile Include="Classes%28Otlazeno%29\Log.cs" />
+    <Compile Include="Classes%28Otlazeno%29\Engine\Log.cs" />
     <Compile Include="Classes\KeyBindings.cs" />
     <Compile Include="Classes\ListBox.cs" />
     <Compile Include="Classes\LogInForm.cs" />
@@ -172,7 +172,7 @@
     <Compile Include="Classes\MainUI.cs" />
     <Compile Include="Classes\Map\MapAttack.cs" />
     <Compile Include="Classes\Map\MapMain.cs" />
-    <Compile Include="Classes%28Otlazeno%29\MouseControl.cs" />
+    <Compile Include="Classes%28Otlazeno%29\Engine\MouseControl.cs" />
     <Compile Include="Classes\Map\MapChangeAnims.cs" />
     <Compile Include="Classes\Map\MapGetTile.cs" />
     <Compile Include="Classes\Map\MapPathFinding.cs" />
@@ -188,8 +188,8 @@
     <Compile Include="Classes\Tile.cs" />
     <Compile Include="Classes\UI_Resource_Info.cs" />
     <Compile Include="Classes\Unit.cs" />
-    <Compile Include="Classes\UnitInfo.cs" />
-    <Compile Include="Classes\TileInfo.cs" />
+    <Compile Include="Classes%28Otlazeno%29\UnitInfo.cs" />
+    <Compile Include="Classes%28Otlazeno%29\TileInfo.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Program.cs" />
@@ -297,6 +297,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Cards\Unit\Germany\0\Info.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

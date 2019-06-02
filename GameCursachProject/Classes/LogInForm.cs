@@ -189,7 +189,7 @@ namespace GameCursachProject
                 //DONE: Запрос на сервер
                 IsRegistration = false;
                 IsRequestSended = false;
-                MasterNI.ConnectTo(CommandParser.ServerIP);
+                MasterNI.ConnectTo(Config.ServerIP);
                 Log.SendMessage("Подключение к мастер-серверу");
 
                 ShowConnectingState();
@@ -200,7 +200,7 @@ namespace GameCursachProject
                 //DONE: Запрос на сервер
                 IsRegistration = true;
                 IsRequestSended = false;
-                MasterNI.ConnectTo(CommandParser.ServerIP);
+                MasterNI.ConnectTo(Config.ServerIP);
                 Log.SendMessage("Подключение к мастер-серверу");
 
                 ShowConnectingState();

@@ -10,20 +10,31 @@ using System.IO;
 
 namespace GameCursachProject
 {
+    //Информация о карте и юните
     public struct UnitCardInfo
     {
+        //Имя
         public string Name;
-
+        //Стоимость
         public int Cost;
+        //Броня
         public int Armor;
+        //Радиус атаки
         public int AttackRadius;
+        //Урон
         public int Damage;
+        //Очки жизни
         public int HP;
+        //Скорость
         public int Speed;
+        //Текстура юнита
         public Texture2D UnitTexture;
+        //Скрипт анимации атаки юнита
         public string UnitAttackScript;
+        //Текстура для карты
         public Texture2D Card_Decoration;
 
+        //Конструктор
         public UnitCardInfo(string Name, int Cost, int Armor, int AttackRadius, int Damage, int HP, int Speed, Texture2D UnitTexture,
         string UnitAttackScript, Texture2D Card_Decoration)
         {
@@ -38,7 +49,7 @@ namespace GameCursachProject
             this.UnitAttackScript = UnitAttackScript;
             this.Card_Decoration = Card_Decoration;
         }
-
+        //Конструктор из файла
         public UnitCardInfo(string InfoPath)
         {
             Name = "";
@@ -90,14 +101,21 @@ namespace GameCursachProject
         }
     }
 
+    //Информация о клетке поля боя
     public struct TileTypeInfo
     {
+        //ID
         public int TileID;
+        //Предоставляет броню юниту, стоящему на ней
         public int Armor;
+        //Очки перемещения для прохождения через клетку
         public int SpeedNeeded;
+        //Имя
         public string Name;
+        //Текстура клетки
         public Texture2D Tile_Decoration;
 
+        //Конструктор из файла
         public TileTypeInfo(string InfoPath)
         {
             TileID = 0;
@@ -129,10 +147,12 @@ namespace GameCursachProject
 
     public static class GameContent
     {
+        //Пути к основному контенту
         public const string DefaultSovietUnitCardsPath = @"Cards\Unit\Soviet";
         public const string DefaultGermanyUnitCardsPath = @"Cards\Unit\Germany";
         public const string DefaultTileTypesPath = @"Tiles";
 
+        //Текстуры, скрипты, шрифты, используемые в игре
         static public Texture2D Unit_AttackRadius;
         static public List<UnitCardInfo> UnitCards = new List<UnitCardInfo>();
         static public List<UnitCardInfo> SovietUnitCards = new List<UnitCardInfo>();
@@ -216,10 +236,11 @@ namespace GameCursachProject
 
         static public Texture2D CardTexture;
 
-        ///////////
+        //Текстуры для скриптов атаки
         static public Texture2D Bullet;
         static public Texture2D Explosion;
 
+        //Загрузка всех ресурсов
         static public void LoadGameContent()
         {
             UI_Info_Allied = ContentLoader.LoadTexture(@"Textures\UnitHaracts_Allied");
@@ -303,7 +324,8 @@ namespace GameCursachProject
 
             //////////////////////////////////////////////////////////////////////////
 
-            UI_Player_Icons.Add(ContentLoader.LoadTexture(@"Textures\Player_Icon"));
+            UI_Player_Icons.Add(ContentLoader.LoadTexture(@"Textures\Player_Icon_Soviet"));
+            UI_Player_Icons.Add(ContentLoader.LoadTexture(@"Textures\Player_Icon_Germany"));
 
             var i = 0;
             while(Directory.Exists(@"Content\" + DefaultSovietUnitCardsPath + @"\" + i.ToString()))
